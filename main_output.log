@@ -1,0 +1,208 @@
+
+================================================================================
+  Flight Simulation Data Analysis Pipeline
+================================================================================
+
+Working directory: /home/cavok3/Desktop/DEV/DATA_ANALYSIS
+
+================================================================================
+  STEP 1: Copying Data Files
+================================================================================
+
+Source directory: /home/cavok3/Desktop/DEV/QN-ACTR-XPlane 2022-03-06/out/production/QN workspace/HMI_1/Results
+
+✓ Copied: results_eye_movement.txt
+  → eye_movement/results_eye_movement.txt
+✓ Copied: trace.txt
+  → trace_analyzer/trace.txt
+✓ Copied: results_mental_workload.txt
+  → workload_analyzer/results_mental_workload.txt
+
+3/3 files copied successfully.
+
+================================================================================
+  STEP 2: Running Analysis Scripts
+================================================================================
+
+
+================================================================================
+  Running: Eye Movement Analysis
+================================================================================
+
+Parsing eye_movement/results_eye_movement.txt...
+Successfully loaded 695 eye fixation points.
+
+
+======================================================================
+EYE MOVEMENT DATA STATISTICS
+======================================================================
+Total fixations: 695
+Duration: 0.185s to 330.615s (330.430s)
+
+X Coordinates:
+  Min:  350 px
+  Max:  2170 px
+  Mean: 1232.2 px
+  Std:  562.1 px
+
+Y Coordinates:
+  Min:  690 px
+  Max:  1340 px
+  Mean: 875.4 px
+  Std:  159.8 px
+
+Unique fixation targets: 14
+
+Top 10 most fixated targets:
+  CAS                           :   91 ( 13.1%)
+  N1%                           :   90 ( 12.9%)
+  N2%                           :   90 ( 12.9%)
+  CURRENT_TASK_OBJECT           :   89 ( 12.8%)
+  CURRENT_TASK_VALUE            :   89 ( 12.8%)
+  PITCH                         :   36 (  5.2%)
+  ROLL                          :   36 (  5.2%)
+  SLIP                          :   36 (  5.2%)
+  ALT                           :   36 (  5.2%)
+  KIAS                          :   36 (  5.2%)
+======================================================================
+
+Generating heatmap...
+Creating visualizations...
+Heatmap saved as 'eye_movement/eye_movement_heatmap.png'
+Scatter plot saved as 'eye_movement/eye_movement_scatter.png'
+Combined plot saved as 'eye_movement/eye_movement_combined.png'
+
+Creating cockpit overlay...
+Background image size: 2556x1375
+Cockpit overlay saved as 'eye_movement/eye_movement_cockpit_overlay.png'
+
+Creating scan path visualization...
+Background image size: 2556x1375
+
+Calculating Area of Interest (AoI) metrics...
+
+================================================================================
+AREA OF INTEREST (AoI) ANALYSIS
+================================================================================
+AoI Name             Fixations    Percentage   Avg Dwell (s)   Total Dwell (s)
+--------------------------------------------------------------------------------
+ND                   295           42.45%        0.466         137.546
+PFD                  180           25.90%        0.417          75.060
+TARS                 178           25.61%        0.543          96.565
+Central_Console      42             6.04%        0.518          21.735
+================================================================================
+
+Creating AoI analysis visualization...
+AoI analysis plot saved as 'eye_movement/aoi_analysis.png'
+Scan path visualization saved as 'eye_movement/eye_movement_scanpath.png'
+  Dwell time range: 0.350s to 0.685s
+  Average dwell time: 0.476s
+
+All visualizations completed successfully!
+
+Warnings/Errors:
+  plt.show()
+  plt.show()
+
+✓ Eye Movement Analysis completed successfully!
+
+================================================================================
+  Running: Trace Analysis
+================================================================================
+
+Parsing trace_analyzer/trace.txt...
+No matching conflict resolution events found in the trace file.
+
+
+✓ Trace Analysis completed successfully!
+
+================================================================================
+  Running: Mental Workload Analysis
+================================================================================
+
+Loading workload data...
+Loaded 331 time points.
+
+
+======================================================================
+WORKLOAD STATISTICS
+======================================================================
+Duration: 0.5s to 330.5s
+Total time points: 331
+
+Perceptual SubNetwork:
+  Mean: 0.089
+  Max:  0.128
+  Min:  0.045
+
+Cognitive SubNetwork:
+  Mean: 0.312
+  Max:  0.333
+  Min:  0.305
+
+Motor SubNetwork:
+  Mean: 0.000
+  Max:  0.000
+  Min:  0.000
+
+Overall Utilization:
+  Mean: 0.134
+  Max:  0.154
+  Min:  0.117
+
+Individual Module Peaks:
+  Vision:      0.255
+  Audio:       0.000
+  Production:  0.450
+  Declarative: 0.000
+  Imaginary:   0.650
+  Motor:       0.000
+  Speech:      0.000
+======================================================================
+
+Generating plots...
+Perceptual modules plot saved as 'workload_analyzer/workload_perceptual.png'
+Cognitive modules plot saved as 'workload_analyzer/workload_cognitive.png'
+Motor modules plot saved as 'workload_analyzer/workload_motor.png'
+Overall utilization plot saved as 'workload_analyzer/workload_overall.png'
+All subnetworks plot saved as 'workload_analyzer/workload_all_subnetworks.png'
+
+All workload visualizations completed successfully!
+
+
+✓ Mental Workload Analysis completed successfully!
+
+================================================================================
+  Analysis Complete: 3/3 successful
+================================================================================
+
+
+================================================================================
+  SUMMARY
+================================================================================
+
+Generated visualizations:
+
+eye_movement/:
+  ✓ aoi_analysis.png
+  ✓ eye_movement_cockpit_overlay.png
+  ✓ eye_movement_combined.png
+  ✓ eye_movement_heatmap.png
+  ✓ eye_movement_scanpath.png
+  ✓ eye_movement_scatter.png
+
+trace_analyzer/:
+  ✓ utility_all_comparison.png
+  ✓ utility_comparison.png
+  ✓ utility_with_without_noise.png
+
+workload_analyzer/:
+  ✓ workload_all_subnetworks.png
+  ✓ workload_cognitive.png
+  ✓ workload_motor.png
+  ✓ workload_overall.png
+  ✓ workload_perceptual.png
+
+Total plots generated: 14
+
+🎉 All analyses completed successfully!

@@ -535,11 +535,10 @@ def print_coordination_summary(task_coordination):
 
 def create_coordination_overhead_chart(task_coordination, output_dir):
     """Create a visualization of coordination overhead per task"""
-    fig = plt.figure(figsize=(20, 8))
-    gs = fig.add_gridspec(1, 3, width_ratios=[1.2, 1.5, 1.5])
+    fig = plt.figure(figsize=(14, 8))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.5])
     ax1 = fig.add_subplot(gs[0])
     ax2 = fig.add_subplot(gs[1])
-    ax3 = fig.add_subplot(gs[2])
     
     # Extract data
     task_names = [f"{t['task_object'][:20]}..." if len(t['task_object']) > 20 else t['task_object'] 
@@ -561,7 +560,7 @@ def create_coordination_overhead_chart(task_coordination, output_dir):
     explode = (0, 0.1)
     
     ax1.pie(sizes, explode=explode, labels=labels, colors=colors,
-            autopct='', shadow=True, startangle=90, textprops={'fontsize': 11, 'fontweight': 'bold'})
+            autopct='', shadow=False, startangle=90, textprops={'fontsize': 11, 'fontweight': 'bold'})
     ax1.set_title('Overall Time Allocation:\nTaskwork vs Coordination', 
                   fontsize=14, fontweight='bold', pad=20)
     
@@ -591,26 +590,6 @@ def create_coordination_overhead_chart(task_coordination, output_dir):
                     ha='center', va='center', fontsize=8, fontweight='bold',
                     bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8))
     
-    # Chart 3: Coordination percentage by task
-    bars = ax3.barh(x_pos, coord_percentages, color='#E74C3C', edgecolor='black', alpha=0.7)
-    
-    ax3.set_xlabel('Coordination Overhead (%)', fontsize=12, fontweight='bold')
-    ax3.set_ylabel('Task', fontsize=12, fontweight='bold')
-    ax3.set_title('Coordination Overhead as % of FSM Time', fontsize=14, fontweight='bold')
-    ax3.set_yticks(x_pos)
-    ax3.set_yticklabels(task_names, fontsize=9)
-    ax3.grid(axis='x', alpha=0.3, linestyle='--')
-    ax3.set_xlim(0, max(coord_percentages) * 1.2 if coord_percentages else 100)
-    
-    # Add value labels
-    for bar, pct, coord_time in zip(bars, coord_percentages, coord_times):
-        if pct > 0:
-            width = bar.get_width()
-            ax3.text(width, bar.get_y() + bar.get_height()/2, 
-                    f' {pct:.1f}% ({coord_time:.2f}s)',
-                    ha='left', va='center', fontsize=8,
-                    bbox=dict(boxstyle='round,pad=0.2', facecolor='white', alpha=0.7))
-    
     plt.tight_layout()
     
     # Save the plot in PNG and EPS formats
@@ -619,8 +598,42 @@ def create_coordination_overhead_chart(task_coordination, output_dir):
     plt.savefig(output_path_png, dpi=300, bbox_inches='tight')
     plt.savefig(output_path_eps, format='eps', bbox_inches='tight')
     print(f"Coordination overhead chart saved as '{output_path_png}' and '{output_path_eps}'")
+    plt.close()
     
-    return fig
+    # Create separate chart for coordination percentage by task
+    fig2, ax = plt.subplots(figsize=(12, 8))
+    
+    x_pos = np.arange(len(task_names))
+    bars = ax.barh(x_pos, coord_percentages, color='#E74C3C', edgecolor='black', alpha=0.7)
+    
+    ax.set_xlabel('Coordination Overhead (%)', fontsize=12, fontweight='bold')
+    ax.set_ylabel('Task', fontsize=12, fontweight='bold')
+    ax.set_title('Coordination Overhead as % of FSM Time', fontsize=14, fontweight='bold')
+    ax.set_yticks(x_pos)
+    ax.set_yticklabels(task_names, fontsize=9)
+    ax.grid(axis='x', alpha=0.3, linestyle='--')
+    ax.set_xlim(0, max(coord_percentages) * 1.2 if coord_percentages else 100)
+    
+    # Add value labels
+    for bar, pct, coord_time in zip(bars, coord_percentages, coord_times):
+        if pct > 0:
+            width = bar.get_width()
+            ax.text(width, bar.get_y() + bar.get_height()/2, 
+                    f' {pct:.1f}% ({coord_time:.2f}s)',
+                    ha='left', va='center', fontsize=8,
+                    bbox=dict(boxstyle='round,pad=0.2', facecolor='white', alpha=0.7))
+    
+    plt.tight_layout()
+    
+    # Save the percentage plot
+    output_path_png2 = output_dir / 'coordination_overhead_percentage.png'
+    output_path_eps2 = output_dir / 'coordination_overhead_percentage.eps'
+    plt.savefig(output_path_png2, dpi=300, bbox_inches='tight')
+    plt.savefig(output_path_eps2, format='eps', bbox_inches='tight')
+    print(f"Coordination overhead percentage chart saved as '{output_path_png2}' and '{output_path_eps2}'")
+    plt.close()
+    
+    return fig, fig2
 
 def print_task_summary(task_data, start_time, end_time):
     """Print a summary of tasks and their durations"""
@@ -674,10 +687,17 @@ def main():
     cognitive_ends = parse_cognitive_task_ends(csv_file)
     print(f"Found {len(cognitive_ends)} cognitive task end events (form-task-done)")
     
-    # Use the first and last TARS events as boundaries
-    start_uuid = tars_events[0]['uuid']
+    # Find the first non-Idle event as start boundary (skip Idle task)
+    start_idx = 0
+    for i, event in enumerate(tars_events):
+        if event['task_object'] != 'Idle':
+            start_idx = i
+            break
+    
+    # Use the identified start and last TARS events as boundaries
+    start_uuid = tars_events[start_idx]['uuid']
     end_uuid = tars_events[-1]['uuid']
-    print(f"Using first event as start: {tars_events[0]['task_object']}")
+    print(f"Using first event as start: {tars_events[start_idx]['task_object']}")
     print(f"Using last event as end: {tars_events[-1]['task_object']}")
     
     # Extract task sequence

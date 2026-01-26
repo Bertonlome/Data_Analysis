@@ -122,7 +122,9 @@ def plot_heatmap(heatmap, save_as='eye_movement_heatmap.png', title='Eye Movemen
     
     plt.tight_layout()
     plt.savefig(save_as, dpi=300, facecolor='black')
-    print(f"Heatmap saved as '{save_as}'")
+    eps_path = save_as.replace('.png', '.eps')
+    plt.savefig(eps_path, format='eps', facecolor='black')
+    print(f"Heatmap saved as '{save_as}' and '{eps_path}'")
     
     plt.show()
 
@@ -155,7 +157,9 @@ def plot_scatter_overlay(x_coords, y_coords, timestamps,
     
     plt.tight_layout()
     plt.savefig(save_as, dpi=300, facecolor='white')
-    print(f"Scatter plot saved as '{save_as}'")
+    eps_path = save_as.replace('.png', '.eps')
+    plt.savefig(eps_path, format='eps', facecolor='white')
+    print(f"Scatter plot saved as '{save_as}' and '{eps_path}'")
     
     plt.show()
 
@@ -197,7 +201,9 @@ def plot_combined_view(heatmap, x_coords, y_coords,
                  fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout()
     plt.savefig(save_as, dpi=300)
-    print(f"Combined plot saved as '{save_as}'")
+    eps_path = save_as.replace('.png', '.eps')
+    plt.savefig(eps_path, format='eps')
+    print(f"Combined plot saved as '{save_as}' and '{eps_path}'")
     plt.close()
 
 
@@ -247,7 +253,9 @@ def plot_heatmap_on_cockpit(heatmap, background_image_path='eye_movement/cessna_
         
         plt.tight_layout()
         plt.savefig(save_as, dpi=300, bbox_inches='tight')
-        print(f"Cockpit overlay saved as '{save_as}'")
+        eps_path = save_as.replace('.png', '.eps')
+        plt.savefig(eps_path, format='eps', bbox_inches='tight')
+        print(f"Cockpit overlay saved as '{save_as}' and '{eps_path}'")
         plt.close()
         return True
         
@@ -418,7 +426,9 @@ def plot_aoi_metrics(aoi_metrics, save_as='eye_movement/aoi_analysis.png'):
                  fontsize=16, fontweight='bold', y=0.98)
     plt.tight_layout()
     plt.savefig(save_as, dpi=300, bbox_inches='tight')
-    print(f"AoI analysis plot saved as '{save_as}'")
+    eps_path = save_as.replace('.png', '.eps')
+    plt.savefig(eps_path, format='eps', bbox_inches='tight')
+    print(f"AoI analysis plot saved as '{save_as}' and '{eps_path}'")
     plt.close()
 
 
@@ -552,7 +562,9 @@ def plot_scanpath_on_cockpit(x_coords, y_coords, timestamps,
         
         plt.tight_layout()
         plt.savefig(save_as, dpi=300, bbox_inches='tight')
-        print(f"Scan path visualization saved as '{save_as}'")
+        eps_path = save_as.replace('.png', '.eps')
+        plt.savefig(eps_path, format='eps', bbox_inches='tight')
+        print(f"Scan path visualization saved as '{save_as}' and '{eps_path}'")
         print(f"  Dwell time range: {min_dwell:.3f}s to {max_dwell:.3f}s")
         print(f"  Average dwell time: {np.mean(dwell_times):.3f}s")
         plt.close()

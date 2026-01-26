@@ -36,7 +36,9 @@ def plot_perceptual_modules(df, save_as='workload_analyzer/workload_perceptual.p
     
     plt.tight_layout()
     plt.savefig(save_as, dpi=300)
-    print(f"Perceptual modules plot saved as '{save_as}'")
+    eps_path = save_as.replace('.png', '.eps')
+    plt.savefig(eps_path, format='eps')
+    print(f"Perceptual modules plot saved as '{save_as}' and '{eps_path}'")
     plt.close()
 
 
@@ -64,7 +66,9 @@ def plot_cognitive_modules(df, save_as='workload_analyzer/workload_cognitive.png
     
     plt.tight_layout()
     plt.savefig(save_as, dpi=300)
-    print(f"Cognitive modules plot saved as '{save_as}'")
+    eps_path = save_as.replace('.png', '.eps')
+    plt.savefig(eps_path, format='eps')
+    print(f"Cognitive modules plot saved as '{save_as}' and '{eps_path}'")
     plt.close()
 
 
@@ -90,7 +94,9 @@ def plot_motor_modules(df, save_as='workload_analyzer/workload_motor.png'):
     
     plt.tight_layout()
     plt.savefig(save_as, dpi=300)
-    print(f"Motor modules plot saved as '{save_as}'")
+    eps_path = save_as.replace('.png', '.eps')
+    plt.savefig(eps_path, format='eps')
+    print(f"Motor modules plot saved as '{save_as}' and '{eps_path}'")
     plt.close()
 
 
@@ -117,7 +123,9 @@ def plot_overall_utilization(df, save_as='workload_analyzer/workload_overall.png
     
     plt.tight_layout()
     plt.savefig(save_as, dpi=300)
-    print(f"Overall utilization plot saved as '{save_as}'")
+    eps_path = save_as.replace('.png', '.eps')
+    plt.savefig(eps_path, format='eps')
+    print(f"Overall utilization plot saved as '{save_as}' and '{eps_path}'")
     plt.close()
 
 
@@ -145,7 +153,9 @@ def plot_all_subnetworks(df, save_as='workload_analyzer/workload_all_subnetworks
     
     plt.tight_layout()
     plt.savefig(save_as, dpi=300)
-    print(f"All subnetworks plot saved as '{save_as}'")
+    eps_path = save_as.replace('.png', '.eps')
+    plt.savefig(eps_path, format='eps')
+    print(f"All subnetworks plot saved as '{save_as}' and '{eps_path}'")
     plt.close()
 
 

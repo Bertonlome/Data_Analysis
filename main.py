@@ -15,6 +15,8 @@ import os
 import shutil
 import subprocess
 import sys
+import json
+import re
 from pathlib import Path
 from datetime import datetime
 
@@ -40,7 +42,145 @@ ANALYSIS_SCRIPTS = [
     ("eye_movement/eye-movement-analyzer.py", "Eye Movement Analysis"),
     ("trace_analyzer/trace-analyzer.py", "Trace Analysis"),
     ("workload_analyzer/workload_analyzer.py", "Mental Workload Analysis"),
+    ("team-analyzer/team-analyzer.py", "Team Analysis"),
 ]
+
+
+class TaskEvent:
+    """Represents a task event from the TARS Agent state transitions"""
+    def __init__(self, timestamp, task_object, value, csv_timestamp):
+        self.timestamp = timestamp  # Time in trace.txt coordinates
+        self.task_object = task_object
+        self.value = value
+        self.csv_timestamp = csv_timestamp  # Original CSV timestamp
+    
+    def __repr__(self):
+        return f"TaskEvent({self.timestamp:.2f}s, {self.task_object}, {self.value})"
+
+
+def parse_tars_tasks_from_csv(csv_filepath):
+    """
+    Parse TARS Agent task events from the CSV file.
+    Returns list of TaskEvent objects with CSV timestamps.
+    """
+    events = []
+    
+    with open(csv_filepath, 'r', encoding='utf-8') as f:
+        header = f.readline()  # Skip header
+        
+        for line in f:
+            parts = line.strip().split(';')
+            if len(parts) >= 7:
+                agent = parts[2]
+                source_type = parts[3]  # This is the event source (e.g., "current_state")
+                timestamp_str = parts[1]
+                value_str = parts[6]
+                
+                # Look for TARS Agent current_state events
+                if agent == 'TARS Agent' and source_type == 'current_state':
+                    try:
+                        # The value_str is wrapped in quotes and has escaped quotes inside
+                        # Remove outer quotes if present
+                        if value_str.startswith('"') and value_str.endswith('"'):
+                            value_str = value_str[1:-1]
+                        
+                        # Unescape double quotes
+                        value_str = value_str.replace('""', '"')
+                        
+                        # Parse the JSON value
+                        state_data = json.loads(value_str)
+                        task_object = state_data.get('task_object', '')
+                        task_value = state_data.get('value', '')
+                        csv_timestamp = float(timestamp_str)
+                        
+                        # Skip IDLE and empty tasks
+                        if task_object and task_object != 'Idle':
+                            # Create TaskEvent with CSV timestamp (will sync later)
+                            event = TaskEvent(csv_timestamp, task_object, task_value, csv_timestamp)
+                            events.append(event)
+                    except (json.JSONDecodeError, ValueError) as e:
+                        # Silently skip problematic lines
+                        continue
+    
+    return events
+
+
+def find_first_audio_event_time(trace_filepath):
+    """
+    Find the timestamp of the first audio event in trace.txt.
+    Returns the timestamp as a float.
+    """
+    with open(trace_filepath, 'r', encoding='utf-8') as f:
+        for line in f:
+            # Look for the first AUDIO SET-BUFFER-CHUNK event
+            if 'AUDIO' in line and 'SET-BUFFER-CHUNK' in line:
+                # Extract timestamp from the beginning of the line
+                match = re.match(r'\s*([\d.]+)\s+AUDIO', line)
+                if match:
+                    return float(match.group(1))
+    return None
+
+
+def synchronize_task_events(task_events, trace_filepath):
+    """
+    Synchronize task events from CSV with trace.txt timeline.
+    Maps the first task event to the first audio event.
+    
+    Args:
+        task_events: List of TaskEvent objects with CSV timestamps
+        trace_filepath: Path to trace.txt file
+    
+    Returns:
+        List of TaskEvent objects with synchronized timestamps in trace.txt coordinates
+    """
+    if not task_events:
+        return []
+    
+    # Find the first audio event time in trace.txt
+    first_audio_time = find_first_audio_event_time(trace_filepath)
+    
+    if first_audio_time is None:
+        print("⚠ Warning: Could not find first audio event in trace.txt")
+        return task_events
+    
+    # Get the CSV timestamp of the first task
+    first_task_csv_time = task_events[0].csv_timestamp
+    
+    # Calculate the time offset
+    time_offset = first_audio_time - first_task_csv_time
+    
+    print(f"\nTime Synchronization:")
+    print(f"  First task CSV time: {first_task_csv_time:.3f}")
+    print(f"  First audio trace time: {first_audio_time:.3f}")
+    print(f"  Time offset: {time_offset:.3f}s\n")
+    
+    # Create new TaskEvent objects with synchronized timestamps
+    synchronized_events = []
+    for event in task_events:
+        sync_time = event.csv_timestamp + time_offset
+        sync_event = TaskEvent(sync_time, event.task_object, event.value, event.csv_timestamp)
+        synchronized_events.append(sync_event)
+    
+    return synchronized_events
+
+
+def save_task_events_json(task_events, output_path):
+    """
+    Save task events to a JSON file that can be read by trace-analyzer.py
+    """
+    task_data = [
+        {
+            'timestamp': event.timestamp,
+            'task_object': event.task_object,
+            'value': event.value
+        }
+        for event in task_events
+    ]
+    
+    with open(output_path, 'w') as f:
+        json.dump(task_data, f, indent=2)
+    
+    print(f"Saved {len(task_events)} synchronized task events to {output_path}")
 
 
 def print_header(message):
@@ -67,9 +207,32 @@ def create_output_directory():
     return OUTPUT_DIR
 
 
+def cleanup_old_plots():
+    """Remove old plot files from analyzer directories before running new analyses."""
+    print_header("STEP 1: Cleaning Up Old Plots")
+    
+    analyzer_dirs = ['eye_movement', 'trace_analyzer', 'workload_analyzer', 'team-analyzer']
+    total_removed = 0
+    
+    for dir_name in analyzer_dirs:
+        dir_path = BASE_DIR / dir_name
+        if dir_path.exists():
+            # Remove PNG and EPS files (but not background images)
+            for ext in ['*.png', '*.eps']:
+                for plot_file in dir_path.glob(ext):
+                    if 'cockpit_picture' not in plot_file.name:
+                        plot_file.unlink()
+                        total_removed += 1
+    
+    if total_removed > 0:
+        print(f"Removed {total_removed} old plot files from analyzer directories.\n")
+    else:
+        print("No old plot files found.\n")
+
+
 def copy_data_files():
     """Copy data files from source directory to appropriate subdirectories."""
-    print_header("STEP 1: Copying Data Files")
+    print_header("STEP 2: Copying Data Files")
     
     source_path = Path(SOURCE_DIR)
     
@@ -104,16 +267,30 @@ def copy_data_files():
         else:
             print(f"⚠ Warning: {source_file} not found in source directory")
     
-    print(f"\n{success_count}/{len(DATA_FILES)} files copied successfully.")
+    # Handle team-analyzer CSV files separately (use whatever exists locally)
+    team_analyzer_dir = BASE_DIR / "team-analyzer"
+    if team_analyzer_dir.exists():
+        csv_files = list(team_analyzer_dir.glob("*.csv"))
+        if csv_files:
+            print(f"✓ Using existing team-analyzer CSV file:")
+            for csv_file in csv_files:
+                print(f"  → team-analyzer/{csv_file.name}")
+            success_count += 1
+        else:
+            print(f"⚠ Warning: No CSV files found in team-analyzer/")
+    else:
+        print(f"⚠ Warning: team-analyzer/ directory not found")
+    
+    print(f"\n{success_count}/{len(DATA_FILES) + 1} files ready for analysis.")
     
     if success_count == 0:
         print("\n❌ No files were copied. Aborting analysis.")
         sys.exit(1)
     
-    return success_count == len(DATA_FILES)
+    return success_count == len(DATA_FILES) + 1
 
 
-def run_analysis_script(script_path, description):
+def run_analysis_script(script_path, description, task_events_file=None):
     """Run an analysis script and report results."""
     print_header(f"Running: {description}")
     
@@ -133,9 +310,14 @@ def run_analysis_script(script_path, description):
         else:
             python_cmd = str(venv_python)
         
+        # Build command with optional task events file argument
+        cmd = [python_cmd, str(script_full_path)]
+        if task_events_file:
+            cmd.append(task_events_file)
+        
         # Run the script with a timeout
         result = subprocess.run(
-            [python_cmd, str(script_full_path)],
+            cmd,
             cwd=str(BASE_DIR),
             capture_output=True,
             text=True,
@@ -171,7 +353,7 @@ def run_analysis_script(script_path, description):
 
 def copy_results_to_output():
     """Copy source data files and generated plots to output directory."""
-    print_header("STEP 3: Copying Results to Output Directory")
+    print_header("STEP 4: Copying Results to Output Directory")
     
     # Directories to process
     analysis_dirs = {
@@ -190,6 +372,16 @@ def copy_results_to_output():
         if not source_dir.exists():
             continue
         
+        # Check if any plots were generated (PNG or EPS files)
+        png_files = [f for f in source_dir.glob('*.png') if 'cockpit_picture' not in f.name]
+        eps_files = [f for f in source_dir.glob('*.eps')]
+        has_plots = len(png_files) > 0 or len(eps_files) > 0
+        
+        # Skip copying if no plots were generated (no analysis results)
+        if not has_plots:
+            print(f"⊘ Skipping {dir_name}: No analysis results generated")
+            continue
+        
         # Copy source data files
         for source_file in source_files:
             source_path = source_dir / source_file
@@ -199,12 +391,13 @@ def copy_results_to_output():
                 total_files_copied += 1
         
         # Copy all PNG and EPS files
-        for ext in ['*.png', '*.eps']:
-            for plot_file in source_dir.glob(ext):
-                # Skip background images
-                if 'cockpit_picture' not in plot_file.name:
-                    shutil.copy2(plot_file, output_subdir / plot_file.name)
-                    total_files_copied += 1
+        for plot_file in png_files:
+            shutil.copy2(plot_file, output_subdir / plot_file.name)
+            total_files_copied += 1
+        
+        for plot_file in eps_files:
+            shutil.copy2(plot_file, output_subdir / plot_file.name)
+            total_files_copied += 1
         
         # Count copied plots
         png_count = len(list(output_subdir.glob('*.png')))
@@ -220,17 +413,57 @@ def copy_results_to_output():
 
 def run_all_analyses():
     """Run all analysis scripts."""
-    print_header("STEP 2: Running Analysis Scripts")
+    print_header("STEP 3: Running Analysis Scripts")
+    
+    # Parse and synchronize task events for trace analyzer
+    task_events_file = None
+    csv_path = BASE_DIR / "team-analyzer" / "25_01_26 - 16_05_27.csv"
+    trace_path = BASE_DIR / "trace_analyzer" / "trace.txt"
+    
+    if csv_path.exists() and trace_path.exists():
+        print("Preparing task synchronization data...")
+        print(f"  CSV file: {csv_path}")
+        print(f"  Trace file: {trace_path}")
+        
+        # Parse tasks from CSV
+        task_events = parse_tars_tasks_from_csv(csv_path)
+        print(f"  Parsed {len(task_events)} task events from CSV")
+        
+        # Synchronize with trace.txt timeline
+        if task_events:
+            sync_events = synchronize_task_events(task_events, trace_path)
+            
+            # Save to temporary JSON file
+            task_events_file = str(BASE_DIR / "task_events.json")
+            save_task_events_json(sync_events, task_events_file)
+        else:
+            print("  No task events found in CSV")
+    else:
+        print("  CSV or trace file not found, skipping task synchronization")
+    
+    print()
     
     success_count = 0
     total_scripts = len(ANALYSIS_SCRIPTS)
     
     for script_path, description in ANALYSIS_SCRIPTS:
-        if run_analysis_script(script_path, description):
-            success_count += 1
+        # Pass task events file only to trace analyzer
+        if "trace-analyzer" in script_path and task_events_file:
+            if run_analysis_script(script_path, description, task_events_file):
+                success_count += 1
+            else:
+                print(f"\n⚠ Warning: {description} did not complete successfully.")
+                print("Continuing with remaining analyses...\n")
         else:
-            print(f"\n⚠ Warning: {description} did not complete successfully.")
-            print("Continuing with remaining analyses...\n")
+            if run_analysis_script(script_path, description):
+                success_count += 1
+            else:
+                print(f"\n⚠ Warning: {description} did not complete successfully.")
+                print("Continuing with remaining analyses...\n")
+    
+    # Cleanup temporary file
+    if task_events_file and Path(task_events_file).exists():
+        Path(task_events_file).unlink()
     
     print_header(f"Analysis Complete: {success_count}/{total_scripts} successful")
     
@@ -246,23 +479,26 @@ def main():
     # Step 0: Create output directory
     create_output_directory()
     
-    # Step 1: Copy data files
+    # Step 1: Clean up old plots
+    cleanup_old_plots()
+    
+    # Step 2: Copy data files
     all_files_copied = copy_data_files()
     
     if not all_files_copied:
         print("\n⚠ Warning: Not all files were copied. Proceeding anyway...")
     
-    # Step 2: Run analyses
+    # Step 3: Run analyses
     all_analyses_successful = run_all_analyses()
     
-    # Step 3: Copy results to output directory
+    # Step 4: Copy results to output directory
     copy_results_to_output()
     
     # Final summary
     print_header("SUMMARY")
     
     # List generated plot files
-    plot_dirs = ["eye_movement", "trace_analyzer", "workload_analyzer"]
+    plot_dirs = ["eye_movement", "trace_analyzer", "workload_analyzer", "team-analyzer"]
     total_plots = 0
     
     print("Generated visualizations:\n")

@@ -16,12 +16,17 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from datetime import datetime
 
 # Source directory with the data files
 SOURCE_DIR = "/home/cavok3/Desktop/DEV/QN-ACTR-XPlane 2022-03-06/out/production/QN workspace/HMI_1/Results"
 
 # Current working directory (where this script is located)
 BASE_DIR = Path(__file__).parent.absolute()
+
+# Create timestamped output directory
+TIMESTAMP = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+OUTPUT_DIR = BASE_DIR / "output" / f"results_{TIMESTAMP}"
 
 # Data file mappings: (source_filename, destination_folder, destination_filename)
 DATA_FILES = [
@@ -43,6 +48,23 @@ def print_header(message):
     print(f"\n{'='*80}")
     print(f"  {message}")
     print(f"{'='*80}\n")
+
+
+def create_output_directory():
+    """Create timestamped output directory structure."""
+    print_header("Creating Output Directory")
+    
+    # Create main output directory and subdirectories
+    subdirs = ['eye_movement', 'team-analyzer', 'trace_analyzer', 'workload_analyzer']
+    
+    for subdir in subdirs:
+        output_subdir = OUTPUT_DIR / subdir
+        output_subdir.mkdir(parents=True, exist_ok=True)
+    
+    print(f"Output directory created: {OUTPUT_DIR}")
+    print(f"Subdirectories: {', '.join(subdirs)}\n")
+    
+    return OUTPUT_DIR
 
 
 def copy_data_files():
@@ -147,6 +169,55 @@ def run_analysis_script(script_path, description):
         return False
 
 
+def copy_results_to_output():
+    """Copy source data files and generated plots to output directory."""
+    print_header("STEP 3: Copying Results to Output Directory")
+    
+    # Directories to process
+    analysis_dirs = {
+        'eye_movement': ['results_eye_movement.txt'],
+        'trace_analyzer': ['trace.txt'],
+        'workload_analyzer': ['results_mental_workload.txt'],
+        'team-analyzer': ['25_01_26 - 16_05_27.csv']
+    }
+    
+    total_files_copied = 0
+    
+    for dir_name, source_files in analysis_dirs.items():
+        source_dir = BASE_DIR / dir_name
+        output_subdir = OUTPUT_DIR / dir_name
+        
+        if not source_dir.exists():
+            continue
+        
+        # Copy source data files
+        for source_file in source_files:
+            source_path = source_dir / source_file
+            if source_path.exists():
+                shutil.copy2(source_path, output_subdir / source_file)
+                print(f"✓ Copied source: {dir_name}/{source_file}")
+                total_files_copied += 1
+        
+        # Copy all PNG and EPS files
+        for ext in ['*.png', '*.eps']:
+            for plot_file in source_dir.glob(ext):
+                # Skip background images
+                if 'cockpit_picture' not in plot_file.name:
+                    shutil.copy2(plot_file, output_subdir / plot_file.name)
+                    total_files_copied += 1
+        
+        # Count copied plots
+        png_count = len(list(output_subdir.glob('*.png')))
+        eps_count = len(list(output_subdir.glob('*.eps')))
+        if png_count > 0 or eps_count > 0:
+            print(f"  → {dir_name}: {png_count} PNG, {eps_count} EPS plots")
+    
+    print(f"\nTotal files copied to output: {total_files_copied}")
+    print(f"Output location: {OUTPUT_DIR}\n")
+    
+    return total_files_copied
+
+
 def run_all_analyses():
     """Run all analysis scripts."""
     print_header("STEP 2: Running Analysis Scripts")
@@ -170,6 +241,10 @@ def main():
     """Main execution function."""
     print_header("Flight Simulation Data Analysis Pipeline")
     print(f"Working directory: {BASE_DIR}")
+    print(f"Timestamp: {TIMESTAMP}\n")
+    
+    # Step 0: Create output directory
+    create_output_directory()
     
     # Step 1: Copy data files
     all_files_copied = copy_data_files()
@@ -179,6 +254,9 @@ def main():
     
     # Step 2: Run analyses
     all_analyses_successful = run_all_analyses()
+    
+    # Step 3: Copy results to output directory
+    copy_results_to_output()
     
     # Final summary
     print_header("SUMMARY")
@@ -201,6 +279,7 @@ def main():
                 print()
     
     print(f"Total plots generated: {total_plots}")
+    print(f"\nResults saved to: {OUTPUT_DIR}")
     
     if all_analyses_successful:
         print("\n🎉 All analyses completed successfully!")

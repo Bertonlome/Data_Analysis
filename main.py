@@ -13,12 +13,60 @@ All plots are generated in their respective subdirectories.
 
 import os
 import shutil
+import signal
 import subprocess
 import sys
 import json
 import re
 from pathlib import Path
 from datetime import datetime
+import time
+from echo import *
+
+Ingescape_Agent = True
+port = 5670
+agent_name = "Data Analysis"
+device = "wlp0s20f3"
+verbose = False
+is_interrupted = False
+analysis_number = 0
+
+def signal_handler(signal_received, frame):
+    global is_interrupted
+    print("\n", signal.strsignal(signal_received), sep="")
+    is_interrupted = True
+    try:
+        app.destroy()
+    except Exception:
+        pass
+
+# inputs
+def impulsion_input_callback(io_type, name, value_type, value, my_data):
+    igs.info(f"Input {name} written")
+    if name == "launch_analysis":
+        run_flight_simulation_analysis()
+    # Update the label for impulsion
+    
+igs.agent_set_name(agent_name)
+igs.definition_set_version("1.0")
+igs.log_set_console(verbose)
+igs.log_set_file(True, None)
+igs.log_set_stream(verbose)
+igs.set_command_line(sys.executable + " " + " ".join(sys.argv))
+
+agent = Echo()
+
+igs.input_create("launch_analysis", igs.IMPULSION_T, None)
+igs.output_create("analysis_complete", igs.IMPULSION_T, None)
+
+igs.observe_input("launch_analysis", impulsion_input_callback, agent)
+
+igs.log_set_console(True)
+igs.log_set_console_level(igs.LOG_INFO)
+
+igs.start_with_device(device, port)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 # Source directory with the data files
 SOURCE_DIR = "/home/cavok3/Desktop/DEV/QN-ACTR-XPlane 2022-03-06/out/production/QN workspace/HMI_1/Results"
@@ -28,7 +76,7 @@ BASE_DIR = Path(__file__).parent.absolute()
 
 # Create timestamped output directory
 TIMESTAMP = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-OUTPUT_DIR = BASE_DIR / "output" / f"results_{TIMESTAMP}"
+OUTPUT_DIR = BASE_DIR / "output" / f"results_{analysis_number}_{TIMESTAMP}"
 
 # Data file mappings: (source_filename, destination_folder, destination_filename)
 DATA_FILES = [
@@ -470,7 +518,7 @@ def run_all_analyses():
     return success_count == total_scripts
 
 
-def main():
+def run_flight_simulation_analysis():
     """Main execution function."""
     print_header("Flight Simulation Data Analysis Pipeline")
     print(f"Working directory: {BASE_DIR}")
@@ -519,6 +567,8 @@ def main():
     
     if all_analyses_successful:
         print("\n🎉 All analyses completed successfully!")
+        igs.output_set_impulsion("analysis_complete")
+        analysis_number += 1
         return 0
     else:
         print("\n⚠ Some analyses encountered issues. Please review the output above.")
@@ -526,4 +576,14 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+
+    if not Ingescape_Agent:
+        sys.exit(run_flight_simulation_analysis())
+    else:
+        try:
+            while not is_interrupted:
+                time.sleep(0.1)
+                # main loop
+        except Exception as e:
+            igs.error(f"Exception in main loop: {e}")
+        igs.stop()

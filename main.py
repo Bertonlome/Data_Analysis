@@ -231,6 +231,146 @@ def save_task_events_json(task_events, output_path):
     print(f"Saved {len(task_events)} synchronized task events to {output_path}")
 
 
+def fetch_and_convert_cassandra_run():
+    """
+    Fetch the latest run from Cassandra and convert to team-analyzer format.
+    A run is defined as data between Cognitive_Model;start;true and Cognitive_Model;start;false.
+    
+    Returns:
+        Path to converted CSV file, or None if failed
+    """
+    print_header("Fetching Latest Run from Cassandra")
+    
+    # Import Cassandra libraries with eventlet patch
+    import eventlet
+    eventlet.monkey_patch()
+    
+    from cassandra.cluster import Cluster
+    from cassandra.io.eventletreactor import EventletConnection
+    import csv
+    
+    CASSANDRA_HOST = '127.0.0.1'
+    CASSANDRA_PORT = 9042
+    
+    # Output paths
+    raw_export_path = BASE_DIR / "cassandra_event_export.csv"
+    converted_path = BASE_DIR / "team-analyzer" / "cassandra_converted.csv"
+    
+    try:
+        # Connect to Cassandra
+        print(f"Connecting to Cassandra at {CASSANDRA_HOST}:{CASSANDRA_PORT}...")
+        cluster = Cluster([CASSANDRA_HOST], port=CASSANDRA_PORT, connection_class=EventletConnection)
+        session = cluster.connect()
+        session.set_keyspace('ingescape')
+        print("✓ Connected to Cassandra\n")
+        
+        # Fetch event data
+        print("Fetching event data...")
+        query = "SELECT * FROM event LIMIT 10000"
+        rows = session.execute(query)
+        rows_list = list(rows)
+        print(f"✓ Retrieved {len(rows_list)} rows\n")
+        
+        # Find the latest Cognitive_Model;start;true event
+        print("Searching for latest run markers...")
+        latest_start_idx = -1
+        latest_start_time = None
+        
+        for i, row in enumerate(rows_list):
+            if row.agent == 'Cognitive_Model' and row.source == 'start':
+                if row.value == b'\x01':  # true
+                    # Parse timestamp
+                    date_str = str(row.date)
+                    time_str = str(row.time)
+                    
+                    if '.' in time_str:
+                        time_parts = time_str.split('.')
+                        time_str = f"{time_parts[0]}.{time_parts[1][:6]}"
+                    
+                    datetime_str = f"{date_str} {time_str}"
+                    dt = datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S.%f')
+                    
+                    if latest_start_time is None or dt > latest_start_time:
+                        latest_start_time = dt
+                        latest_start_idx = i
+        
+        if latest_start_idx == -1:
+            print("❌ No run start marker found (Cognitive_Model;start;true)")
+            cluster.shutdown()
+            return None
+        
+        print(f"✓ Found run start at index {latest_start_idx}")
+        print(f"  Timestamp: {latest_start_time}")
+        
+        # Find corresponding end event
+        end_idx = -1
+        for i in range(latest_start_idx + 1, len(rows_list)):
+            row = rows_list[i]
+            if row.agent == 'Cognitive_Model' and row.source == 'start':
+                if row.value == b'\x00':  # false
+                    end_idx = i
+                    break
+        
+        if end_idx == -1:
+            print("⚠ Warning: No run end marker found, using all data until end")
+            end_idx = len(rows_list) - 1
+        else:
+            print(f"✓ Found run end at index {end_idx}")
+        
+        run_rows = rows_list[latest_start_idx:end_idx + 1]
+        print(f"\n✓ Extracted {len(run_rows)} rows for this run\n")
+        
+        # Save to CSV (raw format)
+        print(f"Saving raw export to: {raw_export_path}")
+        
+        # Get column names from schema
+        columns = ['agent', 'date', 'id', 'igs_timestamp', 'record_id', 'source', 'time', 'type', 'value']
+        
+        with open(raw_export_path, 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile, delimiter=';')
+            writer.writerow(columns)
+            
+            for row in run_rows:
+                row_values = [getattr(row, col) for col in columns]
+                writer.writerow(row_values)
+        
+        print(f"✓ Saved {len(run_rows)} rows to {raw_export_path}\n")
+        
+        cluster.shutdown()
+        
+        # Now convert using the conversion script
+        print("Converting to team-analyzer format...")
+        
+        converter_script = BASE_DIR / "convert_cassandra_to_team_analyzer.py"
+        
+        result = subprocess.run(
+            [sys.executable, str(converter_script)],
+            cwd=str(BASE_DIR),
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+        
+        if result.stdout:
+            print(result.stdout)
+        
+        if result.returncode == 0:
+            print(f"✓ Conversion successful!")
+            print(f"  Output: {converted_path}\n")
+            return str(converted_path)
+        else:
+            print(f"❌ Conversion failed")
+            if result.stderr:
+                print(result.stderr)
+            return None
+        
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+
 def print_header(message):
     """Print a formatted header message."""
     print(f"\n{'='*80}")
@@ -257,7 +397,7 @@ def create_output_directory():
 
 def cleanup_old_plots():
     """Remove old plot files from analyzer directories before running new analyses."""
-    print_header("STEP 1: Cleaning Up Old Plots")
+    print_header("STEP 2: Cleaning Up Old Plots")
     
     analyzer_dirs = ['eye_movement', 'trace_analyzer', 'workload_analyzer', 'team-analyzer']
     total_removed = 0
@@ -280,7 +420,7 @@ def cleanup_old_plots():
 
 def copy_data_files():
     """Copy data files from source directory to appropriate subdirectories."""
-    print_header("STEP 2: Copying Data Files")
+    print_header("STEP 3: Copying Data Files")
     
     source_path = Path(SOURCE_DIR)
     
@@ -401,7 +541,7 @@ def run_analysis_script(script_path, description, task_events_file=None):
 
 def copy_results_to_output():
     """Copy source data files and generated plots to output directory."""
-    print_header("STEP 4: Copying Results to Output Directory")
+    print_header("STEP 5: Copying Results to Output Directory")
     
     # Directories to process
     analysis_dirs = {
@@ -461,7 +601,7 @@ def copy_results_to_output():
 
 def run_all_analyses():
     """Run all analysis scripts."""
-    print_header("STEP 3: Running Analysis Scripts")
+    print_header("STEP 4: Running Analysis Scripts")
     
     # Parse and synchronize task events for trace analyzer
     task_events_file = None
@@ -527,19 +667,25 @@ def run_flight_simulation_analysis():
     # Step 0: Create output directory
     create_output_directory()
     
-    # Step 1: Clean up old plots
+    # Step 1: Fetch latest run from Cassandra
+    cassandra_csv = fetch_and_convert_cassandra_run()
+    
+    if not cassandra_csv:
+        print("\n⚠ Warning: Failed to fetch Cassandra data. Continuing with existing files...")
+    
+    # Step 2: Clean up old plots
     cleanup_old_plots()
     
-    # Step 2: Copy data files
+    # Step 3: Copy data files
     all_files_copied = copy_data_files()
     
     if not all_files_copied:
         print("\n⚠ Warning: Not all files were copied. Proceeding anyway...")
     
-    # Step 3: Run analyses
+    # Step 4: Run analyses
     all_analyses_successful = run_all_analyses()
     
-    # Step 4: Copy results to output directory
+    # Step 5: Copy results to output directory
     copy_results_to_output()
     
     # Final summary

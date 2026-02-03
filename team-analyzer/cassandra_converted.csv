@@ -1,0 +1,4860 @@
+uuid;timestamp;agent;source;type;igs_timestamp;value
+37d285a0-00aa-11f1-bbdd-9d3344d32583;1770104650.613;SNAPSHOT;SNAPSHOT_BEGIN;0;;
+37d285a1-00aa-11f1-bbdd-9d3344d32583;1770104650.613;Shared Interface;ENTERED;15;;1DE17AB900DED443B9287850ABAE82AB
+37d285a2-00aa-11f1-bbdd-9d3344d32583;1770104650.613;TARS Agent;ENTERED;15;;9BB795DCE6040B409582B3E25F080838
+37d285a3-00aa-11f1-bbdd-9d3344d32583;1770104650.613;TTS_Agent;ENTERED;15;;A8F93C409150B744AC5D182936CE0D23
+37d285a4-00aa-11f1-bbdd-9d3344d32583;1770104650.613;Proxy;ENTERED;15;;ECC44B5B1FC9575E174170C28BBE952C
+37d285a5-00aa-11f1-bbdd-9d3344d32583;1770104650.613;ATC_Agent;ENTERED;15;;60E60B901F32D544B947FA2BA7E2682A
+37d285a6-00aa-11f1-bbdd-9d3344d32583;1770104650.613;Aircraft;ENTERED;15;;970DB7505468AB40820E28B9346F8010
+37d285a7-00aa-11f1-bbdd-9d3344d32583;1770104650.613;Aircraft;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""Aircraft"",
+        ""class"": ""Aircraft"",
+        ""version"": ""1.0"",
+        ""inputs"": [
+            {
+                ""name"": ""reset"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""elevator"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""aileron"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flaps"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""gear"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""brake"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""l_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""speed_mode"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""heading_mode"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""heading_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""autopilot_master"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""fuel_boost_l"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""fuel_boost_r"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""test_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""autopilot_heading_set"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_ign_switch"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_ign_switch"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""r_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""transfer_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""bird_strike"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""baro_setting"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pitot_heat"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_engine_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_engine_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""exterior_lights"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""anti_coll_lights"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""yoke_hide"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""airspeed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pitch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlPitch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""roll"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlRoll"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""heading"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlYaw"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""verticalSpeed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""altitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""latitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""longitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlThrottle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlFlaps"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlGear"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""speedBrakes"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""outsideEvent"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""parkBrake"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""n1_match_bug"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""e1_n1_percent"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""e2_n1_percent"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""slip"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""engine_fire_l"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""engine_fire_r"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""master_warning"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""master_caution"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""speed_mode"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""heading_mode"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""fuel_boost_l"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""fuel_boost_r"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""test_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""autopilot_heading_set"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_ign_switch"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_ign_switch"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""r_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""transfer_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""baro_setting"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""cabin_altitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pitot_heat"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_engine_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_engine_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""exterior_lights"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""anti_coll_lights"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""heading_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""l_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""ptt"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""yoke_hide"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+37d285a8-00aa-11f1-bbdd-9d3344d32583;1770104650.613;ATC_Agent;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""ATC_Agent"",
+        ""class"": ""ATC_Agent"",
+        ""version"": ""1.0"",
+        ""inputs"": [
+            {
+                ""name"": ""Reset"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""request_ATIS"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""request_takeoff_clearance"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""declare_mayday"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""declare_panpan"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""request_vectors"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""custom_speech"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""speech_output"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""is_speaking"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+37d285a9-00aa-11f1-bbdd-9d3344d32583;1770104650.613;Shared Interface;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""Shared Interface"",
+        ""class"": ""Shared Interface"",
+        ""version"": ""1.0"",
+        ""inputs"": [
+            {
+                ""name"": ""current_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""next_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""previous_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""countdown_current"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_next"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_max_current"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_max_next"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""alert"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""alert_clear"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""condition_violated"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""condition_restored"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""tts_speaking"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""tts_text"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""action_about_to_fire"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""checklist_item_complete"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""emergency_procedure_inject"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""interaction_message"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""task_approval"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""task_acknowledged"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""task_cancelled"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""task_override"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""start_procedure"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""stop_procedure"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""emergency_inject"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""force_state_jump"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""countdown_complete"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""next_step"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""previous_step"",
+                ""type"": ""IMPULSION""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+37d285aa-00aa-11f1-bbdd-9d3344d32583;1770104650.613;Proxy;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""Proxy"",
+        ""class"": ""Proxy"",
+        ""package"": ""ingescape::network"",
+        ""family"": ""CA2FFA9FAABE4781A21E590FABEABC67"",
+        ""version"": ""dynamic"",
+        ""inputs"": [
+
+        ],
+        ""outputs"": [
+
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+37d285ab-00aa-11f1-bbdd-9d3344d32583;1770104650.613;TARS Agent;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""TARS Agent"",
+        ""class"": ""TARS Agent"",
+        ""version"": ""1.0"",
+        ""inputs"": [
+            {
+                ""name"": ""Reset"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""On_Off"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""next_step"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""previous_step"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""airspeed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pitch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""roll"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""heading"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""control_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""vertical_speed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""altitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""control_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""control_flaps"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""control_gear"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""speed_brakes"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""park_brake"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""n1_match_bug"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""e1_n1_percent"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""e2_n1_percent"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""slip"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""engine_fire_l"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""engine_fire_r"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""master_warning"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""master_caution"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""speed_mode"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""heading_mode"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""fuel_boost_l"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""fuel_boost_r"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""test_knob"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""autopilot_heading_set"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_ign_switch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_ign_switch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_gen_switch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_gen_switch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""transfer_knob"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""cabin_altitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""speech_input"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""pitot_heat"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""latitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""longitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""anti_coll_lights"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""heading_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""task_approval"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""task_acknowledged"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""task_cancelled"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""start_procedure"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""stop_procedure"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""emergency_inject"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""force_state_jump"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""countdown_complete"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""tts_is_speaking"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""speed_mode"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""heading_mode"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""autopilot_master"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""autopilot_heading_set"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""autopilot_state"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""altimeter_setting"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""request_takeoff_clearance"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""declare_mayday"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""declare_pan"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""request_vectors"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""current_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_procedure"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_object"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_value"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_autonomy_role"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_human_role"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""next_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""previous_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""countdown_current"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_next"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_max_current"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_max_next"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""alert"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""alert_clear"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""condition_violated"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""condition_restored"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""action_about_to_fire"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""checklist_item_complete"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""emergency_procedure_inject"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""interaction_message"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""end_signal"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""tts_request"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+37d285ac-00aa-11f1-bbdd-9d3344d32583;1770104650.613;TTS_Agent;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""TTS_Agent"",
+        ""class"": ""TTS_Agent"",
+        ""inputs"": [
+            {
+                ""name"": ""text_to_speak"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""is_speaking"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""current_text"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+37d285ad-00aa-11f1-bbdd-9d3344d32583;1770104650.613;Aircraft;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""flight_director"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""flight_director""
+        },
+        {
+            ""fromInput"": ""speed_mode"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""speed_mode""
+        },
+        {
+            ""fromInput"": ""heading_mode"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""heading_mode""
+        },
+        {
+            ""fromInput"": ""autopilot_master"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""autopilot_master""
+        },
+        {
+            ""fromInput"": ""autopilot_heading_set"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""autopilot_heading_set""
+        },
+        {
+            ""fromInput"": ""yaw_damper"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""yaw_damper""
+        },
+        {
+            ""fromInput"": ""baro_setting"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""altimeter_setting""
+        },
+        {
+            ""fromInput"": ""trim_rudder"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""trim_rudder""
+        },
+        {
+            ""fromInput"": ""alt_sel"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""alt_sel""
+        },
+        {
+            ""fromInput"": ""pax_safety"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""pax_safety""
+        },
+        {
+            ""fromInput"": ""r_gen_switch"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_gen_switch""
+        },
+        {
+            ""fromInput"": ""fuel_boost_l"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_fuel_boost""
+        },
+        {
+            ""fromInput"": ""l_throttle"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_throttle""
+        },
+        {
+            ""fromInput"": ""r_throttle"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_throttle""
+        },
+        {
+            ""fromInput"": ""l_ign_switch"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_ign_switch""
+        },
+        {
+            ""fromInput"": ""heading_mode"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""heading_mode_toggle""
+        },
+        {
+            ""fromInput"": ""fuel_boost_r"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_fuel_boost""
+        },
+        {
+            ""fromInput"": ""speed_mode"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""speed_mode_toggle""
+        },
+        {
+            ""fromInput"": ""l_gen_switch"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_gen_switch""
+        },
+        {
+            ""fromInput"": ""r_ign_switch"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_ign_switch""
+        },
+        {
+            ""fromInput"": ""throttle"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""throttle""
+        },
+        {
+            ""fromInput"": ""l_bottle_arm"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_bottle""
+        },
+        {
+            ""fromInput"": ""autopilot_master"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""autopilot""
+        },
+        {
+            ""fromInput"": ""flight_director"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""flight_director""
+        },
+        {
+            ""fromInput"": ""r_windshield_anti_ice"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_windshield_anti_ice""
+        },
+        {
+            ""fromInput"": ""brake"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""park_brake""
+        },
+        {
+            ""fromInput"": ""flaps"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""flaps""
+        },
+        {
+            ""fromInput"": ""elevator"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""elevator""
+        },
+        {
+            ""fromInput"": ""alt_sel"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""alt_sel""
+        },
+        {
+            ""fromInput"": ""rudder"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""rudder""
+        },
+        {
+            ""fromInput"": ""aileron"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""aileron""
+        },
+        {
+            ""fromInput"": ""heading_sel"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""heading_sel""
+        },
+        {
+            ""fromInput"": ""pitot_heat"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""pitot_heat""
+        },
+        {
+            ""fromInput"": ""anti_coll_lights"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""anti_coll_lights""
+        },
+        {
+            ""fromInput"": ""l_windshield_anti_ice"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_windshield_anti_ice""
+        },
+        {
+            ""fromInput"": ""test_knob"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""test_knob""
+        },
+        {
+            ""fromInput"": ""gear"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""landing_gear""
+        },
+        {
+            ""fromInput"": ""r_bottle_arm"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_bottle""
+        },
+        {
+            ""fromInput"": ""yaw_damper"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""yaw_damper""
+        },
+        {
+            ""fromInput"": ""trim_rudder"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""trim_rudder""
+        },
+        {
+            ""fromInput"": ""baro_setting"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""baro_setting""
+        },
+        {
+            ""fromInput"": ""pax_safety"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""pax_safety""
+        },
+        {
+            ""fromInput"": ""transfer_knob"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""transfer_knob""
+        },
+        {
+            ""fromInput"": ""l_engine_anti_ice"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_engine_anti_ice""
+        },
+        {
+            ""fromInput"": ""r_engine_anti_ice"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_engine_anti_ice""
+        },
+        {
+            ""fromInput"": ""exterior_lights"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""landing_lights""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+37d285ae-00aa-11f1-bbdd-9d3344d32583;1770104650.613;ATC_Agent;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""declare_mayday"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""declare_mayday""
+        },
+        {
+            ""fromInput"": ""declare_panpan"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""declare_pan""
+        },
+        {
+            ""fromInput"": ""request_vectors"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""request_vectors""
+        },
+        {
+            ""fromInput"": ""request_takeoff_clearance"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""request_takeoff_clearance""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+37d285af-00aa-11f1-bbdd-9d3344d32583;1770104650.613;Shared Interface;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""current_state"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""current_state""
+        },
+        {
+            ""fromInput"": ""next_state"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""next_state""
+        },
+        {
+            ""fromInput"": ""previous_state"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""previous_state""
+        },
+        {
+            ""fromInput"": ""countdown_current"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""countdown_current""
+        },
+        {
+            ""fromInput"": ""countdown_next"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""countdown_next""
+        },
+        {
+            ""fromInput"": ""countdown_max_current"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""countdown_max_current""
+        },
+        {
+            ""fromInput"": ""countdown_max_next"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""countdown_max_next""
+        },
+        {
+            ""fromInput"": ""alert"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""alert""
+        },
+        {
+            ""fromInput"": ""alert_clear"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""alert_clear""
+        },
+        {
+            ""fromInput"": ""alert_clear"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""condition_violated""
+        },
+        {
+            ""fromInput"": ""condition_restored"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""condition_restored""
+        },
+        {
+            ""fromInput"": ""condition_violated"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""condition_violated""
+        },
+        {
+            ""fromInput"": ""action_about_to_fire"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""action_about_to_fire""
+        },
+        {
+            ""fromInput"": ""checklist_item_complete"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""checklist_item_complete""
+        },
+        {
+            ""fromInput"": ""emergency_procedure_inject"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""emergency_procedure_inject""
+        },
+        {
+            ""fromInput"": ""interaction_message"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""interaction_message""
+        },
+        {
+            ""fromInput"": ""tts_speaking"",
+            ""toAgent"": ""TTS_Agent"",
+            ""toOutput"": ""is_speaking""
+        },
+        {
+            ""fromInput"": ""tts_text"",
+            ""toAgent"": ""TTS_Agent"",
+            ""toOutput"": ""current_text""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+37d285b0-00aa-11f1-bbdd-9d3344d32583;1770104650.613;Proxy;MAPPING;8;;"{
+    ""mappings"": [
+
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+37d285b1-00aa-11f1-bbdd-9d3344d32583;1770104650.613;TARS Agent;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""airspeed"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""airspeed""
+        },
+        {
+            ""fromInput"": ""pitch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""pitch""
+        },
+        {
+            ""fromInput"": ""roll"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""roll""
+        },
+        {
+            ""fromInput"": ""heading"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""heading""
+        },
+        {
+            ""fromInput"": ""altitude"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""altitude""
+        },
+        {
+            ""fromInput"": ""l_throttle"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_throttle""
+        },
+        {
+            ""fromInput"": ""r_throttle"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_throttle""
+        },
+        {
+            ""fromInput"": ""n1_match_bug"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""n1_match_bug""
+        },
+        {
+            ""fromInput"": ""slip"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""slip""
+        },
+        {
+            ""fromInput"": ""pax_safety"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""pax_safety""
+        },
+        {
+            ""fromInput"": ""master_warning"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""master_warning""
+        },
+        {
+            ""fromInput"": ""master_caution"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""master_caution""
+        },
+        {
+            ""fromInput"": ""flight_director"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""flight_director""
+        },
+        {
+            ""fromInput"": ""speed_mode"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""speed_mode""
+        },
+        {
+            ""fromInput"": ""heading_mode"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""heading_mode""
+        },
+        {
+            ""fromInput"": ""fuel_boost_r"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""fuel_boost_r""
+        },
+        {
+            ""fromInput"": ""test_knob"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""test_knob""
+        },
+        {
+            ""fromInput"": ""autopilot_heading_set"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""autopilot_heading_set""
+        },
+        {
+            ""fromInput"": ""yaw_damper"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""yaw_damper""
+        },
+        {
+            ""fromInput"": ""l_ign_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_ign_switch""
+        },
+        {
+            ""fromInput"": ""r_ign_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_ign_switch""
+        },
+        {
+            ""fromInput"": ""l_gen_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_gen_switch""
+        },
+        {
+            ""fromInput"": ""r_gen_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_gen_switch""
+        },
+        {
+            ""fromInput"": ""transfer_knob"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""transfer_knob""
+        },
+        {
+            ""fromInput"": ""e1_n1_percent"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""e1_n1_percent""
+        },
+        {
+            ""fromInput"": ""e2_n1_percent"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""e2_n1_percent""
+        },
+        {
+            ""fromInput"": ""engine_fire_l"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""engine_fire_l""
+        },
+        {
+            ""fromInput"": ""engine_fire_r"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""engine_fire_r""
+        },
+        {
+            ""fromInput"": ""cabin_altitude"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""cabin_altitude""
+        },
+        {
+            ""fromInput"": ""park_brake"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""parkBrake""
+        },
+        {
+            ""fromInput"": ""speed_brakes"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""speedBrakes""
+        },
+        {
+            ""fromInput"": ""control_gear"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlGear""
+        },
+        {
+            ""fromInput"": ""control_flaps"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlFlaps""
+        },
+        {
+            ""fromInput"": ""control_throttle"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlThrottle""
+        },
+        {
+            ""fromInput"": ""vertical_speed"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""verticalSpeed""
+        },
+        {
+            ""fromInput"": ""trim_rudder"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""trim_rudder""
+        },
+        {
+            ""fromInput"": ""l_gen_load"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_gen_load""
+        },
+        {
+            ""fromInput"": ""r_gen_load"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_gen_load""
+        },
+        {
+            ""fromInput"": ""l_bottle_arm"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_bottle_arm""
+        },
+        {
+            ""fromInput"": ""r_bottle_arm"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_bottle_arm""
+        },
+        {
+            ""fromInput"": ""pitot_heat"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""pitot_heat""
+        },
+        {
+            ""fromInput"": ""control_rudder"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlYaw""
+        },
+        {
+            ""fromInput"": ""latitude"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""latitude""
+        },
+        {
+            ""fromInput"": ""longitude"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""longitude""
+        },
+        {
+            ""fromInput"": ""fuel_boost_l"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""fuel_boost_l""
+        },
+        {
+            ""fromInput"": ""anti_coll_lights"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""anti_coll_lights""
+        },
+        {
+            ""fromInput"": ""alt_sel"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""alt_sel""
+        },
+        {
+            ""fromInput"": ""heading_sel"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""heading_sel""
+        },
+        {
+            ""fromInput"": ""task_approval"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""task_approval""
+        },
+        {
+            ""fromInput"": ""task_acknowledged"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""task_acknowledged""
+        },
+        {
+            ""fromInput"": ""task_cancelled"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""task_cancelled""
+        },
+        {
+            ""fromInput"": ""start_procedure"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""start_procedure""
+        },
+        {
+            ""fromInput"": ""stop_procedure"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""stop_procedure""
+        },
+        {
+            ""fromInput"": ""emergency_inject"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""emergency_inject""
+        },
+        {
+            ""fromInput"": ""countdown_complete"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""countdown_complete""
+        },
+        {
+            ""fromInput"": ""force_state_jump"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""force_state_jump""
+        },
+        {
+            ""fromInput"": ""next_step"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""task_override""
+        },
+        {
+            ""fromInput"": ""next_step"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""next_step""
+        },
+        {
+            ""fromInput"": ""previous_step"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""previous_step""
+        },
+        {
+            ""fromInput"": ""task_cancelled"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""task_cancel""
+        },
+        {
+            ""fromInput"": ""task_acknowledged"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""task_check""
+        },
+        {
+            ""fromInput"": ""task_approval"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""task_approve""
+        },
+        {
+            ""fromInput"": ""On_Off"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""start""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+37d285b2-00aa-11f1-bbdd-9d3344d32583;1770104650.613;TTS_Agent;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""text_to_speak"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""tts_request""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+37d285b3-00aa-11f1-bbdd-9d3344d32583;1770104650.613;SNAPSHOT;SNAPSHOT_END;0;;
+38a1bc80-00aa-11f1-bbdd-9d3344d32583;1770104651.977;Aircraft;airspeed;2;;1.800000
+3af103b0-00aa-11f1-bbdd-9d3344d32583;1770104655.851;Aircraft;airspeed;2;;1.700000
+42061050-00aa-11f1-bbdd-9d3344d32583;1770104667.733;Cognitive_Model;ENTERED;15;;82933FC208D49A8F2BAF26834015FEF6
+420fad40-00aa-11f1-bbdd-9d3344d32583;1770104667.796;Cognitive_Model;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""Cognitive_Model"",
+        ""family"": ""582E79F9B5B44C8EADBDEE6E613CC5AC"",
+        ""description"": ""QN-ACTR model of the Single Pilot"",
+        ""version"": ""1.0"",
+        ""inputs"": [
+            {
+                ""name"": ""cabin_alt"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""r_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_fuel_boost"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""runway_centerline_deviation"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""TARS_is_speaking"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""e1_n1"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""radio_frequency"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""elevator"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""heading_deviation"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""l_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""aileron"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pitch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""ATC_speech"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""test_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""heading_mode"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""e2_n1"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""parking_brake"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""spoilers"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""master_warning"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""master_caution"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""baro_setting"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""current_task_human_role"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""reset"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""transfer_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""l_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""altitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""chrono_time"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""r_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""n1_match_bug"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""roll"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_windsh_ai"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""birds"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""next_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""l_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flaps"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_engine_fire"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""lateral_deviation"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""l_ign_switch"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_eng_ai"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_eng_ai"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""heading_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""interaction_message"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_object"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""r_engine_fire"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""pitot_heat"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""anti_coll_lights"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""previous_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""heading"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_windsh_ai"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""vertical_speed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""airspeed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""landing_gear"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""landing_lights"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flc_mode"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""slip"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_fuel_boost"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""TARS_speech"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_procedure"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_autonomy_role"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_value"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""r_ign_switch"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""vocal_command"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""speech_output"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""l_bottle"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""autopilot"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""l_fuel_boost"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""r_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""push_to_talk"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""task_cancel"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""park_brake"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""l_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flaps"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""elevator"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""l_ign_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""task_check"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""aileron"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""task_approve"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""heading_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""pitot_heat"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""anti_coll_lights"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""test_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""start"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""landing_gear"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_eng_fire_switch"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""l_eng_fire_switch"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""production_selected"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""r_bottle"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""landing_lights"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""baro_setting"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""master_warning"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""master_caution"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""heading_mode_toggle"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""r_fuel_boost"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""transfer_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""speed_mode_toggle"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""l_engine_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_ign_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""l_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""r_engine_anti_ice"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+420ffb60-00aa-11f1-bbdd-9d3344d32583;1770104667.798;Cognitive_Model;MAPPING;8;;"{
+    ""mappings"": [
+
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+429e7fc0-00aa-11f1-bbdd-9d3344d32583;1770104668.732;Cognitive_Model;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""ATC_speech"",
+            ""toAgent"": ""ATC_Agent"",
+            ""toOutput"": ""speech_output""
+        },
+        {
+            ""fromInput"": ""TARS_speech"",
+            ""toAgent"": ""TTS_Agent"",
+            ""toOutput"": ""current_text""
+        },
+        {
+            ""fromInput"": ""current_task_human_role"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""current_task_human_role""
+        },
+        {
+            ""fromInput"": ""current_task_autonomy_role"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""current_task_autonomy_role""
+        },
+        {
+            ""fromInput"": ""current_task_value"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""current_task_value""
+        },
+        {
+            ""fromInput"": ""current_task_object"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""current_task_object""
+        },
+        {
+            ""fromInput"": ""current_procedure"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""current_procedure""
+        },
+        {
+            ""fromInput"": ""previous_state"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""previous_state""
+        },
+        {
+            ""fromInput"": ""interaction_message"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""interaction_message""
+        },
+        {
+            ""fromInput"": ""next_state"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""next_state""
+        },
+        {
+            ""fromInput"": ""airspeed"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""airspeed""
+        },
+        {
+            ""fromInput"": ""pitch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""pitch""
+        },
+        {
+            ""fromInput"": ""elevator"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlPitch""
+        },
+        {
+            ""fromInput"": ""roll"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""roll""
+        },
+        {
+            ""fromInput"": ""aileron"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlRoll""
+        },
+        {
+            ""fromInput"": ""heading"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""heading""
+        },
+        {
+            ""fromInput"": ""rudder"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlYaw""
+        },
+        {
+            ""fromInput"": ""vertical_speed"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""verticalSpeed""
+        },
+        {
+            ""fromInput"": ""altitude"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""altitude""
+        },
+        {
+            ""fromInput"": ""flaps"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlFlaps""
+        },
+        {
+            ""fromInput"": ""landing_gear"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlGear""
+        },
+        {
+            ""fromInput"": ""spoilers"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""speedBrakes""
+        },
+        {
+            ""fromInput"": ""parking_brake"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""parkBrake""
+        },
+        {
+            ""fromInput"": ""l_throttle"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_throttle""
+        },
+        {
+            ""fromInput"": ""r_throttle"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_throttle""
+        },
+        {
+            ""fromInput"": ""n1_match_bug"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""n1_match_bug""
+        },
+        {
+            ""fromInput"": ""slip"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""slip""
+        },
+        {
+            ""fromInput"": ""pax_safety"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""pax_safety""
+        },
+        {
+            ""fromInput"": ""flight_director"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""flight_director""
+        },
+        {
+            ""fromInput"": ""master_warning"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""master_warning""
+        },
+        {
+            ""fromInput"": ""master_caution"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""master_caution""
+        },
+        {
+            ""fromInput"": ""flc_mode"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""speed_mode""
+        },
+        {
+            ""fromInput"": ""heading_mode"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""heading_mode""
+        },
+        {
+            ""fromInput"": ""l_fuel_boost"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""fuel_boost_l""
+        },
+        {
+            ""fromInput"": ""r_fuel_boost"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""fuel_boost_r""
+        },
+        {
+            ""fromInput"": ""test_knob"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""test_knob""
+        },
+        {
+            ""fromInput"": ""heading_sel"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""autopilot_heading_set""
+        },
+        {
+            ""fromInput"": ""yaw_damper"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""yaw_damper""
+        },
+        {
+            ""fromInput"": ""l_ign_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_ign_switch""
+        },
+        {
+            ""fromInput"": ""r_ign_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_ign_switch""
+        },
+        {
+            ""fromInput"": ""l_gen_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_gen_switch""
+        },
+        {
+            ""fromInput"": ""r_gen_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_gen_switch""
+        },
+        {
+            ""fromInput"": ""transfer_knob"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""transfer_knob""
+        },
+        {
+            ""fromInput"": ""e1_n1"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""e1_n1_percent""
+        },
+        {
+            ""fromInput"": ""e2_n1"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""e2_n1_percent""
+        },
+        {
+            ""fromInput"": ""l_engine_fire"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""engine_fire_l""
+        },
+        {
+            ""fromInput"": ""r_engine_fire"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""engine_fire_r""
+        },
+        {
+            ""fromInput"": ""l_gen_load"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_gen_load""
+        },
+        {
+            ""fromInput"": ""cabin_alt"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""cabin_altitude""
+        },
+        {
+            ""fromInput"": ""r_gen_load"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_gen_load""
+        },
+        {
+            ""fromInput"": ""pitot_heat"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""pitot_heat""
+        },
+        {
+            ""fromInput"": ""trim_rudder"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""trim_rudder""
+        },
+        {
+            ""fromInput"": ""l_bottle_arm"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_bottle_arm""
+        },
+        {
+            ""fromInput"": ""r_bottle_arm"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_bottle_arm""
+        },
+        {
+            ""fromInput"": ""anti_coll_lights"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""anti_coll_lights""
+        },
+        {
+            ""fromInput"": ""alt_sel"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""alt_sel""
+        },
+        {
+            ""fromInput"": ""heading_sel"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""heading_sel""
+        },
+        {
+            ""fromInput"": ""baro_setting"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""baro_setting""
+        },
+        {
+            ""fromInput"": ""l_eng_ai"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_engine_anti_ice""
+        },
+        {
+            ""fromInput"": ""r_eng_ai"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_engine_anti_ice""
+        },
+        {
+            ""fromInput"": ""l_windsh_ai"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_windshield_anti_ice""
+        },
+        {
+            ""fromInput"": ""r_windsh_ai"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_windshield_anti_ice""
+        },
+        {
+            ""fromInput"": ""landing_lights"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""exterior_lights""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+43713910-00aa-11f1-bbdd-9d3344d32583;1770104670.113;Cognitive_Model;start;4;;true
+4378da30-00aa-11f1-bbdd-9d3344d32583;1770104670.164;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+43799d80-00aa-11f1-bbdd-9d3344d32583;1770104670.168;ATC_Agent;speech_output;3;;C-POLY, Montreal-Tower, wind-0-9-0-at-4, cleared-for-takeoff runway-zero-six-left. Climb-to-5000ft.
+43799d81-00aa-11f1-bbdd-9d3344d32583;1770104670.169;TARS Agent;request_takeoff_clearance;5;;
+43799d82-00aa-11f1-bbdd-9d3344d32583;1770104670.169;ATC_Agent;is_speaking;4;;true
+43799d83-00aa-11f1-bbdd-9d3344d32583;1770104670.169;TARS Agent;current_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""Takeoff clearance"", ""value"": ""CONFIRM"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ATC clearance status, checklist completion status."", ""interaction"": """", ""delay_before_action"": 0.0, ""delay_after_action"": 0.0, ""callout"": ""Cessna Charlie Papa Oscar Lima Yankee cleared for takeoff, will maintain runway heading, climb to 5000ft proceed direct AGMEB then OMEKI"", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+43799d84-00aa-11f1-bbdd-9d3344d32583;1770104670.169;TARS Agent;current_procedure;3;;BEFORE TAKEOFF
+43799d85-00aa-11f1-bbdd-9d3344d32583;1770104670.169;TARS Agent;interaction_message;3;;
+43799d86-00aa-11f1-bbdd-9d3344d32583;1770104670.169;TARS Agent;current_task_object;3;;Takeoff clearance
+4379c490-00aa-11f1-bbdd-9d3344d32583;1770104670.169;TARS Agent;current_task_value;3;;CONFIRM
+437b7240-00aa-11f1-bbdd-9d3344d32583;1770104670.181;Shared Interface;countdown_complete;5;;
+437b7241-00aa-11f1-bbdd-9d3344d32583;1770104670.181;TARS Agent;current_task_autonomy_role;3;;
+437b9950-00aa-11f1-bbdd-9d3344d32583;1770104670.181;Shared Interface;countdown_complete;5;;
+437b9951-00aa-11f1-bbdd-9d3344d32583;1770104670.181;TARS Agent;current_task_human_role;3;;performer
+437b9952-00aa-11f1-bbdd-9d3344d32583;1770104670.181;TARS Agent;next_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""Pitot-Static Switch"", ""value"": ""PITOT-STATIC"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Pitot-static switch status"", ""interaction"": ""pitot_static_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": 0.0, ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+437b9953-00aa-11f1-bbdd-9d3344d32583;1770104670.181;TARS Agent;countdown_next;1;;false
+437b9954-00aa-11f1-bbdd-9d3344d32583;1770104670.181;TARS Agent;countdown_max_next;1;;false
+437b9955-00aa-11f1-bbdd-9d3344d32583;1770104670.181;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""Takeoff clearance"", ""value"": ""CONFIRM"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ATC clearance status, checklist completion status."", ""interaction"": """", ""delay_before_action"": 0.0, ""delay_after_action"": 0.0, ""callout"": ""Cessna Charlie Papa Oscar Lima Yankee cleared for takeoff, will maintain runway heading, climb to 5000ft proceed direct AGMEB then OMEKI"", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+43807b50-00aa-11f1-bbdd-9d3344d32583;1770104670.213;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+438fe4a0-00aa-11f1-bbdd-9d3344d32583;1770104670.314;Cognitive_Model;production_selected;3;;encode-aoi-information
+43b08c00-00aa-11f1-bbdd-9d3344d32583;1770104670.528;Cognitive_Model;production_selected;3;;detected-sound
+43c76f60-00aa-11f1-bbdd-9d3344d32583;1770104670.679;Cognitive_Model;production_selected;3;;encode-sound
+43e69020-00aa-11f1-bbdd-9d3344d32583;1770104670.883;Cognitive_Model;production_selected;3;;retrieve-self-callsign
+440c8eb0-00aa-11f1-bbdd-9d3344d32583;1770104671.132;Cognitive_Model;production_selected;3;;is-our-callsign
+44a59a60-00aa-11f1-bbdd-9d3344d32583;1770104672.135;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+44ad6290-00aa-11f1-bbdd-9d3344d32583;1770104672.185;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+44b503b0-00aa-11f1-bbdd-9d3344d32583;1770104672.235;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+44c41ee0-00aa-11f1-bbdd-9d3344d32583;1770104672.335;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+44cbc000-00aa-11f1-bbdd-9d3344d32583;1770104672.385;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+44d38830-00aa-11f1-bbdd-9d3344d32583;1770104672.435;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+44db2950-00aa-11f1-bbdd-9d3344d32583;1770104672.485;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+44e2a360-00aa-11f1-bbdd-9d3344d32583;1770104672.534;Cognitive_Model;production_selected;3;;t-i-allocation-to-takeoff-clearance-readback-by-pilot
+4508f010-00aa-11f1-bbdd-9d3344d32583;1770104672.785;Cognitive_Model;production_selected;3;;detected-sound
+45740df0-00aa-11f1-bbdd-9d3344d32583;1770104673.487;Cognitive_Model;production_selected;3;;encode-sound
+462e3630-00aa-11f1-bbdd-9d3344d32583;1770104674.707;Aircraft;airspeed;2;;1.600000
+468eccc0-00aa-11f1-bbdd-9d3344d32583;1770104675.340;Cognitive_Model;production_selected;3;;detected-sound
+470905d0-00aa-11f1-bbdd-9d3344d32583;1770104676.141;Cognitive_Model;production_selected;3;;encode-sound
+483acf10-00aa-11f1-bbdd-9d3344d32583;1770104678.146;Cognitive_Model;production_selected;3;;detected-sound
+48a5c5e0-00aa-11f1-bbdd-9d3344d32583;1770104678.846;Cognitive_Model;production_selected;3;;encode-sound
+499a8620-00aa-11f1-bbdd-9d3344d32583;1770104680.451;Cognitive_Model;production_selected;3;;detected-sound
+4a3391d0-00aa-11f1-bbdd-9d3344d32583;1770104681.453;Cognitive_Model;production_selected;3;;encode-sound
+4b376d40-00aa-11f1-bbdd-9d3344d32583;1770104683.157;Cognitive_Model;production_selected;3;;detected-sound
+4b6226c0-00aa-11f1-bbdd-9d3344d32583;1770104683.436;Aircraft;airspeed;2;;1.700000
+4b9321d0-00aa-11f1-bbdd-9d3344d32583;1770104683.758;Cognitive_Model;production_selected;3;;encode-sound
+4c3a3740-00aa-11f1-bbdd-9d3344d32583;1770104684.852;Aircraft;airspeed;2;;1.600000
+4c76a400-00aa-11f1-bbdd-9d3344d32583;1770104685.249;ATC_Agent;is_speaking;4;;false
+4f865500-00aa-11f1-bbdd-9d3344d32583;1770104690.385;Aircraft;airspeed;2;;1.700000
+52ce2d00-00aa-11f1-bbdd-9d3344d32583;1770104695.889;Aircraft;airspeed;2;;1.600000
+553a23f0-00aa-11f1-bbdd-9d3344d32583;1770104699.952;Cognitive_Model;EXITED;15;;82933FC208D49A8F2BAF26834015FEF6
+5708c970-00aa-11f1-bbdd-9d3344d32583;1770104702.984;Aircraft;airspeed;2;;1.700000
+59833f50-00aa-11f1-bbdd-9d3344d32583;1770104707.141;Aircraft;airspeed;2;;1.600000
+6106ec40-00aa-11f1-bbdd-9d3344d32583;1770104719.748;Aircraft;airspeed;2;;1.700000
+6a3e8ac0-00aa-11f1-bbdd-9d3344d32583;1770104735.213;Aircraft;airspeed;2;;1.600000
+6d2d6d50-00aa-11f1-bbdd-9d3344d32583;1770104740.134;Aircraft;airspeed;2;;1.700000
+6d746160-00aa-11f1-bbdd-9d3344d32583;1770104740.598;Aircraft;airspeed;2;;1.600000
+727bc3b0-00aa-11f1-bbdd-9d3344d32583;1770104749.035;Aircraft;airspeed;2;;1.700000
+7440f350-00aa-11f1-bbdd-9d3344d32583;1770104752.005;Aircraft;airspeed;2;;1.800000
+7b45ac40-00aa-11f1-bbdd-9d3344d32583;1770104763.781;Aircraft;airspeed;2;;1.700000
+7c447ea0-00aa-11f1-bbdd-9d3344d32583;1770104765.450;Aircraft;airspeed;2;;1.600000
+7f5e68d0-00aa-11f1-bbdd-9d3344d32583;1770104770.653;Aircraft;airspeed;2;;1.500000
+842f78e0-00aa-11f1-bbdd-9d3344d32583;1770104778.734;Aircraft;airspeed;2;;1.600000
+8dc9d0d0-00aa-11f1-bbdd-9d3344d32583;1770104794.846;Aircraft;airspeed;2;;1.500000
+90b72cc0-00aa-11f1-bbdd-9d3344d32583;1770104799.756;Ingescape Circle;service;14;;Recorder|stop_recording
+a7f77270-00ad-11f1-bbdd-9d3344d32583;1770106127.248;SNAPSHOT;SNAPSHOT_BEGIN;0;;
+a7f77271-00ad-11f1-bbdd-9d3344d32583;1770106127.248;Shared Interface;ENTERED;15;;1DE17AB900DED443B9287850ABAE82AB
+a7f77272-00ad-11f1-bbdd-9d3344d32583;1770106127.248;TARS Agent;ENTERED;15;;9BB795DCE6040B409582B3E25F080838
+a7f77273-00ad-11f1-bbdd-9d3344d32583;1770106127.248;TTS_Agent;ENTERED;15;;A8F93C409150B744AC5D182936CE0D23
+a7f77274-00ad-11f1-bbdd-9d3344d32583;1770106127.248;Proxy;ENTERED;15;;ECC44B5B1FC9575E174170C28BBE952C
+a7f77275-00ad-11f1-bbdd-9d3344d32583;1770106127.248;ATC_Agent;ENTERED;15;;60E60B901F32D544B947FA2BA7E2682A
+a7f77276-00ad-11f1-bbdd-9d3344d32583;1770106127.248;Aircraft;ENTERED;15;;970DB7505468AB40820E28B9346F8010
+a7f77277-00ad-11f1-bbdd-9d3344d32583;1770106127.248;Aircraft;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""Aircraft"",
+        ""class"": ""Aircraft"",
+        ""version"": ""1.0"",
+        ""inputs"": [
+            {
+                ""name"": ""reset"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""elevator"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""aileron"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flaps"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""gear"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""brake"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""l_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""speed_mode"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""heading_mode"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""heading_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""autopilot_master"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""fuel_boost_l"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""fuel_boost_r"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""test_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""autopilot_heading_set"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_ign_switch"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_ign_switch"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""r_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""transfer_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""bird_strike"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""baro_setting"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pitot_heat"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_engine_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_engine_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""exterior_lights"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""anti_coll_lights"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""yoke_hide"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""airspeed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pitch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlPitch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""roll"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlRoll"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""heading"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlYaw"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""verticalSpeed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""altitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""latitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""longitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlThrottle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlFlaps"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""controlGear"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""speedBrakes"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""outsideEvent"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""parkBrake"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""n1_match_bug"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""e1_n1_percent"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""e2_n1_percent"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""slip"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""engine_fire_l"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""engine_fire_r"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""master_warning"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""master_caution"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""speed_mode"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""heading_mode"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""fuel_boost_l"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""fuel_boost_r"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""test_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""autopilot_heading_set"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_ign_switch"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_ign_switch"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""r_gen_switch"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""transfer_knob"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""baro_setting"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""cabin_altitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pitot_heat"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_engine_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_engine_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""l_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_windshield_anti_ice"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""exterior_lights"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""anti_coll_lights"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""heading_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""l_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""ptt"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""yoke_hide"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+a7f77278-00ad-11f1-bbdd-9d3344d32583;1770106127.248;ATC_Agent;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""ATC_Agent"",
+        ""class"": ""ATC_Agent"",
+        ""version"": ""1.0"",
+        ""inputs"": [
+            {
+                ""name"": ""Reset"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""request_ATIS"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""request_takeoff_clearance"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""declare_mayday"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""declare_panpan"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""request_vectors"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""custom_speech"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""speech_output"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""is_speaking"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+a7f77279-00ad-11f1-bbdd-9d3344d32583;1770106127.248;Shared Interface;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""Shared Interface"",
+        ""class"": ""Shared Interface"",
+        ""version"": ""1.0"",
+        ""inputs"": [
+            {
+                ""name"": ""current_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""next_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""previous_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""countdown_current"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_next"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_max_current"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_max_next"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""alert"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""alert_clear"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""condition_violated"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""condition_restored"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""tts_speaking"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""tts_text"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""action_about_to_fire"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""checklist_item_complete"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""emergency_procedure_inject"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""interaction_message"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""task_approval"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""task_acknowledged"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""task_cancelled"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""task_override"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""start_procedure"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""stop_procedure"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""emergency_inject"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""force_state_jump"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""countdown_complete"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""next_step"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""previous_step"",
+                ""type"": ""IMPULSION""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+a7f7727a-00ad-11f1-bbdd-9d3344d32583;1770106127.248;Proxy;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""Proxy"",
+        ""class"": ""Proxy"",
+        ""package"": ""ingescape::network"",
+        ""family"": ""CA2FFA9FAABE4781A21E590FABEABC67"",
+        ""version"": ""dynamic"",
+        ""inputs"": [
+
+        ],
+        ""outputs"": [
+
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+a7f7727b-00ad-11f1-bbdd-9d3344d32583;1770106127.248;TARS Agent;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""TARS Agent"",
+        ""class"": ""TARS Agent"",
+        ""version"": ""1.0"",
+        ""inputs"": [
+            {
+                ""name"": ""Reset"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""On_Off"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""next_step"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""previous_step"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""airspeed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""pitch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""roll"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""heading"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""control_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""vertical_speed"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""altitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""control_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""control_flaps"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""control_gear"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""speed_brakes"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""park_brake"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_throttle"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""n1_match_bug"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""e1_n1_percent"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""e2_n1_percent"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""slip"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""engine_fire_l"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""engine_fire_r"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""master_warning"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""master_caution"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""speed_mode"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""heading_mode"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""fuel_boost_l"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""fuel_boost_r"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""test_knob"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""autopilot_heading_set"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_ign_switch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_ign_switch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_gen_switch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_gen_switch"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""transfer_knob"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""cabin_altitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""r_gen_load"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""l_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""r_bottle_arm"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""speech_input"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""pitot_heat"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""latitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""longitude"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""anti_coll_lights"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""heading_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""task_approval"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""task_acknowledged"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""task_cancelled"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""start_procedure"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""stop_procedure"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""emergency_inject"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""force_state_jump"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""countdown_complete"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""tts_is_speaking"",
+                ""type"": ""BOOL""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""pax_safety"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""flight_director"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""speed_mode"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""heading_mode"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""autopilot_master"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""autopilot_heading_set"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""autopilot_state"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""yaw_damper"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""altimeter_setting"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""trim_rudder"",
+                ""type"": ""DOUBLE""
+            },
+            {
+                ""name"": ""request_takeoff_clearance"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""declare_mayday"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""declare_pan"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""request_vectors"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""current_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_procedure"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_object"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_value"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_autonomy_role"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""current_task_human_role"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""next_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""previous_state"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""countdown_current"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_next"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_max_current"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""countdown_max_next"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""alert"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""alert_clear"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""condition_violated"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""condition_restored"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""action_about_to_fire"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""checklist_item_complete"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""emergency_procedure_inject"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""interaction_message"",
+                ""type"": ""STRING""
+            },
+            {
+                ""name"": ""alt_sel"",
+                ""type"": ""INTEGER""
+            },
+            {
+                ""name"": ""end_signal"",
+                ""type"": ""IMPULSION""
+            },
+            {
+                ""name"": ""tts_request"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+a7f7727c-00ad-11f1-bbdd-9d3344d32583;1770106127.248;TTS_Agent;DEFINITION;17;;"{
+    ""definition"": {
+        ""name"": ""TTS_Agent"",
+        ""class"": ""TTS_Agent"",
+        ""inputs"": [
+            {
+                ""name"": ""text_to_speak"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""outputs"": [
+            {
+                ""name"": ""is_speaking"",
+                ""type"": ""BOOL""
+            },
+            {
+                ""name"": ""current_text"",
+                ""type"": ""STRING""
+            }
+        ],
+        ""attributes"": [
+
+        ],
+        ""services"": [
+
+        ]
+    }
+}
+"
+a7f7727d-00ad-11f1-bbdd-9d3344d32583;1770106127.248;Aircraft;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""flight_director"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""flight_director""
+        },
+        {
+            ""fromInput"": ""speed_mode"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""speed_mode""
+        },
+        {
+            ""fromInput"": ""heading_mode"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""heading_mode""
+        },
+        {
+            ""fromInput"": ""autopilot_master"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""autopilot_master""
+        },
+        {
+            ""fromInput"": ""autopilot_heading_set"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""autopilot_heading_set""
+        },
+        {
+            ""fromInput"": ""yaw_damper"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""yaw_damper""
+        },
+        {
+            ""fromInput"": ""baro_setting"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""altimeter_setting""
+        },
+        {
+            ""fromInput"": ""trim_rudder"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""trim_rudder""
+        },
+        {
+            ""fromInput"": ""alt_sel"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""alt_sel""
+        },
+        {
+            ""fromInput"": ""pax_safety"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""pax_safety""
+        },
+        {
+            ""fromInput"": ""r_gen_switch"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_gen_switch""
+        },
+        {
+            ""fromInput"": ""fuel_boost_l"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_fuel_boost""
+        },
+        {
+            ""fromInput"": ""l_throttle"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_throttle""
+        },
+        {
+            ""fromInput"": ""r_throttle"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_throttle""
+        },
+        {
+            ""fromInput"": ""l_ign_switch"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_ign_switch""
+        },
+        {
+            ""fromInput"": ""heading_mode"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""heading_mode_toggle""
+        },
+        {
+            ""fromInput"": ""fuel_boost_r"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_fuel_boost""
+        },
+        {
+            ""fromInput"": ""speed_mode"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""speed_mode_toggle""
+        },
+        {
+            ""fromInput"": ""l_gen_switch"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_gen_switch""
+        },
+        {
+            ""fromInput"": ""r_ign_switch"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_ign_switch""
+        },
+        {
+            ""fromInput"": ""throttle"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""throttle""
+        },
+        {
+            ""fromInput"": ""l_bottle_arm"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_bottle""
+        },
+        {
+            ""fromInput"": ""autopilot_master"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""autopilot""
+        },
+        {
+            ""fromInput"": ""flight_director"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""flight_director""
+        },
+        {
+            ""fromInput"": ""r_windshield_anti_ice"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_windshield_anti_ice""
+        },
+        {
+            ""fromInput"": ""brake"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""park_brake""
+        },
+        {
+            ""fromInput"": ""flaps"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""flaps""
+        },
+        {
+            ""fromInput"": ""elevator"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""elevator""
+        },
+        {
+            ""fromInput"": ""alt_sel"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""alt_sel""
+        },
+        {
+            ""fromInput"": ""rudder"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""rudder""
+        },
+        {
+            ""fromInput"": ""aileron"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""aileron""
+        },
+        {
+            ""fromInput"": ""heading_sel"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""heading_sel""
+        },
+        {
+            ""fromInput"": ""pitot_heat"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""pitot_heat""
+        },
+        {
+            ""fromInput"": ""anti_coll_lights"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""anti_coll_lights""
+        },
+        {
+            ""fromInput"": ""l_windshield_anti_ice"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_windshield_anti_ice""
+        },
+        {
+            ""fromInput"": ""test_knob"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""test_knob""
+        },
+        {
+            ""fromInput"": ""gear"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""landing_gear""
+        },
+        {
+            ""fromInput"": ""r_bottle_arm"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_bottle""
+        },
+        {
+            ""fromInput"": ""yaw_damper"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""yaw_damper""
+        },
+        {
+            ""fromInput"": ""trim_rudder"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""trim_rudder""
+        },
+        {
+            ""fromInput"": ""baro_setting"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""baro_setting""
+        },
+        {
+            ""fromInput"": ""pax_safety"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""pax_safety""
+        },
+        {
+            ""fromInput"": ""transfer_knob"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""transfer_knob""
+        },
+        {
+            ""fromInput"": ""l_engine_anti_ice"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""l_engine_anti_ice""
+        },
+        {
+            ""fromInput"": ""r_engine_anti_ice"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""r_engine_anti_ice""
+        },
+        {
+            ""fromInput"": ""exterior_lights"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""landing_lights""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+a7f7727e-00ad-11f1-bbdd-9d3344d32583;1770106127.248;ATC_Agent;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""declare_mayday"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""declare_mayday""
+        },
+        {
+            ""fromInput"": ""declare_panpan"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""declare_pan""
+        },
+        {
+            ""fromInput"": ""request_vectors"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""request_vectors""
+        },
+        {
+            ""fromInput"": ""request_takeoff_clearance"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""request_takeoff_clearance""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+a7f7727f-00ad-11f1-bbdd-9d3344d32583;1770106127.248;Shared Interface;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""current_state"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""current_state""
+        },
+        {
+            ""fromInput"": ""next_state"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""next_state""
+        },
+        {
+            ""fromInput"": ""previous_state"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""previous_state""
+        },
+        {
+            ""fromInput"": ""countdown_current"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""countdown_current""
+        },
+        {
+            ""fromInput"": ""countdown_next"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""countdown_next""
+        },
+        {
+            ""fromInput"": ""countdown_max_current"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""countdown_max_current""
+        },
+        {
+            ""fromInput"": ""countdown_max_next"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""countdown_max_next""
+        },
+        {
+            ""fromInput"": ""alert"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""alert""
+        },
+        {
+            ""fromInput"": ""alert_clear"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""alert_clear""
+        },
+        {
+            ""fromInput"": ""alert_clear"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""condition_violated""
+        },
+        {
+            ""fromInput"": ""condition_restored"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""condition_restored""
+        },
+        {
+            ""fromInput"": ""condition_violated"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""condition_violated""
+        },
+        {
+            ""fromInput"": ""action_about_to_fire"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""action_about_to_fire""
+        },
+        {
+            ""fromInput"": ""checklist_item_complete"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""checklist_item_complete""
+        },
+        {
+            ""fromInput"": ""emergency_procedure_inject"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""emergency_procedure_inject""
+        },
+        {
+            ""fromInput"": ""interaction_message"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""interaction_message""
+        },
+        {
+            ""fromInput"": ""tts_speaking"",
+            ""toAgent"": ""TTS_Agent"",
+            ""toOutput"": ""is_speaking""
+        },
+        {
+            ""fromInput"": ""tts_text"",
+            ""toAgent"": ""TTS_Agent"",
+            ""toOutput"": ""current_text""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+a7f77280-00ad-11f1-bbdd-9d3344d32583;1770106127.248;Proxy;MAPPING;8;;"{
+    ""mappings"": [
+
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+a7f77281-00ad-11f1-bbdd-9d3344d32583;1770106127.248;TARS Agent;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""airspeed"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""airspeed""
+        },
+        {
+            ""fromInput"": ""pitch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""pitch""
+        },
+        {
+            ""fromInput"": ""roll"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""roll""
+        },
+        {
+            ""fromInput"": ""heading"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""heading""
+        },
+        {
+            ""fromInput"": ""altitude"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""altitude""
+        },
+        {
+            ""fromInput"": ""l_throttle"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_throttle""
+        },
+        {
+            ""fromInput"": ""r_throttle"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_throttle""
+        },
+        {
+            ""fromInput"": ""n1_match_bug"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""n1_match_bug""
+        },
+        {
+            ""fromInput"": ""slip"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""slip""
+        },
+        {
+            ""fromInput"": ""pax_safety"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""pax_safety""
+        },
+        {
+            ""fromInput"": ""master_warning"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""master_warning""
+        },
+        {
+            ""fromInput"": ""master_caution"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""master_caution""
+        },
+        {
+            ""fromInput"": ""flight_director"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""flight_director""
+        },
+        {
+            ""fromInput"": ""speed_mode"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""speed_mode""
+        },
+        {
+            ""fromInput"": ""heading_mode"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""heading_mode""
+        },
+        {
+            ""fromInput"": ""fuel_boost_r"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""fuel_boost_r""
+        },
+        {
+            ""fromInput"": ""test_knob"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""test_knob""
+        },
+        {
+            ""fromInput"": ""autopilot_heading_set"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""autopilot_heading_set""
+        },
+        {
+            ""fromInput"": ""yaw_damper"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""yaw_damper""
+        },
+        {
+            ""fromInput"": ""l_ign_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_ign_switch""
+        },
+        {
+            ""fromInput"": ""r_ign_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_ign_switch""
+        },
+        {
+            ""fromInput"": ""l_gen_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_gen_switch""
+        },
+        {
+            ""fromInput"": ""r_gen_switch"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_gen_switch""
+        },
+        {
+            ""fromInput"": ""transfer_knob"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""transfer_knob""
+        },
+        {
+            ""fromInput"": ""e1_n1_percent"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""e1_n1_percent""
+        },
+        {
+            ""fromInput"": ""e2_n1_percent"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""e2_n1_percent""
+        },
+        {
+            ""fromInput"": ""engine_fire_l"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""engine_fire_l""
+        },
+        {
+            ""fromInput"": ""engine_fire_r"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""engine_fire_r""
+        },
+        {
+            ""fromInput"": ""cabin_altitude"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""cabin_altitude""
+        },
+        {
+            ""fromInput"": ""park_brake"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""parkBrake""
+        },
+        {
+            ""fromInput"": ""speed_brakes"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""speedBrakes""
+        },
+        {
+            ""fromInput"": ""control_gear"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlGear""
+        },
+        {
+            ""fromInput"": ""control_flaps"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlFlaps""
+        },
+        {
+            ""fromInput"": ""control_throttle"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlThrottle""
+        },
+        {
+            ""fromInput"": ""vertical_speed"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""verticalSpeed""
+        },
+        {
+            ""fromInput"": ""trim_rudder"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""trim_rudder""
+        },
+        {
+            ""fromInput"": ""l_gen_load"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_gen_load""
+        },
+        {
+            ""fromInput"": ""r_gen_load"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_gen_load""
+        },
+        {
+            ""fromInput"": ""l_bottle_arm"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""l_bottle_arm""
+        },
+        {
+            ""fromInput"": ""r_bottle_arm"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""r_bottle_arm""
+        },
+        {
+            ""fromInput"": ""pitot_heat"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""pitot_heat""
+        },
+        {
+            ""fromInput"": ""control_rudder"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""controlYaw""
+        },
+        {
+            ""fromInput"": ""latitude"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""latitude""
+        },
+        {
+            ""fromInput"": ""longitude"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""longitude""
+        },
+        {
+            ""fromInput"": ""fuel_boost_l"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""fuel_boost_l""
+        },
+        {
+            ""fromInput"": ""anti_coll_lights"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""anti_coll_lights""
+        },
+        {
+            ""fromInput"": ""alt_sel"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""alt_sel""
+        },
+        {
+            ""fromInput"": ""heading_sel"",
+            ""toAgent"": ""Aircraft"",
+            ""toOutput"": ""heading_sel""
+        },
+        {
+            ""fromInput"": ""task_approval"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""task_approval""
+        },
+        {
+            ""fromInput"": ""task_acknowledged"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""task_acknowledged""
+        },
+        {
+            ""fromInput"": ""task_cancelled"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""task_cancelled""
+        },
+        {
+            ""fromInput"": ""start_procedure"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""start_procedure""
+        },
+        {
+            ""fromInput"": ""stop_procedure"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""stop_procedure""
+        },
+        {
+            ""fromInput"": ""emergency_inject"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""emergency_inject""
+        },
+        {
+            ""fromInput"": ""countdown_complete"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""countdown_complete""
+        },
+        {
+            ""fromInput"": ""force_state_jump"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""force_state_jump""
+        },
+        {
+            ""fromInput"": ""next_step"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""task_override""
+        },
+        {
+            ""fromInput"": ""next_step"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""next_step""
+        },
+        {
+            ""fromInput"": ""previous_step"",
+            ""toAgent"": ""Shared Interface"",
+            ""toOutput"": ""previous_step""
+        },
+        {
+            ""fromInput"": ""task_cancelled"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""task_cancel""
+        },
+        {
+            ""fromInput"": ""task_acknowledged"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""task_check""
+        },
+        {
+            ""fromInput"": ""task_approval"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""task_approve""
+        },
+        {
+            ""fromInput"": ""On_Off"",
+            ""toAgent"": ""Cognitive_Model"",
+            ""toOutput"": ""start""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+a7f77282-00ad-11f1-bbdd-9d3344d32583;1770106127.248;TTS_Agent;MAPPING;8;;"{
+    ""mappings"": [
+        {
+            ""fromInput"": ""text_to_speak"",
+            ""toAgent"": ""TARS Agent"",
+            ""toOutput"": ""tts_request""
+        }
+    ],
+    ""splits"": [
+
+    ]
+}
+"
+a7f77283-00ad-11f1-bbdd-9d3344d32583;1770106127.248;SNAPSHOT;SNAPSHOT_END;0;;
+a9ef98f0-00ad-11f1-bbdd-9d3344d32583;1770106130.560;Aircraft;airspeed;2;;1.600000
+ab8ef110-00ad-11f1-bbdd-9d3344d32583;1770106133.281;Aircraft;controlYaw;2;;0.010000
+ab946f50-00ad-11f1-bbdd-9d3344d32583;1770106133.318;Aircraft;controlYaw;2;;0.000000
+aba2c730-00ad-11f1-bbdd-9d3344d32583;1770106133.411;Aircraft;controlRoll;2;;-0.010000
+aba2c731-00ad-11f1-bbdd-9d3344d32583;1770106133.411;Aircraft;controlYaw;2;;-0.020000
+abb23080-00ad-11f1-bbdd-9d3344d32583;1770106133.512;Aircraft;controlRoll;2;;-0.030000
+abb23081-00ad-11f1-bbdd-9d3344d32583;1770106133.512;Aircraft;controlYaw;2;;-0.060000
+abc1c0e0-00ad-11f1-bbdd-9d3344d32583;1770106133.614;Aircraft;controlRoll;2;;-0.100000
+abc1c0e1-00ad-11f1-bbdd-9d3344d32583;1770106133.614;Aircraft;controlPitch;2;;0.040000
+abc1c0e2-00ad-11f1-bbdd-9d3344d32583;1770106133.614;Aircraft;controlYaw;2;;-0.080000
+abd0dc10-00ad-11f1-bbdd-9d3344d32583;1770106133.714;Aircraft;controlRoll;2;;-0.130000
+abd0dc11-00ad-11f1-bbdd-9d3344d32583;1770106133.714;Aircraft;controlPitch;2;;0.160000
+abd0dc12-00ad-11f1-bbdd-9d3344d32583;1770106133.714;Aircraft;controlYaw;2;;-0.120000
+abdfa920-00ad-11f1-bbdd-9d3344d32583;1770106133.810;Aircraft;controlRoll;2;;-0.100000
+abdfa921-00ad-11f1-bbdd-9d3344d32583;1770106133.811;Aircraft;controlPitch;2;;0.380000
+abdfa922-00ad-11f1-bbdd-9d3344d32583;1770106133.811;Aircraft;controlYaw;2;;-0.090000
+abee9d40-00ad-11f1-bbdd-9d3344d32583;1770106133.909;Aircraft;controlRoll;2;;-0.010000
+abee9d41-00ad-11f1-bbdd-9d3344d32583;1770106133.909;Aircraft;controlPitch;2;;0.640000
+abee9d42-00ad-11f1-bbdd-9d3344d32583;1770106133.909;Aircraft;controlYaw;2;;-0.070000
+abfdb870-00ad-11f1-bbdd-9d3344d32583;1770106134.008;Aircraft;controlRoll;2;;0.040000
+abfddf80-00ad-11f1-bbdd-9d3344d32583;1770106134.008;Aircraft;controlPitch;2;;0.800000
+abfddf81-00ad-11f1-bbdd-9d3344d32583;1770106134.008;Aircraft;controlYaw;2;;-0.030000
+ac1b79a0-00ad-11f1-bbdd-9d3344d32583;1770106134.203;Aircraft;controlRoll;2;;0.150000
+ac1ba0b0-00ad-11f1-bbdd-9d3344d32583;1770106134.203;Aircraft;controlPitch;2;;0.780000
+ac1ba0b1-00ad-11f1-bbdd-9d3344d32583;1770106134.203;Aircraft;controlYaw;2;;-0.010000
+ac1d2750-00ad-11f1-bbdd-9d3344d32583;1770106134.213;Aircraft;controlRoll;2;;0.340000
+ac1d2751-00ad-11f1-bbdd-9d3344d32583;1770106134.213;Aircraft;controlPitch;2;;0.600000
+ac1d2752-00ad-11f1-bbdd-9d3344d32583;1770106134.213;Aircraft;controlYaw;2;;-0.000000
+ac2bcd50-00ad-11f1-bbdd-9d3344d32583;1770106134.310;Aircraft;controlRoll;2;;0.530000
+ac2bf460-00ad-11f1-bbdd-9d3344d32583;1770106134.310;Aircraft;controlPitch;2;;0.410000
+ac3b0f90-00ad-11f1-bbdd-9d3344d32583;1770106134.410;Aircraft;controlRoll;2;;0.620000
+ac3b0f91-00ad-11f1-bbdd-9d3344d32583;1770106134.410;Aircraft;controlPitch;2;;0.350000
+ac4aee10-00ad-11f1-bbdd-9d3344d32583;1770106134.513;Aircraft;controlRoll;2;;0.680000
+ac4aee11-00ad-11f1-bbdd-9d3344d32583;1770106134.514;Aircraft;controlPitch;2;;0.390000
+ac5a3050-00ad-11f1-bbdd-9d3344d32583;1770106134.613;Aircraft;controlRoll;2;;0.730000
+ac5a3051-00ad-11f1-bbdd-9d3344d32583;1770106134.613;Aircraft;controlPitch;2;;0.500000
+ac6999a0-00ad-11f1-bbdd-9d3344d32583;1770106134.714;Aircraft;controlRoll;2;;0.660000
+ac6999a1-00ad-11f1-bbdd-9d3344d32583;1770106134.715;Aircraft;controlPitch;2;;1.000000
+ac783fa0-00ad-11f1-bbdd-9d3344d32583;1770106134.811;Aircraft;controlRoll;2;;0.580000
+aca82940-00ad-11f1-bbdd-9d3344d32583;1770106135.124;Aircraft;controlRoll;2;;0.590000
+aca82941-00ad-11f1-bbdd-9d3344d32583;1770106135.124;Aircraft;controlYaw;2;;0.010000
+acb48550-00ad-11f1-bbdd-9d3344d32583;1770106135.206;Aircraft;controlRoll;2;;0.580000
+acb48551-00ad-11f1-bbdd-9d3344d32583;1770106135.206;Aircraft;controlYaw;2;;0.000000
+acc3c790-00ad-11f1-bbdd-9d3344d32583;1770106135.306;Aircraft;controlRoll;2;;0.600000
+acc3c791-00ad-11f1-bbdd-9d3344d32583;1770106135.306;Aircraft;controlYaw;2;;0.010000
+acd2e2c0-00ad-11f1-bbdd-9d3344d32583;1770106135.404;Aircraft;controlRoll;2;;0.620000
+ace1d6e0-00ad-11f1-bbdd-9d3344d32583;1770106135.502;Aircraft;controlRoll;2;;0.690000
+acf0f210-00ad-11f1-bbdd-9d3344d32583;1770106135.602;Aircraft;controlRoll;2;;0.750000
+ad000d40-00ad-11f1-bbdd-9d3344d32583;1770106135.700;Aircraft;controlRoll;2;;0.760000
+ad1012d0-00ad-11f1-bbdd-9d3344d32583;1770106135.806;Aircraft;controlRoll;2;;0.750000
+ad3ca110-00ad-11f1-bbdd-9d3344d32583;1770106136.097;Aircraft;controlRoll;2;;0.740000
+ad4b9530-00ad-11f1-bbdd-9d3344d32583;1770106136.196;Aircraft;controlRoll;2;;0.720000
+ad4bbc40-00ad-11f1-bbdd-9d3344d32583;1770106136.196;Aircraft;controlYaw;2;;0.000000
+ad5b9ac0-00ad-11f1-bbdd-9d3344d32583;1770106136.301;Aircraft;controlRoll;2;;0.580000
+ad6c63a0-00ad-11f1-bbdd-9d3344d32583;1770106136.410;Aircraft;controlRoll;2;;0.150000
+ad6c63a1-00ad-11f1-bbdd-9d3344d32583;1770106136.410;Aircraft;controlPitch;2;;0.380000
+ad6c63a2-00ad-11f1-bbdd-9d3344d32583;1770106136.411;Aircraft;controlYaw;2;;-0.020000
+ad834700-00ad-11f1-bbdd-9d3344d32583;1770106136.561;Aircraft;controlRoll;2;;0.010000
+ad834701-00ad-11f1-bbdd-9d3344d32583;1770106136.561;Aircraft;controlPitch;2;;0.010000
+ad834702-00ad-11f1-bbdd-9d3344d32583;1770106136.561;Aircraft;controlYaw;2;;-0.010000
+ad8eb8b0-00ad-11f1-bbdd-9d3344d32583;1770106136.636;Aircraft;controlRoll;2;;0.000000
+ad8eb8b1-00ad-11f1-bbdd-9d3344d32583;1770106136.636;Aircraft;controlPitch;2;;0.000000
+ad8edfc0-00ad-11f1-bbdd-9d3344d32583;1770106136.636;Aircraft;controlYaw;2;;-0.020000
+adaaf340-00ad-11f1-bbdd-9d3344d32583;1770106136.821;Aircraft;controlYaw;2;;-0.010000
+add118e0-00ad-11f1-bbdd-9d3344d32583;1770106137.070;Aircraft;controlThrottle;2;;0.140000
+add29f80-00ad-11f1-bbdd-9d3344d32583;1770106137.080;Aircraft;l_throttle;2;;0.200000
+add29f81-00ad-11f1-bbdd-9d3344d32583;1770106137.080;Aircraft;r_throttle;2;;0.200000
+add29f82-00ad-11f1-bbdd-9d3344d32583;1770106137.080;Aircraft;e1_n1_percent;2;;23.500000
+add29f83-00ad-11f1-bbdd-9d3344d32583;1770106137.080;Aircraft;e2_n1_percent;2;;23.500000
+addefb90-00ad-11f1-bbdd-9d3344d32583;1770106137.162;Aircraft;controlThrottle;2;;0.270000
+ade2a510-00ad-11f1-bbdd-9d3344d32583;1770106137.186;Aircraft;l_throttle;2;;0.300000
+ade2a511-00ad-11f1-bbdd-9d3344d32583;1770106137.186;Aircraft;r_throttle;2;;0.300000
+ade2a512-00ad-11f1-bbdd-9d3344d32583;1770106137.186;Aircraft;e1_n1_percent;2;;24.000000
+ade2a513-00ad-11f1-bbdd-9d3344d32583;1770106137.186;Aircraft;e2_n1_percent;2;;24.000000
+adef0120-00ad-11f1-bbdd-9d3344d32583;1770106137.266;Aircraft;controlThrottle;2;;0.450000
+adf1c040-00ad-11f1-bbdd-9d3344d32583;1770106137.285;Aircraft;l_throttle;2;;0.500000
+adf1c041-00ad-11f1-bbdd-9d3344d32583;1770106137.285;Aircraft;r_throttle;2;;0.500000
+adf1c042-00ad-11f1-bbdd-9d3344d32583;1770106137.285;Aircraft;e1_n1_percent;2;;24.400000
+adf1c043-00ad-11f1-bbdd-9d3344d32583;1770106137.285;Aircraft;e2_n1_percent;2;;24.400000
+adfdf540-00ad-11f1-bbdd-9d3344d32583;1770106137.365;Aircraft;controlThrottle;2;;0.590000
+ae026210-00ad-11f1-bbdd-9d3344d32583;1770106137.393;Aircraft;l_throttle;2;;0.600000
+ae026211-00ad-11f1-bbdd-9d3344d32583;1770106137.394;Aircraft;r_throttle;2;;0.600000
+ae026212-00ad-11f1-bbdd-9d3344d32583;1770106137.394;Aircraft;e1_n1_percent;2;;24.900000
+ae026213-00ad-11f1-bbdd-9d3344d32583;1770106137.394;Aircraft;e2_n1_percent;2;;24.900000
+ae0a7860-00ad-11f1-bbdd-9d3344d32583;1770106137.446;Aircraft;pitch;2;;-1.050000
+ae0d85a0-00ad-11f1-bbdd-9d3344d32583;1770106137.467;Aircraft;controlThrottle;2;;0.710000
+ae112f20-00ad-11f1-bbdd-9d3344d32583;1770106137.491;Aircraft;l_throttle;2;;0.700000
+ae112f21-00ad-11f1-bbdd-9d3344d32583;1770106137.491;Aircraft;r_throttle;2;;0.700000
+ae112f22-00ad-11f1-bbdd-9d3344d32583;1770106137.491;Aircraft;e1_n1_percent;2;;25.400000
+ae115630-00ad-11f1-bbdd-9d3344d32583;1770106137.491;Aircraft;e2_n1_percent;2;;25.400000
+ae1d8b30-00ad-11f1-bbdd-9d3344d32583;1770106137.572;Aircraft;controlThrottle;2;;0.880000
+ae209870-00ad-11f1-bbdd-9d3344d32583;1770106137.591;Aircraft;l_throttle;2;;0.900000
+ae209871-00ad-11f1-bbdd-9d3344d32583;1770106137.592;Aircraft;r_throttle;2;;0.900000
+ae209872-00ad-11f1-bbdd-9d3344d32583;1770106137.592;Aircraft;e1_n1_percent;2;;25.900000
+ae209873-00ad-11f1-bbdd-9d3344d32583;1770106137.592;Aircraft;e2_n1_percent;2;;25.900000
+ae28fce0-00ad-11f1-bbdd-9d3344d32583;1770106137.647;Aircraft;pitch;2;;-1.060000
+ae2cf480-00ad-11f1-bbdd-9d3344d32583;1770106137.672;Aircraft;controlThrottle;2;;1.000000
+ae3001c0-00ad-11f1-bbdd-9d3344d32583;1770106137.693;Aircraft;l_throttle;2;;1.000000
+ae3001c1-00ad-11f1-bbdd-9d3344d32583;1770106137.693;Aircraft;r_throttle;2;;1.000000
+ae3001c2-00ad-11f1-bbdd-9d3344d32583;1770106137.693;Aircraft;n1_match_bug;4;;true
+ae3001c3-00ad-11f1-bbdd-9d3344d32583;1770106137.693;Aircraft;e1_n1_percent;2;;26.400000
+ae3028d0-00ad-11f1-bbdd-9d3344d32583;1770106137.693;Aircraft;e2_n1_percent;2;;26.400000
+ae3f4400-00ad-11f1-bbdd-9d3344d32583;1770106137.792;Aircraft;airspeed;2;;1.500000
+ae3f4401-00ad-11f1-bbdd-9d3344d32583;1770106137.792;Aircraft;e1_n1_percent;2;;27.000000
+ae3f4402-00ad-11f1-bbdd-9d3344d32583;1770106137.792;Aircraft;e2_n1_percent;2;;27.000000
+ae47cf80-00ad-11f1-bbdd-9d3344d32583;1770106137.848;Aircraft;pitch;2;;-1.070000
+ae4ead50-00ad-11f1-bbdd-9d3344d32583;1770106137.893;Aircraft;verticalSpeed;2;;0.100000
+ae4ead51-00ad-11f1-bbdd-9d3344d32583;1770106137.893;Aircraft;e1_n1_percent;2;;27.500000
+ae4ead52-00ad-11f1-bbdd-9d3344d32583;1770106137.894;Aircraft;e2_n1_percent;2;;27.500000
+ae56eab0-00ad-11f1-bbdd-9d3344d32583;1770106137.947;Aircraft;pitch;2;;-1.080000
+ae5def90-00ad-11f1-bbdd-9d3344d32583;1770106137.993;Aircraft;e1_n1_percent;2;;28.100000
+ae5def91-00ad-11f1-bbdd-9d3344d32583;1770106137.993;Aircraft;e2_n1_percent;2;;28.100000
+ae7ce940-00ad-11f1-bbdd-9d3344d32583;1770106138.196;Aircraft;e1_n1_percent;2;;28.700000
+ae7ce941-00ad-11f1-bbdd-9d3344d32583;1770106138.196;Aircraft;e2_n1_percent;2;;28.700000
+ae7ce942-00ad-11f1-bbdd-9d3344d32583;1770106138.196;Aircraft;pitch;2;;-1.090000
+ae7ce943-00ad-11f1-bbdd-9d3344d32583;1770106138.197;Aircraft;e1_n1_percent;2;;29.300000
+ae7ce944-00ad-11f1-bbdd-9d3344d32583;1770106138.197;Aircraft;e2_n1_percent;2;;29.300000
+ae8af300-00ad-11f1-bbdd-9d3344d32583;1770106138.289;Aircraft;e1_n1_percent;2;;29.900000
+ae8af301-00ad-11f1-bbdd-9d3344d32583;1770106138.289;Aircraft;e2_n1_percent;2;;29.900000
+ae948ff0-00ad-11f1-bbdd-9d3344d32583;1770106138.352;Aircraft;pitch;2;;-1.100000
+ae9a8360-00ad-11f1-bbdd-9d3344d32583;1770106138.391;Aircraft;e1_n1_percent;2;;30.500000
+ae9a8361-00ad-11f1-bbdd-9d3344d32583;1770106138.391;Aircraft;e2_n1_percent;2;;30.500000
+aea5f510-00ad-11f1-bbdd-9d3344d32583;1770106138.466;Aircraft;pitch;2;;-1.110000
+aeac5db0-00ad-11f1-bbdd-9d3344d32583;1770106138.508;Aircraft;e1_n1_percent;2;;31.300000
+aeac5db1-00ad-11f1-bbdd-9d3344d32583;1770106138.508;Aircraft;e2_n1_percent;2;;31.300000
+aeb75a30-00ad-11f1-bbdd-9d3344d32583;1770106138.580;Aircraft;pitch;2;;-1.120000
+aebdc2d0-00ad-11f1-bbdd-9d3344d32583;1770106138.622;Aircraft;e1_n1_percent;2;;32.100000
+aebdc2d1-00ad-11f1-bbdd-9d3344d32583;1770106138.622;Aircraft;e2_n1_percent;2;;32.100000
+aecd7a40-00ad-11f1-bbdd-9d3344d32583;1770106138.725;Aircraft;e1_n1_percent;2;;32.800000
+aecd7a41-00ad-11f1-bbdd-9d3344d32583;1770106138.725;Aircraft;e2_n1_percent;2;;32.800000
+aed5deb0-00ad-11f1-bbdd-9d3344d32583;1770106138.779;Aircraft;pitch;2;;-1.130000
+aedbf930-00ad-11f1-bbdd-9d3344d32583;1770106138.819;Aircraft;e1_n1_percent;2;;33.500000
+aedbf931-00ad-11f1-bbdd-9d3344d32583;1770106138.819;Aircraft;e2_n1_percent;2;;33.500000
+aee56f10-00ad-11f1-bbdd-9d3344d32583;1770106138.881;Aircraft;pitch;2;;-1.140000
+aeeb3b70-00ad-11f1-bbdd-9d3344d32583;1770106138.919;Aircraft;e1_n1_percent;2;;34.300000
+aeeb3b71-00ad-11f1-bbdd-9d3344d32583;1770106138.919;Aircraft;e2_n1_percent;2;;34.300000
+aef4ff70-00ad-11f1-bbdd-9d3344d32583;1770106138.983;Aircraft;pitch;2;;-1.150000
+aefaa4c0-00ad-11f1-bbdd-9d3344d32583;1770106139.021;Aircraft;e1_n1_percent;2;;35.000000
+aefaa4c1-00ad-11f1-bbdd-9d3344d32583;1770106139.021;Aircraft;e2_n1_percent;2;;35.000000
+af041aa0-00ad-11f1-bbdd-9d3344d32583;1770106139.082;Aircraft;pitch;2;;-1.160000
+af09e700-00ad-11f1-bbdd-9d3344d32583;1770106139.120;Aircraft;verticalSpeed;2;;0.200000
+af09e701-00ad-11f1-bbdd-9d3344d32583;1770106139.120;Aircraft;e1_n1_percent;2;;35.800000
+af09e702-00ad-11f1-bbdd-9d3344d32583;1770106139.120;Aircraft;e2_n1_percent;2;;35.800000
+af130ec0-00ad-11f1-bbdd-9d3344d32583;1770106139.180;Aircraft;pitch;2;;-1.170000
+af19ec90-00ad-11f1-bbdd-9d3344d32583;1770106139.225;Aircraft;e1_n1_percent;2;;36.700000
+af19ec91-00ad-11f1-bbdd-9d3344d32583;1770106139.226;Aircraft;e2_n1_percent;2;;36.700000
+af2166a0-00ad-11f1-bbdd-9d3344d32583;1770106139.275;Aircraft;pitch;2;;-1.180000
+af275a10-00ad-11f1-bbdd-9d3344d32583;1770106139.314;Aircraft;e1_n1_percent;2;;37.500000
+af28e0b0-00ad-11f1-bbdd-9d3344d32583;1770106139.323;Aircraft;e2_n1_percent;2;;37.500000
+af30cff0-00ad-11f1-bbdd-9d3344d32583;1770106139.376;Aircraft;latitude;2;;45.461222
+af371180-00ad-11f1-bbdd-9d3344d32583;1770106139.416;Aircraft;e1_n1_percent;2;;38.400000
+af371181-00ad-11f1-bbdd-9d3344d32583;1770106139.417;Aircraft;e2_n1_percent;2;;38.400000
+af414ab0-00ad-11f1-bbdd-9d3344d32583;1770106139.484;Aircraft;pitch;2;;-1.200000
+af4653c0-00ad-11f1-bbdd-9d3344d32583;1770106139.516;Aircraft;e1_n1_percent;2;;39.300000
+af4653c1-00ad-11f1-bbdd-9d3344d32583;1770106139.516;Aircraft;e2_n1_percent;2;;39.300000
+af4f5470-00ad-11f1-bbdd-9d3344d32583;1770106139.575;Aircraft;pitch;2;;-1.210000
+af560b30-00ad-11f1-bbdd-9d3344d32583;1770106139.620;Aircraft;e1_n1_percent;2;;40.300000
+af560b31-00ad-11f1-bbdd-9d3344d32583;1770106139.620;Aircraft;e2_n1_percent;2;;40.300000
+af5e96b0-00ad-11f1-bbdd-9d3344d32583;1770106139.675;Aircraft;pitch;2;;-1.220000
+af66fb20-00ad-11f1-bbdd-9d3344d32583;1770106139.730;Aircraft;e1_n1_percent;2;;41.200000
+af66fb21-00ad-11f1-bbdd-9d3344d32583;1770106139.730;Aircraft;e2_n1_percent;2;;41.200000
+af73f370-00ad-11f1-bbdd-9d3344d32583;1770106139.816;Aircraft;e1_n1_percent;2;;42.200000
+af73f371-00ad-11f1-bbdd-9d3344d32583;1770106139.816;Aircraft;e2_n1_percent;2;;42.200000
+af7c7ef0-00ad-11f1-bbdd-9d3344d32583;1770106139.872;Aircraft;pitch;2;;-1.230000
+af835cc0-00ad-11f1-bbdd-9d3344d32583;1770106139.917;Aircraft;e1_n1_percent;2;;43.300000
+af835cc1-00ad-11f1-bbdd-9d3344d32583;1770106139.917;Aircraft;e2_n1_percent;2;;43.300000
+af8bc130-00ad-11f1-bbdd-9d3344d32583;1770106139.971;Aircraft;pitch;2;;-1.250000
+af9277f0-00ad-11f1-bbdd-9d3344d32583;1770106140.016;Aircraft;e1_n1_percent;2;;44.400000
+af9277f1-00ad-11f1-bbdd-9d3344d32583;1770106140.016;Aircraft;e2_n1_percent;2;;44.400000
+af9b0370-00ad-11f1-bbdd-9d3344d32583;1770106140.071;Aircraft;pitch;2;;-1.270000
+afa1e140-00ad-11f1-bbdd-9d3344d32583;1770106140.116;Aircraft;e1_n1_percent;2;;45.500000
+afa1e141-00ad-11f1-bbdd-9d3344d32583;1770106140.116;Aircraft;e2_n1_percent;2;;45.500000
+afa9f790-00ad-11f1-bbdd-9d3344d32583;1770106140.170;Aircraft;pitch;2;;-1.280000
+afb1e6d0-00ad-11f1-bbdd-9d3344d32583;1770106140.221;Aircraft;airspeed;2;;1.600000
+afb1e6d1-00ad-11f1-bbdd-9d3344d32583;1770106140.221;Aircraft;e1_n1_percent;2;;46.700000
+afb1e6d2-00ad-11f1-bbdd-9d3344d32583;1770106140.222;Aircraft;e2_n1_percent;2;;46.700000
+afba9960-00ad-11f1-bbdd-9d3344d32583;1770106140.279;Aircraft;pitch;2;;-1.300000
+afc0daf0-00ad-11f1-bbdd-9d3344d32583;1770106140.319;Aircraft;verticalSpeed;2;;0.300000
+afc0daf1-00ad-11f1-bbdd-9d3344d32583;1770106140.319;Aircraft;e1_n1_percent;2;;47.900000
+afc0daf2-00ad-11f1-bbdd-9d3344d32583;1770106140.319;Aircraft;e2_n1_percent;2;;47.900000
+afca02b0-00ad-11f1-bbdd-9d3344d32583;1770106140.380;Aircraft;pitch;2;;-1.320000
+afcf32d0-00ad-11f1-bbdd-9d3344d32583;1770106140.414;Aircraft;e1_n1_percent;2;;49.200000
+afcf80f0-00ad-11f1-bbdd-9d3344d32583;1770106140.416;Aircraft;e2_n1_percent;2;;49.200000
+afd8f6d0-00ad-11f1-bbdd-9d3344d32583;1770106140.477;Aircraft;pitch;2;;-1.330000
+afdeea40-00ad-11f1-bbdd-9d3344d32583;1770106140.516;Aircraft;e1_n1_percent;2;;50.500000
+afdeea41-00ad-11f1-bbdd-9d3344d32583;1770106140.516;Aircraft;e2_n1_percent;2;;50.500000
+afe7c3e0-00ad-11f1-bbdd-9d3344d32583;1770106140.575;Aircraft;pitch;2;;-1.340000
+afe7eaf0-00ad-11f1-bbdd-9d3344d32583;1770106140.575;Aircraft;roll;2;;0.520000
+afedb750-00ad-11f1-bbdd-9d3344d32583;1770106140.613;Aircraft;e1_n1_percent;2;;51.900000
+afedb751-00ad-11f1-bbdd-9d3344d32583;1770106140.613;Aircraft;e2_n1_percent;2;;51.900000
+aff72d30-00ad-11f1-bbdd-9d3344d32583;1770106140.675;Aircraft;pitch;2;;-1.360000
+affd20a0-00ad-11f1-bbdd-9d3344d32583;1770106140.714;Aircraft;e1_n1_percent;2;;53.300000
+affd20a1-00ad-11f1-bbdd-9d3344d32583;1770106140.714;Aircraft;e2_n1_percent;2;;53.300000
+b0066f70-00ad-11f1-bbdd-9d3344d32583;1770106140.776;Aircraft;pitch;2;;-1.380000
+b00d2630-00ad-11f1-bbdd-9d3344d32583;1770106140.819;Aircraft;e1_n1_percent;2;;54.700000
+b00d2631-00ad-11f1-bbdd-9d3344d32583;1770106140.819;Aircraft;e2_n1_percent;2;;54.700000
+b015b1b0-00ad-11f1-bbdd-9d3344d32583;1770106140.875;Aircraft;pitch;2;;-1.400000
+b01bcc30-00ad-11f1-bbdd-9d3344d32583;1770106140.915;Aircraft;e1_n1_percent;2;;56.300000
+b01bcc31-00ad-11f1-bbdd-9d3344d32583;1770106140.916;Aircraft;e2_n1_percent;2;;56.300000
+b02430a0-00ad-11f1-bbdd-9d3344d32583;1770106140.971;Aircraft;pitch;2;;-1.430000
+b02b5c90-00ad-11f1-bbdd-9d3344d32583;1770106141.017;Aircraft;verticalSpeed;2;;0.400000
+b02b5c91-00ad-11f1-bbdd-9d3344d32583;1770106141.017;Aircraft;e1_n1_percent;2;;57.800000
+b02b5c92-00ad-11f1-bbdd-9d3344d32583;1770106141.017;Aircraft;e2_n1_percent;2;;57.800000
+b0340f20-00ad-11f1-bbdd-9d3344d32583;1770106141.074;Aircraft;pitch;2;;-1.450000
+b03a77c0-00ad-11f1-bbdd-9d3344d32583;1770106141.116;Aircraft;e1_n1_percent;2;;59.500000
+b03a77c1-00ad-11f1-bbdd-9d3344d32583;1770106141.116;Aircraft;e2_n1_percent;2;;59.500000
+b0430340-00ad-11f1-bbdd-9d3344d32583;1770106141.172;Aircraft;pitch;2;;-1.470000
+b04944d0-00ad-11f1-bbdd-9d3344d32583;1770106141.213;Aircraft;e1_n1_percent;2;;61.200000
+b04944d1-00ad-11f1-bbdd-9d3344d32583;1770106141.213;Aircraft;e2_n1_percent;2;;61.200000
+b051f760-00ad-11f1-bbdd-9d3344d32583;1770106141.270;Aircraft;pitch;2;;-1.500000
+b0594a60-00ad-11f1-bbdd-9d3344d32583;1770106141.318;Aircraft;e1_n1_percent;2;;63.000000
+b0594a61-00ad-11f1-bbdd-9d3344d32583;1770106141.318;Aircraft;e2_n1_percent;2;;63.000000
+b061fcf0-00ad-11f1-bbdd-9d3344d32583;1770106141.376;Aircraft;pitch;2;;-1.520000
+b0622400-00ad-11f1-bbdd-9d3344d32583;1770106141.376;Aircraft;longitude;2;;-73.764739
+b067a240-00ad-11f1-bbdd-9d3344d32583;1770106141.412;Aircraft;e1_n1_percent;2;;64.800000
+b067a241-00ad-11f1-bbdd-9d3344d32583;1770106141.412;Aircraft;e2_n1_percent;2;;64.800000
+b070a2f0-00ad-11f1-bbdd-9d3344d32583;1770106141.471;Aircraft;pitch;2;;-1.550000
+b07759b0-00ad-11f1-bbdd-9d3344d32583;1770106141.516;Aircraft;verticalSpeed;2;;0.500000
+b07759b1-00ad-11f1-bbdd-9d3344d32583;1770106141.516;Aircraft;e1_n1_percent;2;;66.800000
+b07759b2-00ad-11f1-bbdd-9d3344d32583;1770106141.516;Aircraft;e2_n1_percent;2;;66.800000
+b0803350-00ad-11f1-bbdd-9d3344d32583;1770106141.574;Aircraft;pitch;2;;-1.580000
+b086c300-00ad-11f1-bbdd-9d3344d32583;1770106141.616;Aircraft;e1_n1_percent;2;;68.800000
+b086c301-00ad-11f1-bbdd-9d3344d32583;1770106141.616;Aircraft;e2_n1_percent;2;;68.800000
+b08f2770-00ad-11f1-bbdd-9d3344d32583;1770106141.672;Aircraft;pitch;2;;-1.620000
+b0982820-00ad-11f1-bbdd-9d3344d32583;1770106141.730;Aircraft;e1_n1_percent;2;;70.900000
+b0982821-00ad-11f1-bbdd-9d3344d32583;1770106141.730;Aircraft;e2_n1_percent;2;;70.900000
+b09e42a0-00ad-11f1-bbdd-9d3344d32583;1770106141.771;Aircraft;pitch;2;;-1.650000
+b0a4d250-00ad-11f1-bbdd-9d3344d32583;1770106141.814;Aircraft;e1_n1_percent;2;;72.900000
+b0a4d251-00ad-11f1-bbdd-9d3344d32583;1770106141.814;Aircraft;e2_n1_percent;2;;72.900000
+b0add300-00ad-11f1-bbdd-9d3344d32583;1770106141.873;Aircraft;pitch;2;;-1.690000
+b0b43ba0-00ad-11f1-bbdd-9d3344d32583;1770106141.915;Aircraft;verticalSpeed;2;;0.600000
+b0b43ba1-00ad-11f1-bbdd-9d3344d32583;1770106141.915;Aircraft;e1_n1_percent;2;;74.700000
+b0b43ba2-00ad-11f1-bbdd-9d3344d32583;1770106141.915;Aircraft;e2_n1_percent;2;;74.700000
+b0bd3c50-00ad-11f1-bbdd-9d3344d32583;1770106141.973;Aircraft;pitch;2;;-1.730000
+b0c02280-00ad-11f1-bbdd-9d3344d32583;1770106141.993;Aircraft;controlThrottle;2;;0.940000
+b0c44130-00ad-11f1-bbdd-9d3344d32583;1770106142.020;Aircraft;l_throttle;2;;0.900000
+b0c44131-00ad-11f1-bbdd-9d3344d32583;1770106142.020;Aircraft;r_throttle;2;;0.900000
+b0c46840-00ad-11f1-bbdd-9d3344d32583;1770106142.020;Aircraft;n1_match_bug;4;;false
+b0c46841-00ad-11f1-bbdd-9d3344d32583;1770106142.020;Aircraft;e1_n1_percent;2;;76.400000
+b0c46842-00ad-11f1-bbdd-9d3344d32583;1770106142.020;Aircraft;e2_n1_percent;2;;76.400000
+b0cc5780-00ad-11f1-bbdd-9d3344d32583;1770106142.072;Aircraft;pitch;2;;-1.760000
+b0cfd9f0-00ad-11f1-bbdd-9d3344d32583;1770106142.095;Aircraft;controlThrottle;2;;0.640000
+b0d30e40-00ad-11f1-bbdd-9d3344d32583;1770106142.117;Aircraft;l_throttle;2;;0.600000
+b0d30e41-00ad-11f1-bbdd-9d3344d32583;1770106142.117;Aircraft;r_throttle;2;;0.600000
+b0d30e42-00ad-11f1-bbdd-9d3344d32583;1770106142.117;Aircraft;e1_n1_percent;2;;77.400000
+b0d30e43-00ad-11f1-bbdd-9d3344d32583;1770106142.117;Aircraft;e2_n1_percent;2;;77.400000
+b0dbc0d0-00ad-11f1-bbdd-9d3344d32583;1770106142.174;Aircraft;pitch;2;;-1.800000
+b0dece10-00ad-11f1-bbdd-9d3344d32583;1770106142.193;Aircraft;controlThrottle;2;;0.150000
+b0e18d30-00ad-11f1-bbdd-9d3344d32583;1770106142.212;Aircraft;l_throttle;2;;0.100000
+b0e18d31-00ad-11f1-bbdd-9d3344d32583;1770106142.212;Aircraft;r_throttle;2;;0.100000
+b0e18d32-00ad-11f1-bbdd-9d3344d32583;1770106142.212;Aircraft;e1_n1_percent;2;;76.000000
+b0e18d33-00ad-11f1-bbdd-9d3344d32583;1770106142.212;Aircraft;e2_n1_percent;2;;76.000000
+b0eadc00-00ad-11f1-bbdd-9d3344d32583;1770106142.272;Aircraft;pitch;2;;-1.830000
+b0eefab0-00ad-11f1-bbdd-9d3344d32583;1770106142.300;Aircraft;controlThrottle;2;;0.000000
+b0f144a0-00ad-11f1-bbdd-9d3344d32583;1770106142.315;Aircraft;verticalSpeed;2;;0.700000
+b0f144a1-00ad-11f1-bbdd-9d3344d32583;1770106142.315;Aircraft;l_throttle;2;;0.000000
+b0f144a2-00ad-11f1-bbdd-9d3344d32583;1770106142.315;Aircraft;r_throttle;2;;0.000000
+b0f144a3-00ad-11f1-bbdd-9d3344d32583;1770106142.315;Aircraft;e1_n1_percent;2;;73.400000
+b0f16bb0-00ad-11f1-bbdd-9d3344d32583;1770106142.315;Aircraft;e2_n1_percent;2;;73.400000
+b1005fd0-00ad-11f1-bbdd-9d3344d32583;1770106142.413;Aircraft;e1_n1_percent;2;;70.900000
+b1005fd1-00ad-11f1-bbdd-9d3344d32583;1770106142.414;Aircraft;e2_n1_percent;2;;70.900000
+b109fcc0-00ad-11f1-bbdd-9d3344d32583;1770106142.476;Aircraft;pitch;2;;-1.810000
+b10fa210-00ad-11f1-bbdd-9d3344d32583;1770106142.514;Aircraft;verticalSpeed;2;;0.600000
+b10fa211-00ad-11f1-bbdd-9d3344d32583;1770106142.514;Aircraft;e1_n1_percent;2;;68.600000
+b10fa212-00ad-11f1-bbdd-9d3344d32583;1770106142.514;Aircraft;e2_n1_percent;2;;68.600000
+b118c9d0-00ad-11f1-bbdd-9d3344d32583;1770106142.574;Aircraft;pitch;2;;-1.750000
+b11fa7a0-00ad-11f1-bbdd-9d3344d32583;1770106142.619;Aircraft;verticalSpeed;2;;0.500000
+b11fa7a1-00ad-11f1-bbdd-9d3344d32583;1770106142.619;Aircraft;e1_n1_percent;2;;66.300000
+b11fa7a2-00ad-11f1-bbdd-9d3344d32583;1770106142.619;Aircraft;e2_n1_percent;2;;66.300000
+b12796e0-00ad-11f1-bbdd-9d3344d32583;1770106142.670;Aircraft;pitch;2;;-1.690000
+b12e2690-00ad-11f1-bbdd-9d3344d32583;1770106142.713;Aircraft;verticalSpeed;2;;0.400000
+b12e2691-00ad-11f1-bbdd-9d3344d32583;1770106142.714;Aircraft;e1_n1_percent;2;;64.100000
+b12e2692-00ad-11f1-bbdd-9d3344d32583;1770106142.714;Aircraft;e2_n1_percent;2;;64.100000
+b1374e50-00ad-11f1-bbdd-9d3344d32583;1770106142.774;Aircraft;pitch;2;;-1.620000
+b13db6f0-00ad-11f1-bbdd-9d3344d32583;1770106142.815;Aircraft;verticalSpeed;2;;0.200000
+b13db6f1-00ad-11f1-bbdd-9d3344d32583;1770106142.816;Aircraft;e1_n1_percent;2;;62.000000
+b13e2c20-00ad-11f1-bbdd-9d3344d32583;1770106142.818;Aircraft;e2_n1_percent;2;;62.000000
+b146deb0-00ad-11f1-bbdd-9d3344d32583;1770106142.875;Aircraft;pitch;2;;-1.560000
+b14dbc80-00ad-11f1-bbdd-9d3344d32583;1770106142.920;Aircraft;verticalSpeed;2;;0.000000
+b14dbc81-00ad-11f1-bbdd-9d3344d32583;1770106142.920;Aircraft;e1_n1_percent;2;;59.900000
+b14dbc82-00ad-11f1-bbdd-9d3344d32583;1770106142.921;Aircraft;e2_n1_percent;2;;59.900000
+b15620f0-00ad-11f1-bbdd-9d3344d32583;1770106142.976;Aircraft;pitch;2;;-1.520000
+b15d25d0-00ad-11f1-bbdd-9d3344d32583;1770106143.021;Aircraft;airspeed;2;;1.500000
+b15d25d1-00ad-11f1-bbdd-9d3344d32583;1770106143.021;Aircraft;verticalSpeed;2;;-0.100000
+b15d25d2-00ad-11f1-bbdd-9d3344d32583;1770106143.021;Aircraft;e1_n1_percent;2;;58.000000
+b15d25d3-00ad-11f1-bbdd-9d3344d32583;1770106143.021;Aircraft;e2_n1_percent;2;;58.000000
+b1658a40-00ad-11f1-bbdd-9d3344d32583;1770106143.077;Aircraft;pitch;2;;-1.480000
+b16c6810-00ad-11f1-bbdd-9d3344d32583;1770106143.122;Aircraft;verticalSpeed;2;;-0.200000
+b16c6811-00ad-11f1-bbdd-9d3344d32583;1770106143.122;Aircraft;e1_n1_percent;2;;56.200000
+b16c6812-00ad-11f1-bbdd-9d3344d32583;1770106143.122;Aircraft;e2_n1_percent;2;;56.200000
+b1758fd0-00ad-11f1-bbdd-9d3344d32583;1770106143.182;Aircraft;pitch;2;;-1.450000
+b17b8340-00ad-11f1-bbdd-9d3344d32583;1770106143.221;Aircraft;verticalSpeed;2;;-0.300000
+b17b8341-00ad-11f1-bbdd-9d3344d32583;1770106143.221;Aircraft;e1_n1_percent;2;;54.400000
+b17b8342-00ad-11f1-bbdd-9d3344d32583;1770106143.221;Aircraft;e2_n1_percent;2;;54.400000
+b18435d0-00ad-11f1-bbdd-9d3344d32583;1770106143.278;Aircraft;pitch;2;;-1.430000
+b18b13a0-00ad-11f1-bbdd-9d3344d32583;1770106143.323;Aircraft;verticalSpeed;2;;-0.400000
+b18b13a1-00ad-11f1-bbdd-9d3344d32583;1770106143.323;Aircraft;e1_n1_percent;2;;52.700000
+b18b13a2-00ad-11f1-bbdd-9d3344d32583;1770106143.323;Aircraft;e2_n1_percent;2;;52.700000
+b1948980-00ad-11f1-bbdd-9d3344d32583;1770106143.384;Aircraft;pitch;2;;-1.410000
+b19aa400-00ad-11f1-bbdd-9d3344d32583;1770106143.425;Aircraft;e1_n1_percent;2;;51.100000
+b19aa401-00ad-11f1-bbdd-9d3344d32583;1770106143.425;Aircraft;e2_n1_percent;2;;51.100000
+b1a32f80-00ad-11f1-bbdd-9d3344d32583;1770106143.481;Aircraft;pitch;2;;-1.380000
+b1aa3460-00ad-11f1-bbdd-9d3344d32583;1770106143.527;Aircraft;verticalSpeed;2;;-0.500000
+b1aa3461-00ad-11f1-bbdd-9d3344d32583;1770106143.527;Aircraft;e1_n1_percent;2;;49.600000
+b1aa3462-00ad-11f1-bbdd-9d3344d32583;1770106143.527;Aircraft;e2_n1_percent;2;;49.600000
+b1b38330-00ad-11f1-bbdd-9d3344d32583;1770106143.587;Aircraft;pitch;2;;-1.360000
+b1b38331-00ad-11f1-bbdd-9d3344d32583;1770106143.587;Aircraft;longitude;2;;-73.764740
+b1b92880-00ad-11f1-bbdd-9d3344d32583;1770106143.625;Aircraft;e1_n1_percent;2;;48.100000
+b1b92881-00ad-11f1-bbdd-9d3344d32583;1770106143.625;Aircraft;e2_n1_percent;2;;48.100000
+b1c27750-00ad-11f1-bbdd-9d3344d32583;1770106143.685;Aircraft;pitch;2;;-1.340000
+b1c86ac0-00ad-11f1-bbdd-9d3344d32583;1770106143.724;Aircraft;e1_n1_percent;2;;46.700000
+b1c86ac1-00ad-11f1-bbdd-9d3344d32583;1770106143.724;Aircraft;e2_n1_percent;2;;46.700000
+b1d255d0-00ad-11f1-bbdd-9d3344d32583;1770106143.790;Aircraft;pitch;2;;-1.320000
+b1d84940-00ad-11f1-bbdd-9d3344d32583;1770106143.829;Aircraft;e1_n1_percent;2;;45.300000
+b1d84941-00ad-11f1-bbdd-9d3344d32583;1770106143.829;Aircraft;e2_n1_percent;2;;45.300000
+b1e0fbd0-00ad-11f1-bbdd-9d3344d32583;1770106143.886;Aircraft;pitch;2;;-1.300000
+b1e6ef40-00ad-11f1-bbdd-9d3344d32583;1770106143.925;Aircraft;e1_n1_percent;2;;44.000000
+b1e6ef41-00ad-11f1-bbdd-9d3344d32583;1770106143.925;Aircraft;e2_n1_percent;2;;44.000000
+b1efeff0-00ad-11f1-bbdd-9d3344d32583;1770106143.983;Aircraft;pitch;2;;-1.290000
+b1f65890-00ad-11f1-bbdd-9d3344d32583;1770106144.025;Aircraft;e1_n1_percent;2;;42.800000
+b1f65891-00ad-11f1-bbdd-9d3344d32583;1770106144.025;Aircraft;e2_n1_percent;2;;42.800000
+b1ff5940-00ad-11f1-bbdd-9d3344d32583;1770106144.084;Aircraft;pitch;2;;-1.270000
+b204fe90-00ad-11f1-bbdd-9d3344d32583;1770106144.122;Aircraft;e1_n1_percent;2;;41.600000
+b20525a0-00ad-11f1-bbdd-9d3344d32583;1770106144.122;Aircraft;e2_n1_percent;2;;41.600000
+b20e9b80-00ad-11f1-bbdd-9d3344d32583;1770106144.184;Aircraft;pitch;2;;-1.250000
+b21467e0-00ad-11f1-bbdd-9d3344d32583;1770106144.222;Aircraft;airspeed;2;;1.400000
+b21467e1-00ad-11f1-bbdd-9d3344d32583;1770106144.222;Aircraft;e1_n1_percent;2;;40.400000
+b21467e2-00ad-11f1-bbdd-9d3344d32583;1770106144.222;Aircraft;e2_n1_percent;2;;40.400000
+b21e04d0-00ad-11f1-bbdd-9d3344d32583;1770106144.285;Aircraft;pitch;2;;-1.240000
+b223d130-00ad-11f1-bbdd-9d3344d32583;1770106144.324;Aircraft;e1_n1_percent;2;;39.300000
+b223d131-00ad-11f1-bbdd-9d3344d32583;1770106144.324;Aircraft;e2_n1_percent;2;;39.300000
+b22d9530-00ad-11f1-bbdd-9d3344d32583;1770106144.387;Aircraft;pitch;2;;-1.230000
+b2331370-00ad-11f1-bbdd-9d3344d32583;1770106144.423;Aircraft;e1_n1_percent;2;;38.200000
+b23424e0-00ad-11f1-bbdd-9d3344d32583;1770106144.430;Aircraft;e2_n1_percent;2;;38.200000
+b23d73b0-00ad-11f1-bbdd-9d3344d32583;1770106144.491;Aircraft;pitch;2;;-1.210000
+b2434010-00ad-11f1-bbdd-9d3344d32583;1770106144.529;Aircraft;e1_n1_percent;2;;37.100000
+b244edc0-00ad-11f1-bbdd-9d3344d32583;1770106144.540;Aircraft;e2_n1_percent;2;;37.100000
+b24dc760-00ad-11f1-bbdd-9d3344d32583;1770106144.598;Aircraft;pitch;2;;-1.190000
+b257b270-00ad-11f1-bbdd-9d3344d32583;1770106144.663;Aircraft;e1_n1_percent;2;;36.100000
+b257b271-00ad-11f1-bbdd-9d3344d32583;1770106144.663;Aircraft;e2_n1_percent;2;;36.100000
+b25da5e0-00ad-11f1-bbdd-9d3344d32583;1770106144.702;Aircraft;pitch;2;;-1.180000
+b25da5e1-00ad-11f1-bbdd-9d3344d32583;1770106144.703;Aircraft;roll;2;;0.530000
+b2643590-00ad-11f1-bbdd-9d3344d32583;1770106144.745;Aircraft;verticalSpeed;2;;-0.400000
+b2643591-00ad-11f1-bbdd-9d3344d32583;1770106144.745;Aircraft;e1_n1_percent;2;;35.100000
+b2643592-00ad-11f1-bbdd-9d3344d32583;1770106144.745;Aircraft;e2_n1_percent;2;;35.100000
+b26f0b00-00ad-11f1-bbdd-9d3344d32583;1770106144.817;Aircraft;pitch;2;;-1.170000
+b2743b20-00ad-11f1-bbdd-9d3344d32583;1770106144.851;Aircraft;e1_n1_percent;2;;34.300000
+b2743b21-00ad-11f1-bbdd-9d3344d32583;1770106144.851;Aircraft;e2_n1_percent;2;;34.300000
+b27d89f0-00ad-11f1-bbdd-9d3344d32583;1770106144.912;Aircraft;pitch;2;;-1.160000
+b284b5e0-00ad-11f1-bbdd-9d3344d32583;1770106144.958;Aircraft;e1_n1_percent;2;;33.600000
+b284b5e1-00ad-11f1-bbdd-9d3344d32583;1770106144.958;Aircraft;e2_n1_percent;2;;33.600000
+b28f3d30-00ad-11f1-bbdd-9d3344d32583;1770106145.028;Aircraft;pitch;2;;-1.150000
+b296b740-00ad-11f1-bbdd-9d3344d32583;1770106145.077;Aircraft;e1_n1_percent;2;;32.800000
+b296de50-00ad-11f1-bbdd-9d3344d32583;1770106145.077;Aircraft;e2_n1_percent;2;;32.800000
+b2b49f80-00ad-11f1-bbdd-9d3344d32583;1770106145.272;Aircraft;e1_n1_percent;2;;32.200000
+b2b49f81-00ad-11f1-bbdd-9d3344d32583;1770106145.272;Aircraft;e2_n1_percent;2;;32.200000
+b2b49f82-00ad-11f1-bbdd-9d3344d32583;1770106145.272;Aircraft;pitch;2;;-1.140000
+b2b71080-00ad-11f1-bbdd-9d3344d32583;1770106145.289;Aircraft;verticalSpeed;2;;-0.300000
+b2b71081-00ad-11f1-bbdd-9d3344d32583;1770106145.289;Aircraft;e1_n1_percent;2;;31.600000
+b2b73790-00ad-11f1-bbdd-9d3344d32583;1770106145.289;Aircraft;e2_n1_percent;2;;31.600000
+b2bf9c00-00ad-11f1-bbdd-9d3344d32583;1770106145.344;Aircraft;pitch;2;;-1.130000
+b2c5b680-00ad-11f1-bbdd-9d3344d32583;1770106145.385;Aircraft;e1_n1_percent;2;;31.100000
+b2c5b681-00ad-11f1-bbdd-9d3344d32583;1770106145.385;Aircraft;e2_n1_percent;2;;31.100000
+b2ceb730-00ad-11f1-bbdd-9d3344d32583;1770106145.443;Aircraft;pitch;2;;-1.120000
+b2d546e0-00ad-11f1-bbdd-9d3344d32583;1770106145.486;Aircraft;e1_n1_percent;2;;30.700000
+b2d546e1-00ad-11f1-bbdd-9d3344d32583;1770106145.486;Aircraft;e2_n1_percent;2;;30.700000
+b2dd8440-00ad-11f1-bbdd-9d3344d32583;1770106145.540;Aircraft;pitch;2;;-1.110000
+b2dd8441-00ad-11f1-bbdd-9d3344d32583;1770106145.541;Aircraft;latitude;2;;45.461221
+b2e413f0-00ad-11f1-bbdd-9d3344d32583;1770106145.583;Aircraft;e1_n1_percent;2;;30.300000
+b2e413f1-00ad-11f1-bbdd-9d3344d32583;1770106145.583;Aircraft;e2_n1_percent;2;;30.300000
+b2f48eb0-00ad-11f1-bbdd-9d3344d32583;1770106145.691;Aircraft;airspeed;2;;1.500000
+b2f48eb1-00ad-11f1-bbdd-9d3344d32583;1770106145.691;Aircraft;e1_n1_percent;2;;29.900000
+b2f48eb2-00ad-11f1-bbdd-9d3344d32583;1770106145.691;Aircraft;e2_n1_percent;2;;29.900000
+b302bf80-00ad-11f1-bbdd-9d3344d32583;1770106145.785;Aircraft;e1_n1_percent;2;;29.500000
+b302e690-00ad-11f1-bbdd-9d3344d32583;1770106145.785;Aircraft;e2_n1_percent;2;;29.500000
+b30c8380-00ad-11f1-bbdd-9d3344d32583;1770106145.848;Aircraft;pitch;2;;-1.100000
+b311b3a0-00ad-11f1-bbdd-9d3344d32583;1770106145.883;Aircraft;verticalSpeed;2;;-0.200000
+b312c510-00ad-11f1-bbdd-9d3344d32583;1770106145.889;Aircraft;e1_n1_percent;2;;29.100000
+b312c511-00ad-11f1-bbdd-9d3344d32583;1770106145.889;Aircraft;e2_n1_percent;2;;29.100000
+b3225570-00ad-11f1-bbdd-9d3344d32583;1770106145.992;Aircraft;e1_n1_percent;2;;28.800000
+b3225571-00ad-11f1-bbdd-9d3344d32583;1770106145.992;Aircraft;e2_n1_percent;2;;28.800000
+b332f740-00ad-11f1-bbdd-9d3344d32583;1770106146.101;Aircraft;e1_n1_percent;2;;28.500000
+b332f741-00ad-11f1-bbdd-9d3344d32583;1770106146.101;Aircraft;e2_n1_percent;2;;28.500000
+b339d510-00ad-11f1-bbdd-9d3344d32583;1770106146.146;Aircraft;pitch;2;;-1.090000
+b340b2e0-00ad-11f1-bbdd-9d3344d32583;1770106146.190;Aircraft;e1_n1_percent;2;;28.200000
+b340b2e1-00ad-11f1-bbdd-9d3344d32583;1770106146.190;Aircraft;e2_n1_percent;2;;28.200000
+b35fd3a0-00ad-11f1-bbdd-9d3344d32583;1770106146.395;Aircraft;e1_n1_percent;2;;28.000000
+b35ffab0-00ad-11f1-bbdd-9d3344d32583;1770106146.395;Aircraft;e2_n1_percent;2;;28.000000
+b3626bb0-00ad-11f1-bbdd-9d3344d32583;1770106146.411;Aircraft;e1_n1_percent;2;;27.700000
+b3626bb1-00ad-11f1-bbdd-9d3344d32583;1770106146.411;Aircraft;e2_n1_percent;2;;27.700000
+b36bba80-00ad-11f1-bbdd-9d3344d32583;1770106146.472;Aircraft;pitch;2;;-1.080000
+b373d0d0-00ad-11f1-bbdd-9d3344d32583;1770106146.526;Aircraft;verticalSpeed;2;;-0.100000
+b373f7e0-00ad-11f1-bbdd-9d3344d32583;1770106146.526;Aircraft;e1_n1_percent;2;;27.500000
+b373f7e1-00ad-11f1-bbdd-9d3344d32583;1770106146.526;Aircraft;e2_n1_percent;2;;27.500000
+b380f030-00ad-11f1-bbdd-9d3344d32583;1770106146.612;Aircraft;e1_n1_percent;2;;27.300000
+b380f031-00ad-11f1-bbdd-9d3344d32583;1770106146.612;Aircraft;e2_n1_percent;2;;27.300000
+b39143e0-00ad-11f1-bbdd-9d3344d32583;1770106146.718;Aircraft;e1_n1_percent;2;;27.000000
+b39143e1-00ad-11f1-bbdd-9d3344d32583;1770106146.718;Aircraft;e2_n1_percent;2;;27.000000
+b3a5dd50-00ad-11f1-bbdd-9d3344d32583;1770106146.853;Aircraft;e1_n1_percent;2;;26.900000
+b3a5dd51-00ad-11f1-bbdd-9d3344d32583;1770106146.853;Aircraft;e2_n1_percent;2;;26.900000
+b3afa150-00ad-11f1-bbdd-9d3344d32583;1770106146.917;Aircraft;e1_n1_percent;2;;26.700000
+b3afa151-00ad-11f1-bbdd-9d3344d32583;1770106146.918;Aircraft;e2_n1_percent;2;;26.700000
+b3b82cd0-00ad-11f1-bbdd-9d3344d32583;1770106146.973;Aircraft;pitch;2;;-1.070000
+b3be4750-00ad-11f1-bbdd-9d3344d32583;1770106147.013;Aircraft;e1_n1_percent;2;;26.500000
+b3bf58c0-00ad-11f1-bbdd-9d3344d32583;1770106147.020;Aircraft;e2_n1_percent;2;;26.500000
+b3cd6280-00ad-11f1-bbdd-9d3344d32583;1770106147.113;Aircraft;e1_n1_percent;2;;26.400000
+b3cd6281-00ad-11f1-bbdd-9d3344d32583;1770106147.113;Aircraft;e2_n1_percent;2;;26.400000
+b3dca4c0-00ad-11f1-bbdd-9d3344d32583;1770106147.213;Aircraft;e1_n1_percent;2;;26.200000
+b3dccbd0-00ad-11f1-bbdd-9d3344d32583;1770106147.213;Aircraft;e2_n1_percent;2;;26.200000
+b3e68fd0-00ad-11f1-bbdd-9d3344d32583;1770106147.277;Ingescape Circle;service;14;;Recorder|stop_recording

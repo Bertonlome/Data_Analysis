@@ -668,7 +668,7 @@ def print_task_summary(task_data, start_time, end_time):
 def main():
     # Setup paths
     script_dir = Path(__file__).parent
-    csv_file = script_dir / '25_01_26 - 16_05_27.csv'
+    csv_file = script_dir / 'cassandra_converted.csv'
     
     print("="*80)
     print("TEAM ANALYZER - TARS Agent Task Sequence")

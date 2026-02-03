@@ -23,6 +23,28 @@ from datetime import datetime
 import time
 from echo import *
 
+# Eventlet setup for Cassandra (Python 3.14 compatibility)
+# MUST be done once before any other imports
+import eventlet
+eventlet.monkey_patch()
+
+
+class TeeOutput:
+    """Redirect output to both console and log file"""
+    def __init__(self, log_file, original_stream):
+        self.log_file = log_file
+        self.original_stream = original_stream
+    
+    def write(self, message):
+        self.original_stream.write(message)
+        self.original_stream.flush()
+        self.log_file.write(message)
+        self.log_file.flush()
+    
+    def flush(self):
+        self.original_stream.flush()
+        self.log_file.flush()
+
 Ingescape_Agent = True
 port = 5670
 agent_name = "Data Analysis"
@@ -30,6 +52,13 @@ device = "wlp0s20f3"
 verbose = False
 is_interrupted = False
 analysis_number = 0
+
+# Setup logging to file
+BASE_DIR = Path(__file__).parent.absolute()
+LOG_FILE = BASE_DIR / "main_output.log"
+log_file_handle = open(LOG_FILE, 'a', encoding='utf-8')
+sys.stdout = TeeOutput(log_file_handle, sys.stdout)
+sys.stderr = TeeOutput(log_file_handle, sys.stderr)
 
 def signal_handler(signal_received, frame):
     global is_interrupted
@@ -42,9 +71,13 @@ def signal_handler(signal_received, frame):
 
 # inputs
 def impulsion_input_callback(io_type, name, value_type, value, my_data):
+    global analysis_number
     igs.info(f"Input {name} written")
     if name == "launch_analysis":
         run_flight_simulation_analysis()
+    if name == "reset":
+        analysis_number = 0
+
     # Update the label for impulsion
     
 igs.agent_set_name(agent_name)
@@ -56,9 +89,11 @@ igs.set_command_line(sys.executable + " " + " ".join(sys.argv))
 
 agent = Echo()
 
+igs.input_create("reset", igs.IMPULSION_T, None)
 igs.input_create("launch_analysis", igs.IMPULSION_T, None)
 igs.output_create("analysis_complete", igs.IMPULSION_T, None)
 
+igs.observe_input("reset", impulsion_input_callback, agent)
 igs.observe_input("launch_analysis", impulsion_input_callback, agent)
 
 igs.log_set_console(True)
@@ -70,13 +105,6 @@ signal.signal(signal.SIGINT, signal_handler)
 
 # Source directory with the data files
 SOURCE_DIR = "/home/cavok3/Desktop/DEV/QN-ACTR-XPlane 2022-03-06/out/production/QN workspace/HMI_1/Results"
-
-# Current working directory (where this script is located)
-BASE_DIR = Path(__file__).parent.absolute()
-
-# Create timestamped output directory
-TIMESTAMP = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-OUTPUT_DIR = BASE_DIR / "output" / f"results_{analysis_number}_{TIMESTAMP}"
 
 # Data file mappings: (source_filename, destination_folder, destination_filename)
 DATA_FILES = [
@@ -241,10 +269,7 @@ def fetch_and_convert_cassandra_run():
     """
     print_header("Fetching Latest Run from Cassandra")
     
-    # Import Cassandra libraries with eventlet patch
-    import eventlet
-    eventlet.monkey_patch()
-    
+    # Import Cassandra libraries (eventlet already patched at module level)
     from cassandra.cluster import Cluster
     from cassandra.io.eventletreactor import EventletConnection
     import csv
@@ -306,8 +331,7 @@ def fetch_and_convert_cassandra_run():
         end_idx = -1
         for i in range(latest_start_idx + 1, len(rows_list)):
             row = rows_list[i]
-            if row.agent == 'Cognitive_Model' and row.source == 'start':
-                if row.value == b'\x00':  # false
+            if row.agent == 'TARS Agent' and row.source == 'end_signal':
                     end_idx = i
                     break
         
@@ -336,7 +360,11 @@ def fetch_and_convert_cassandra_run():
         
         print(f"✓ Saved {len(run_rows)} rows to {raw_export_path}\n")
         
-        cluster.shutdown()
+        # Properly shutdown cluster before conversion
+        try:
+            cluster.shutdown()
+        except:
+            pass
         
         # Now convert using the conversion script
         print("Converting to team-analyzer format...")
@@ -368,6 +396,12 @@ def fetch_and_convert_cassandra_run():
         print(f"❌ Error: {e}")
         import traceback
         traceback.print_exc()
+        # Ensure cluster is cleaned up on error
+        try:
+            if 'cluster' in locals():
+                cluster.shutdown()
+        except:
+            pass
         return None
 
 
@@ -378,7 +412,7 @@ def print_header(message):
     print(f"{'='*80}\n")
 
 
-def create_output_directory():
+def create_output_directory(output_dir):
     """Create timestamped output directory structure."""
     print_header("Creating Output Directory")
     
@@ -386,13 +420,13 @@ def create_output_directory():
     subdirs = ['eye_movement', 'team-analyzer', 'trace_analyzer', 'workload_analyzer']
     
     for subdir in subdirs:
-        output_subdir = OUTPUT_DIR / subdir
+        output_subdir = output_dir / subdir
         output_subdir.mkdir(parents=True, exist_ok=True)
     
-    print(f"Output directory created: {OUTPUT_DIR}")
+    print(f"Output directory created: {output_dir}")
     print(f"Subdirectories: {', '.join(subdirs)}\n")
     
-    return OUTPUT_DIR
+    return output_dir
 
 
 def cleanup_old_plots():
@@ -539,7 +573,7 @@ def run_analysis_script(script_path, description, task_events_file=None):
         return False
 
 
-def copy_results_to_output():
+def copy_results_to_output(output_dir):
     """Copy source data files and generated plots to output directory."""
     print_header("STEP 5: Copying Results to Output Directory")
     
@@ -548,14 +582,14 @@ def copy_results_to_output():
         'eye_movement': ['results_eye_movement.txt'],
         'trace_analyzer': ['trace.txt'],
         'workload_analyzer': ['results_mental_workload.txt'],
-        'team-analyzer': ['25_01_26 - 16_05_27.csv']
+        'team-analyzer': []  # Will dynamically find CSV files
     }
     
     total_files_copied = 0
     
     for dir_name, source_files in analysis_dirs.items():
         source_dir = BASE_DIR / dir_name
-        output_subdir = OUTPUT_DIR / dir_name
+        output_subdir = output_dir / dir_name
         
         if not source_dir.exists():
             continue
@@ -570,13 +604,21 @@ def copy_results_to_output():
             print(f"⊘ Skipping {dir_name}: No analysis results generated")
             continue
         
-        # Copy source data files
-        for source_file in source_files:
-            source_path = source_dir / source_file
-            if source_path.exists():
-                shutil.copy2(source_path, output_subdir / source_file)
-                print(f"✓ Copied source: {dir_name}/{source_file}")
+        # For team-analyzer, dynamically find all CSV files
+        if dir_name == 'team-analyzer':
+            csv_files = list(source_dir.glob('*.csv'))
+            for csv_file in csv_files:
+                shutil.copy2(csv_file, output_subdir / csv_file.name)
+                print(f"✓ Copied source: {dir_name}/{csv_file.name}")
                 total_files_copied += 1
+        else:
+            # Copy source data files
+            for source_file in source_files:
+                source_path = source_dir / source_file
+                if source_path.exists():
+                    shutil.copy2(source_path, output_subdir / source_file)
+                    print(f"✓ Copied source: {dir_name}/{source_file}")
+                    total_files_copied += 1
         
         # Copy all PNG and EPS files
         for plot_file in png_files:
@@ -594,7 +636,7 @@ def copy_results_to_output():
             print(f"  → {dir_name}: {png_count} PNG, {eps_count} EPS plots")
     
     print(f"\nTotal files copied to output: {total_files_copied}")
-    print(f"Output location: {OUTPUT_DIR}\n")
+    print(f"Output location: {output_dir}\n")
     
     return total_files_copied
 
@@ -605,7 +647,7 @@ def run_all_analyses():
     
     # Parse and synchronize task events for trace analyzer
     task_events_file = None
-    csv_path = BASE_DIR / "team-analyzer" / "25_01_26 - 16_05_27.csv"
+    csv_path = BASE_DIR / "team-analyzer" / "cassandra_converted.csv"
     trace_path = BASE_DIR / "trace_analyzer" / "trace.txt"
     
     if csv_path.exists() and trace_path.exists():
@@ -660,12 +702,25 @@ def run_all_analyses():
 
 def run_flight_simulation_analysis():
     """Main execution function."""
+    global analysis_number
+    
+    # Create fresh timestamp and output directory for this run
+    timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    output_dir = BASE_DIR / "output" / f"results_{analysis_number}_{timestamp}"
+    
+    # Log separator and analysis info
+    print("\n" + "="*80)
+    print(f"ANALYSIS RUN #{analysis_number}")
+    print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("="*80 + "\n")
+    
     print_header("Flight Simulation Data Analysis Pipeline")
+    print(f"Analysis Number: {analysis_number}")
     print(f"Working directory: {BASE_DIR}")
-    print(f"Timestamp: {TIMESTAMP}\n")
+    print(f"Timestamp: {timestamp}\n")
     
     # Step 0: Create output directory
-    create_output_directory()
+    create_output_directory(output_dir)
     
     # Step 1: Fetch latest run from Cassandra
     cassandra_csv = fetch_and_convert_cassandra_run()
@@ -686,7 +741,7 @@ def run_flight_simulation_analysis():
     all_analyses_successful = run_all_analyses()
     
     # Step 5: Copy results to output directory
-    copy_results_to_output()
+    copy_results_to_output(output_dir)
     
     # Final summary
     print_header("SUMMARY")
@@ -709,15 +764,19 @@ def run_flight_simulation_analysis():
                 print()
     
     print(f"Total plots generated: {total_plots}")
-    print(f"\nResults saved to: {OUTPUT_DIR}")
+    print(f"\nResults saved to: {output_dir}")
     
     if all_analyses_successful:
         print("\n🎉 All analyses completed successfully!")
+        print(f"\nAnalysis #{analysis_number} completed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print("="*80 + "\n")
         igs.output_set_impulsion("analysis_complete")
         analysis_number += 1
         return 0
     else:
         print("\n⚠ Some analyses encountered issues. Please review the output above.")
+        print(f"\nAnalysis #{analysis_number} completed with errors at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print("="*80 + "\n")
         return 1
 
 
@@ -732,4 +791,10 @@ if __name__ == "__main__":
                 # main loop
         except Exception as e:
             igs.error(f"Exception in main loop: {e}")
+        finally:
+            # Cleanup logging
+            if log_file_handle:
+                sys.stdout = sys.stdout.original_stream
+                sys.stderr = sys.stderr.original_stream
+                log_file_handle.close()
         igs.stop()

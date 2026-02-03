@@ -329,12 +329,16 @@ def extract_run_data(csv_filepath, run_name):
     }
 
 def find_csv_files(output_dir):
-    """Find all CSV files in the output subfolders"""
+    """Find all CSV files in the output subfolders matching results_n_* pattern"""
+    import re
     csv_files = []
     output_path = Path(output_dir)
     
+    # Pattern to match results_n_timestamp folders (e.g., results_0_2026_02_03_10_33_15)
+    results_pattern = re.compile(r'^results_(\d+)_')
+    
     for subfolder in output_path.iterdir():
-        if subfolder.is_dir() and subfolder.name != '__pycache__':
+        if subfolder.is_dir() and results_pattern.match(subfolder.name):
             team_analyzer_dir = subfolder / 'team-analyzer'
             if team_analyzer_dir.exists():
                 # Find CSV files in the team-analyzer directory

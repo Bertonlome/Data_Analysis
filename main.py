@@ -23,6 +23,9 @@ from datetime import datetime
 import time
 from echo import *
 
+RUN_NUMBER = 1
+analysis_number = 0
+
 # Eventlet setup for Cassandra (Python 3.14 compatibility)
 # MUST be done once before any other imports
 import eventlet
@@ -51,7 +54,6 @@ agent_name = "Data Analysis"
 device = "wlp0s20f3"
 verbose = False
 is_interrupted = False
-analysis_number = 0
 
 # Setup logging to file
 BASE_DIR = Path(__file__).parent.absolute()
@@ -281,6 +283,9 @@ def fetch_and_convert_cassandra_run():
     raw_export_path = BASE_DIR / "cassandra_event_export.csv"
     converted_path = BASE_DIR / "team-analyzer" / "cassandra_converted.csv"
     
+    cluster = None
+    session = None
+    
     try:
         # Connect to Cassandra
         print(f"Connecting to Cassandra at {CASSANDRA_HOST}:{CASSANDRA_PORT}...")
@@ -360,12 +365,6 @@ def fetch_and_convert_cassandra_run():
         
         print(f"✓ Saved {len(run_rows)} rows to {raw_export_path}\n")
         
-        # Properly shutdown cluster before conversion
-        try:
-            cluster.shutdown()
-        except:
-            pass
-        
         # Now convert using the conversion script
         print("Converting to team-analyzer format...")
         
@@ -403,13 +402,24 @@ def fetch_and_convert_cassandra_run():
         except:
             pass
         return None
+    finally:
+        # Always cleanup Cassandra connections
+        try:
+            if session is not None:
+                session.shutdown()
+        except:
+            pass
+        try:
+            if cluster is not None:
+                cluster.shutdown()
+        except:
+            pass
 
 
 def print_header(message):
     """Print a formatted header message."""
     print(f"\n{'='*80}")
     print(f"  {message}")
-    print(f"{'='*80}\n")
 
 
 def create_output_directory(output_dir):
@@ -691,9 +701,9 @@ def run_all_analyses():
                 print(f"\n⚠ Warning: {description} did not complete successfully.")
                 print("Continuing with remaining analyses...\n")
     
-    # Cleanup temporary file
+    # Keep task_events.json persistent for standalone analyzer runs
     if task_events_file and Path(task_events_file).exists():
-        Path(task_events_file).unlink()
+        print(f"\nTask events saved to: {task_events_file}")
     
     print_header(f"Analysis Complete: {success_count}/{total_scripts} successful")
     
@@ -703,10 +713,10 @@ def run_all_analyses():
 def run_flight_simulation_analysis():
     """Main execution function."""
     global analysis_number
-    
+    global RUN_NUMBER
     # Create fresh timestamp and output directory for this run
     timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    output_dir = BASE_DIR / "output" / f"results_{analysis_number}_{timestamp}"
+    output_dir = BASE_DIR / "output" / f"run_{RUN_NUMBER}_results_{analysis_number}_{timestamp}"
     
     # Log separator and analysis info
     print("\n" + "="*80)

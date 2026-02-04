@@ -343,6 +343,51 @@ def print_statistics(times, decide_crosscheck_utilities, no_crosscheck_utilities
     print(f"{'='*70}\n")
 
 
+def export_summary_metrics(times, decide_crosscheck_utilities, no_crosscheck_utilities,
+                           decide_crosscheck_u_no_noise, no_crosscheck_u_no_noise, output_dir='trace_analyzer'):
+    """
+    Export summary metrics to CSV for comparison analysis.
+    Creates a trace_summary.csv file with conflict resolution statistics.
+    """
+    import csv
+    from pathlib import Path
+    
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    
+    # Calculate summary statistics
+    summary_file = output_path / 'trace_summary.csv'
+    
+    with open(summary_file, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Metric', 'Value'])
+        
+        # Number of conflict resolution events
+        writer.writerow(['Num_Conflict_Events', len(times)])
+        
+        # x-7-decide-crosscheck statistics (with noise)
+        writer.writerow(['Decide_Utility_Mean', f'{sum(decide_crosscheck_utilities)/len(decide_crosscheck_utilities):.6f}'])
+        writer.writerow(['Decide_Utility_Min', f'{min(decide_crosscheck_utilities):.6f}'])
+        writer.writerow(['Decide_Utility_Max', f'{max(decide_crosscheck_utilities):.6f}'])
+        
+        # x-7-decide-crosscheck statistics (without noise)
+        writer.writerow(['Decide_U_NoNoise_Mean', f'{sum(decide_crosscheck_u_no_noise)/len(decide_crosscheck_u_no_noise):.6f}'])
+        writer.writerow(['Decide_U_NoNoise_Min', f'{min(decide_crosscheck_u_no_noise):.6f}'])
+        writer.writerow(['Decide_U_NoNoise_Max', f'{max(decide_crosscheck_u_no_noise):.6f}'])
+        
+        # x-7-no-crosscheck statistics (with noise)
+        writer.writerow(['NoCrosscheck_Utility_Mean', f'{sum(no_crosscheck_utilities)/len(no_crosscheck_utilities):.6f}'])
+        writer.writerow(['NoCrosscheck_Utility_Min', f'{min(no_crosscheck_utilities):.6f}'])
+        writer.writerow(['NoCrosscheck_Utility_Max', f'{max(no_crosscheck_utilities):.6f}'])
+        
+        # x-7-no-crosscheck statistics (without noise)
+        writer.writerow(['NoCrosscheck_U_NoNoise_Mean', f'{sum(no_crosscheck_u_no_noise)/len(no_crosscheck_u_no_noise):.6f}'])
+        writer.writerow(['NoCrosscheck_U_NoNoise_Min', f'{min(no_crosscheck_u_no_noise):.6f}'])
+        writer.writerow(['NoCrosscheck_U_NoNoise_Max', f'{max(no_crosscheck_u_no_noise):.6f}'])
+    
+    print(f"  → Summary metrics exported to: {summary_file}")
+
+
 if __name__ == "__main__":
     # Parse the trace file
     print("Parsing trace_analyzer/trace.txt...")
@@ -369,8 +414,15 @@ if __name__ == "__main__":
         print_statistics(times, decide_utilities, no_crosscheck_utilities, 
                         decide_u_no_noise, no_crosscheck_u_no_noise)
         
+        # Export summary metrics for comparison analysis
+        print(f"\n{'='*70}")
+        print("EXPORTING SUMMARY METRICS")
+        print(f"{'='*70}")
+        export_summary_metrics(times, decide_utilities, no_crosscheck_utilities,
+                              decide_u_no_noise, no_crosscheck_u_no_noise, 'trace_analyzer')
+        
         # Create plots
-        print("Generating plots...")
+        print("\nGenerating plots...")
         plot_utilities(times, decide_utilities, no_crosscheck_utilities,
                       decide_u_no_noise, no_crosscheck_u_no_noise, rewards, tasks)
     else:

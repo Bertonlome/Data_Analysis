@@ -122,6 +122,79 @@ def parse_all_cognitive_productions(filepath):
     
     return events
 
+
+def parse_tars_timing_events(filepath):
+    """Parse TARS Agent timing events for execution time calculation"""
+    timing_events = []
+    
+    with open(filepath, 'r', encoding='utf-8') as f:
+        reader = csv.reader(f, delimiter=';')
+        
+        for row in reader:
+            if len(row) >= 7:
+                # Check if this is a TARS Agent timing event
+                if row[2] == "TARS Agent" and row[3] in ['action_time', 'tts_time', 'delay_before_action', 'delay_after_action', 'transition_action']:
+                    # Parse the timing value from format "event_type:0.03"
+                    value_str = row[6] if len(row) > 6 else ''
+                    duration = 0.0
+                    if ':' in value_str:
+                        try:
+                            duration = float(value_str.split(':')[1])
+                        except (ValueError, IndexError):
+                            duration = 0.0
+                    
+                    event = {
+                        'uuid': row[0],
+                        'timestamp': float(row[1]),
+                        'event_type': row[3],
+                        'duration': duration,
+                    }
+                    timing_events.append(event)
+    
+    return timing_events
+
+
+def calculate_tars_execution_times(timing_events, tasks, end_event):
+    """Calculate TARS execution time for each task based on timing events"""
+    tars_execution = []
+    
+    for i, task in enumerate(tasks):
+        task_start = task['timestamp']
+        # Task end is either the next task start or the end event
+        if i < len(tasks) - 1:
+            task_end = tasks[i + 1]['timestamp']
+        else:
+            task_end = end_event['timestamp']
+        
+        # Find all timing events during this task
+        task_timing_events = [
+            e for e in timing_events
+            if task_start <= e['timestamp'] < task_end
+        ]
+        
+        # Sum up all execution times
+        total_execution = sum(e['duration'] for e in task_timing_events)
+        
+        # Count by type for detailed analysis
+        action_time = sum(e['duration'] for e in task_timing_events if e['event_type'] == 'action_time')
+        tts_time = sum(e['duration'] for e in task_timing_events if e['event_type'] == 'tts_time')
+        delay_before = sum(e['duration'] for e in task_timing_events if e['event_type'] == 'delay_before_action')
+        delay_after = sum(e['duration'] for e in task_timing_events if e['event_type'] == 'delay_after_action')
+        transition = sum(e['duration'] for e in task_timing_events if e['event_type'] == 'transition_action')
+        
+        tars_execution.append({
+            'task_object': task['task_object'],
+            'value': task['value'],
+            'total_execution': total_execution,
+            'action_time': action_time,
+            'tts_time': tts_time,
+            'delay_before_action': delay_before,
+            'delay_after_action': delay_after,
+            'transition_action': transition,
+        })
+    
+    return tars_execution
+
 def calculate_coordination_overhead(productions, tasks, end_event):
     """Calculate coordination time for each FSM task/state"""
     task_coordination = []
@@ -495,6 +568,93 @@ def create_comparison_chart(fsm_tasks, active_tasks, output_dir):
     
     return fig
 
+def calculate_jae_metrics(fsm_task_data, active_task_data, tars_execution, theoretical_ed=None):
+    """Calculate Joint Activity Efficiency (JAE) metrics at task and scenario level
+    
+    JAE = ED / AD
+    where:
+    - ED (Estimated Duration) = optimal time for task completion
+    - AD (Active Duration) = Human_Active_Time + TARS_Execution_Time
+    
+    Args:
+        fsm_task_data: FSM-based task durations
+        active_task_data: Human active cognitive time per task
+        tars_execution: TARS execution times per task
+        theoretical_ed: Dictionary mapping task_object to theoretical optimal time (optional)
+    
+    Returns:
+        List of task-level JAE metrics with both data-based and theory-based calculations
+    """
+    jae_metrics = []
+    
+    for i in range(len(fsm_task_data)):
+        fsm_task = fsm_task_data[i]
+        task_object = fsm_task['task_name']  # This is the task_object
+        
+        # Calculate Active Duration (AD) = Human + TARS
+        human_active = active_task_data[i]['duration'] if i < len(active_task_data) else 0.0
+        tars_exec = tars_execution[i]['total_execution'] if i < len(tars_execution) else 0.0
+        active_duration = human_active + tars_exec
+        
+        # For JAE-Data, we'll use the minimum observed AD (will be calculated in compare.py)
+        # Here we just store the AD for later comparison
+        
+        # For JAE-Theory, use theoretical ED if provided
+        jae_theory = None
+        if theoretical_ed and task_object in theoretical_ed:
+            ed_theory = theoretical_ed[task_object]
+            jae_theory = ed_theory / active_duration if active_duration > 0 else 0.0
+        
+        jae_metrics.append({
+            'task_object': task_object,
+            'value': fsm_task['value'],
+            'fsm_duration': fsm_task['duration'],
+            'human_active_time': human_active,
+            'tars_execution_time': tars_exec,
+            'active_duration': active_duration,
+            'jae_theory': jae_theory,
+        })
+    
+    return jae_metrics
+
+
+def print_jae_summary(jae_metrics):
+    """Print summary of JAE metrics"""
+    print("\n" + "="*80)
+    print("JOINT ACTIVITY EFFICIENCY (JAE) ANALYSIS")
+    print("="*80)
+    print("Active Duration (AD) = Human Active Time + TARS Execution Time")
+    print("JAE = Estimated Duration (ED) / Active Duration (AD)")
+    print("\n" + "-"*80)
+    print(f"{'#':<4} {'Task Object':<30} {'Human (s)':<12} {'TARS (s)':<12} {'AD (s)':<12}")
+    print("-"*80)
+    
+    total_human = 0.0
+    total_tars = 0.0
+    total_ad = 0.0
+    
+    for i, jae in enumerate(jae_metrics, 1):
+        print(f"{i:<4} {jae['task_object']:<30} {jae['human_active_time']:<12.3f} "
+              f"{jae['tars_execution_time']:<12.3f} {jae['active_duration']:<12.3f}")
+        total_human += jae['human_active_time']
+        total_tars += jae['tars_execution_time']
+        total_ad += jae['active_duration']
+    
+    print("-"*80)
+    print(f"{'Total':<4} {'':<30} {total_human:<12.3f} {total_tars:<12.3f} {total_ad:<12.3f}")
+    print("="*80)
+    
+    print(f"\nSCENARIO-LEVEL SUMMARY:")
+    print(f"  Total Human Active Time: {total_human:.3f}s")
+    print(f"  Total TARS Execution Time: {total_tars:.3f}s")
+    print(f"  Total Active Duration (AD): {total_ad:.3f}s")
+    print(f"  Human contribution to AD: {(total_human/total_ad*100) if total_ad > 0 else 0:.1f}%")
+    print(f"  TARS contribution to AD: {(total_tars/total_ad*100) if total_ad > 0 else 0:.1f}%")
+    print("\nNOTE: JAE-Data will be calculated in compare.py using minimum AD across runs")
+    print("      JAE-Theory requires theoretical optimal times per task type")
+    print("="*80 + "\n")
+
+
 def print_coordination_summary(task_coordination):
     """Print summary of coordination overhead per task"""
     print("\n" + "="*80)
@@ -532,6 +692,57 @@ def print_coordination_summary(task_coordination):
         print(f"  Mean productions per sequence: {total_productions / total_sequences:.1f}")
     
     print("="*80 + "\n")
+
+def export_summary_metrics(fsm_task_data, active_task_data, task_coordination, jae_metrics, start_time, end_time, output_dir):
+    """Export summary metrics to CSV files for comparison analysis"""
+    output_path = Path(output_dir)
+    
+    # Export scenario summary (overall metrics)
+    scenario_file = output_path / 'scenario_summary.csv'
+    with open(scenario_file, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Metric', 'Value'])
+        
+        total_fsm_time = end_time - start_time
+        total_human_active = sum(j['human_active_time'] for j in jae_metrics)
+        total_tars_exec = sum(j['tars_execution_time'] for j in jae_metrics)
+        total_active_duration = sum(j['active_duration'] for j in jae_metrics)
+        total_coord_time = sum(t['coordination_time'] for t in task_coordination)
+        
+        writer.writerow(['Total_FSM_Time_s', f'{total_fsm_time:.6f}'])
+        writer.writerow(['Total_Human_Active_Time_s', f'{total_human_active:.6f}'])
+        writer.writerow(['Total_TARS_Execution_Time_s', f'{total_tars_exec:.6f}'])
+        writer.writerow(['Total_Active_Duration_s', f'{total_active_duration:.6f}'])
+        writer.writerow(['Total_Coordination_Time_s', f'{total_coord_time:.6f}'])
+        writer.writerow(['Active_Percentage', f'{(total_active_duration/total_fsm_time*100) if total_fsm_time > 0 else 0:.2f}'])
+        writer.writerow(['Coordination_Percentage', f'{(total_coord_time/total_fsm_time*100) if total_fsm_time > 0 else 0:.2f}'])
+        writer.writerow(['Num_Tasks', len(fsm_task_data)])
+    
+    print(f"Exported scenario summary to {scenario_file}")
+    
+    # Export task-level metrics with JAE components
+    task_file = output_path / 'task_summary.csv'
+    with open(task_file, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Task_Object', 'Task_Value', 'FSM_Duration_s', 'Human_Active_Time_s', 
+                        'TARS_Execution_Time_s', 'Active_Duration_s', 'Coordination_Time_s'])
+        
+        for i, fsm_task in enumerate(fsm_task_data):
+            jae = jae_metrics[i] if i < len(jae_metrics) else None
+            coord_time = task_coordination[i]['coordination_time'] if i < len(task_coordination) else 0
+            
+            if jae:
+                writer.writerow([
+                    fsm_task['task_name'],
+                    fsm_task['value'],
+                    f"{fsm_task['duration']:.6f}",
+                    f"{jae['human_active_time']:.6f}",
+                    f"{jae['tars_execution_time']:.6f}",
+                    f"{jae['active_duration']:.6f}",
+                    f"{coord_time:.6f}"
+                ])
+    
+    print(f"Exported task-level metrics to {task_file}")
 
 def create_coordination_overhead_chart(task_coordination, output_dir):
     """Create a visualization of coordination overhead per task"""
@@ -748,6 +959,31 @@ def main():
     # Create coordination overhead visualization
     print("Generating coordination overhead chart...")
     create_coordination_overhead_chart(task_coordination, script_dir)
+    
+    # Parse TARS timing events and calculate execution times
+    print("\n" + "="*80)
+    print("ANALYZING TARS EXECUTION TIMES")
+    print("="*80)
+    timing_events = parse_tars_timing_events(csv_file)
+    print(f"Found {len(timing_events)} TARS timing events\n")
+    
+    tars_execution = calculate_tars_execution_times(timing_events, tasks, end_event)
+    
+    # Calculate JAE metrics
+    print("\n" + "="*80)
+    print("CALCULATING JOINT ACTIVITY EFFICIENCY (JAE) METRICS")
+    print("="*80)
+    jae_metrics = calculate_jae_metrics(fsm_task_data, active_task_data, tars_execution)
+    
+    # Print JAE summary
+    print_jae_summary(jae_metrics)
+    
+    # Export summary metrics for comparison analysis
+    print("\n" + "="*80)
+    print("EXPORTING SUMMARY METRICS")
+    print("="*80)
+    export_summary_metrics(fsm_task_data, active_task_data, task_coordination, jae_metrics,
+                           tasks[0]['timestamp'], end_event['timestamp'], script_dir)
     
     print("\n✓ Team analysis completed successfully!")
 

@@ -1,0 +1,675 @@
+uuid;timestamp;agent;source;type;igs_timestamp;value
+7f7ae5e0-0178-11f1-a92d-bf6711fe544f;1770193247.167;Cognitive_Model;start;4;;true
+7f812770-0178-11f1-a92d-bf6711fe544f;1770193247.207;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+7f825ff0-0178-11f1-a92d-bf6711fe544f;1770193247.216;Shared Interface;countdown_complete;5;;
+7f825ff1-0178-11f1-a92d-bf6711fe544f;1770193247.216;ATC_Agent;speech_output;3;;C-POLY, Montreal-Tower, wind-0-9-0-at-4, cleared-for-takeoff runway-zero-six-left. Climb-to-5000ft.
+7f825ff2-0178-11f1-a92d-bf6711fe544f;1770193247.216;Shared Interface;countdown_complete;5;;
+7f825ff3-0178-11f1-a92d-bf6711fe544f;1770193247.216;ATC_Agent;is_speaking;4;;true
+7f828700-0178-11f1-a92d-bf6711fe544f;1770193247.216;TARS Agent;request_takeoff_clearance;5;;
+7f828701-0178-11f1-a92d-bf6711fe544f;1770193247.216;TARS Agent;action_time;3;;transition_action:0.30
+7f828702-0178-11f1-a92d-bf6711fe544f;1770193247.216;TARS Agent;current_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""Takeoff clearance"", ""value"": ""CONFIRM"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ATC clearance status, checklist completion status."", ""interaction"": """", ""delay_before_action"": 0.0, ""delay_after_action"": 0.0, ""callout"": ""Cessna Charlie Papa Oscar Lima Yankee cleared for takeoff, will maintain runway heading, climb to 5000ft proceed direct AGMEB then OMEKI"", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+7f828703-0178-11f1-a92d-bf6711fe544f;1770193247.216;TARS Agent;current_procedure;3;;BEFORE TAKEOFF
+7f828704-0178-11f1-a92d-bf6711fe544f;1770193247.216;TARS Agent;interaction_message;3;;
+7f828705-0178-11f1-a92d-bf6711fe544f;1770193247.217;TARS Agent;current_task_object;3;;Takeoff clearance
+7f828706-0178-11f1-a92d-bf6711fe544f;1770193247.217;TARS Agent;current_task_value;3;;CONFIRM
+7f828707-0178-11f1-a92d-bf6711fe544f;1770193247.217;TARS Agent;current_task_autonomy_role;3;;
+7f828708-0178-11f1-a92d-bf6711fe544f;1770193247.217;TARS Agent;current_task_human_role;3;;performer
+7f828709-0178-11f1-a92d-bf6711fe544f;1770193247.217;TARS Agent;next_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""Pitot-Static Switch"", ""value"": ""PITOT-STATIC"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Pitot-static switch status"", ""interaction"": ""pitot_static_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": 0.0, ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+7f82870a-0178-11f1-a92d-bf6711fe544f;1770193247.217;TARS Agent;countdown_next;1;;false
+7f82ae10-0178-11f1-a92d-bf6711fe544f;1770193247.217;TARS Agent;countdown_max_next;1;;false
+7f82ae11-0178-11f1-a92d-bf6711fe544f;1770193247.217;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""Takeoff clearance"", ""value"": ""CONFIRM"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ATC clearance status, checklist completion status."", ""interaction"": """", ""delay_before_action"": 0.0, ""delay_after_action"": 0.0, ""callout"": ""Cessna Charlie Papa Oscar Lima Yankee cleared for takeoff, will maintain runway heading, climb to 5000ft proceed direct AGMEB then OMEKI"", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+7f82ae12-0178-11f1-a92d-bf6711fe544f;1770193247.217;TARS Agent;action_time;3;;action:0.03
+7f82ae13-0178-11f1-a92d-bf6711fe544f;1770193247.218;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+7f91f050-0178-11f1-a92d-bf6711fe544f;1770193247.317;Cognitive_Model;production_selected;3;;encode-aoi-information
+7fb815f0-0178-11f1-a92d-bf6711fe544f;1770193247.568;Cognitive_Model;production_selected;3;;detected-sound
+7fcf4770-0178-11f1-a92d-bf6711fe544f;1770193247.719;Cognitive_Model;production_selected;3;;encode-sound
+7fd38d30-0178-11f1-a92d-bf6711fe544f;1770193247.747;Aircraft;cabin_altitude;2;;104.000000
+7fedf300-0178-11f1-a92d-bf6711fe544f;1770193247.920;Cognitive_Model;production_selected;3;;retrieve-self-callsign
+8013a370-0178-11f1-a92d-bf6711fe544f;1770193248.167;Aircraft;e1_n1_percent;2;;23.400000
+8013a371-0178-11f1-a92d-bf6711fe544f;1770193248.167;Aircraft;e2_n1_percent;2;;23.400000
+80143fb0-0178-11f1-a92d-bf6711fe544f;1770193248.171;Cognitive_Model;production_selected;3;;is-our-callsign
+80215f10-0178-11f1-a92d-bf6711fe544f;1770193248.258;Aircraft;cabin_altitude;2;;103.900000
+80a05310-0178-11f1-a92d-bf6711fe544f;1770193249.089;Aircraft;cabin_altitude;2;;103.800000
+80ad2450-0178-11f1-a92d-bf6711fe544f;1770193249.173;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+80b51390-0178-11f1-a92d-bf6711fe544f;1770193249.225;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+80bcb4b0-0178-11f1-a92d-bf6711fe544f;1770193249.276;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+80cbf6f0-0178-11f1-a92d-bf6711fe544f;1770193249.376;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+80cbf6f1-0178-11f1-a92d-bf6711fe544f;1770193249.376;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+80d3bf20-0178-11f1-a92d-bf6711fe544f;1770193249.426;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+80db3930-0178-11f1-a92d-bf6711fe544f;1770193249.476;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+80eaa280-0178-11f1-a92d-bf6711fe544f;1770193249.576;Cognitive_Model;production_selected;3;;wait-for-next-word
+80eaa281-0178-11f1-a92d-bf6711fe544f;1770193249.576;Cognitive_Model;production_selected;3;;start-timing
+81099c30-0178-11f1-a92d-bf6711fe544f;1770193249.779;Aircraft;cabin_altitude;2;;103.700000
+813714d0-0178-11f1-a92d-bf6711fe544f;1770193250.077;Cognitive_Model;production_selected;3;;detected-sound
+8179ea30-0178-11f1-a92d-bf6711fe544f;1770193250.515;Aircraft;cabin_altitude;2;;103.600000
+818b0130-0178-11f1-a92d-bf6711fe544f;1770193250.627;Cognitive_Model;production_selected;3;;encode-and-retrieval-attempt-for-word-from-takeoff-clearance-stop-timer
+81df14a0-0178-11f1-a92d-bf6711fe544f;1770193251.179;Cognitive_Model;production_selected;3;;form-sender-representation-from-takeoff-clearance
+81fe5c70-0178-11f1-a92d-bf6711fe544f;1770193251.384;Aircraft;cabin_altitude;2;;103.500000
+823ac930-0178-11f1-a92d-bf6711fe544f;1770193251.780;Cognitive_Model;production_selected;3;;wait-for-next-word
+82429160-0178-11f1-a92d-bf6711fe544f;1770193251.830;Cognitive_Model;production_selected;3;;start-timing
+82959360-0178-11f1-a92d-bf6711fe544f;1770193252.374;Aircraft;cabin_altitude;2;;103.400000
+82bcca70-0178-11f1-a92d-bf6711fe544f;1770193252.632;Cognitive_Model;production_selected;3;;detected-sound
+83204730-0178-11f1-a92d-bf6711fe544f;1770193253.283;Cognitive_Model;production_selected;3;;encode-and-retrieval-attempt-for-word-from-takeoff-clearance-stop-timer
+8340ee90-0178-11f1-a92d-bf6711fe544f;1770193253.497;Aircraft;cabin_altitude;2;;103.300000
+83a9e990-0178-11f1-a92d-bf6711fe544f;1770193254.186;Cognitive_Model;production_selected;3;;form-wind-representation-from-takeoff-clearance
+83c89520-0178-11f1-a92d-bf6711fe544f;1770193254.386;Cognitive_Model;production_selected;3;;update-wind-belief-from-takeoff-clearance
+83d03640-0178-11f1-a92d-bf6711fe544f;1770193254.436;Cognitive_Model;production_selected;3;;wait-for-next-word
+83d7d760-0178-11f1-a92d-bf6711fe544f;1770193254.487;Cognitive_Model;production_selected;3;;start-timing
+83eb3850-0178-11f1-a92d-bf6711fe544f;1770193254.614;Aircraft;cabin_altitude;2;;103.200000
+846152b0-0178-11f1-a92d-bf6711fe544f;1770193255.388;Cognitive_Model;production_selected;3;;detected-sound
+84c67d20-0178-11f1-a92d-bf6711fe544f;1770193256.051;Aircraft;cabin_altitude;2;;103.100000
+84dbb2d0-0178-11f1-a92d-bf6711fe544f;1770193256.189;Cognitive_Model;production_selected;3;;encode-and-retrieval-attempt-for-word-from-takeoff-clearance-stop-timer
+859ae420-0178-11f1-a92d-bf6711fe544f;1770193257.443;Cognitive_Model;production_selected;3;;detected-sound
+85cec560-0178-11f1-a92d-bf6711fe544f;1770193257.783;Aircraft;cabin_altitude;2;;103.000000
+8633c8c0-0178-11f1-a92d-bf6711fe544f;1770193258.444;Cognitive_Model;production_selected;3;;encode-and-retrieval-attempt-for-word-from-takeoff-clearance-stop-timer
+869f34c0-0178-11f1-a92d-bf6711fe544f;1770193259.148;Cognitive_Model;production_selected;3;;form-runway-representation-from-takeoff-clearance
+86f32120-0178-11f1-a92d-bf6711fe544f;1770193259.699;Cognitive_Model;production_selected;3;;wait-for-next-word
+86fac240-0178-11f1-a92d-bf6711fe544f;1770193259.749;Cognitive_Model;production_selected;3;;start-timing
+86ffcb50-0178-11f1-a92d-bf6711fe544f;1770193259.782;Aircraft;cabin_altitude;2;;102.900000
+874efcc0-0178-11f1-a92d-bf6711fe544f;1770193260.300;Cognitive_Model;production_selected;3;;detected-sound
+8786ae90-0178-11f1-a92d-bf6711fe544f;1770193260.666;Aircraft;airspeed;2;;1.700000
+87aab150-0178-11f1-a92d-bf6711fe544f;1770193260.902;Cognitive_Model;production_selected;3;;encode-and-retrieval-attempt-for-word-from-takeoff-clearance-stop-timer
+87d0fe00-0178-11f1-a92d-bf6711fe544f;1770193261.152;Cognitive_Model;production_selected;3;;form-altitude-representation-from-takeoff-clearance
+8852ff40-0178-11f1-a92d-bf6711fe544f;1770193262.004;Cognitive_Model;production_selected;3;;wait-for-next-word
+885aa060-0178-11f1-a92d-bf6711fe544f;1770193262.054;Cognitive_Model;production_selected;3;;start-timing
+887fdba0-0178-11f1-a92d-bf6711fe544f;1770193262.298;ATC_Agent;is_speaking;4;;false
+889140c0-0178-11f1-a92d-bf6711fe544f;1770193262.412;Aircraft;cabin_altitude;2;;102.800000
+892913f0-0178-11f1-a92d-bf6711fe544f;1770193263.407;Cognitive_Model;production_selected;3;;atc-not-speaking-end-of-message
+89385630-0178-11f1-a92d-bf6711fe544f;1770193263.507;Cognitive_Model;production_selected;3;;t-i-end-of-communication-and-we-have-allocation
+893ff750-0178-11f1-a92d-bf6711fe544f;1770193263.558;Cognitive_Model;production_selected;3;;t-i-allocation-to-takeoff-clearance-readback-by-pilot
+89479870-0178-11f1-a92d-bf6711fe544f;1770193263.608;Cognitive_Model;production_selected;3;;start-readback-push-ptt-on
+89661cf0-0178-11f1-a92d-bf6711fe544f;1770193263.808;Cognitive_Model;push_to_talk;4;;true
+89664400-0178-11f1-a92d-bf6711fe544f;1770193263.808;Cognitive_Model;production_selected;3;;start-readback-sender
+898c4290-0178-11f1-a92d-bf6711fe544f;1770193264.058;Cognitive_Model;speech_output;3;;montreal-tower
+898c69a0-0178-11f1-a92d-bf6711fe544f;1770193264.058;Cognitive_Model;production_selected;3;;readback-callsign
+89b28f40-0178-11f1-a92d-bf6711fe544f;1770193264.308;Cognitive_Model;speech_output;3;;c-poly
+89b28f41-0178-11f1-a92d-bf6711fe544f;1770193264.309;Cognitive_Model;production_selected;3;;readback-cleared-for-takeoff
+89d8dbf0-0178-11f1-a92d-bf6711fe544f;1770193264.559;Cognitive_Model;speech_output;3;;cleared-for-takeoff
+89d8dbf1-0178-11f1-a92d-bf6711fe544f;1770193264.559;Cognitive_Model;production_selected;3;;readback-runway-heading
+89ff0190-0178-11f1-a92d-bf6711fe544f;1770193264.810;Cognitive_Model;speech_output;3;;runway-zero-six-left
+89ff0191-0178-11f1-a92d-bf6711fe544f;1770193264.810;Cognitive_Model;production_selected;3;;readback-climb-to-altitude
+8a06a2b0-0178-11f1-a92d-bf6711fe544f;1770193264.860;Cognitive_Model;production_selected;3;;finish-readback
+8a254e40-0178-11f1-a92d-bf6711fe544f;1770193265.060;Cognitive_Model;push_to_talk;4;;false
+8a254e41-0178-11f1-a92d-bf6711fe544f;1770193265.060;Cognitive_Model;speech_output;3;;w-to-five-thousand
+8a254e42-0178-11f1-a92d-bf6711fe544f;1770193265.061;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+8a349080-0178-11f1-a92d-bf6711fe544f;1770193265.161;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+8a349081-0178-11f1-a92d-bf6711fe544f;1770193265.161;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+8a5add30-0178-11f1-a92d-bf6711fe544f;1770193265.411;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+8a627e50-0178-11f1-a92d-bf6711fe544f;1770193265.461;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+8a69f860-0178-11f1-a92d-bf6711fe544f;1770193265.511;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+8a8102d0-0178-11f1-a92d-bf6711fe544f;1770193265.662;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+8a980d40-0178-11f1-a92d-bf6711fe544f;1770193265.812;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+8ab691c0-0178-11f1-a92d-bf6711fe544f;1770193266.012;Cognitive_Model;task_check;5;;
+8ab691c1-0178-11f1-a92d-bf6711fe544f;1770193266.013;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+8abcd350-0178-11f1-a92d-bf6711fe544f;1770193266.054;TARS Agent;action_time;3;;transition_action:0.04
+8abcd351-0178-11f1-a92d-bf6711fe544f;1770193266.054;Shared Interface;countdown_complete;5;;
+8abcfa60-0178-11f1-a92d-bf6711fe544f;1770193266.054;TARS Agent;current_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""Pitot-Static Switch"", ""value"": ""PITOT-STATIC"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Pitot-static switch status"", ""interaction"": ""pitot_static_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": 0.0, ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+8abcfa61-0178-11f1-a92d-bf6711fe544f;1770193266.054;Shared Interface;countdown_complete;5;;
+8abcfa62-0178-11f1-a92d-bf6711fe544f;1770193266.054;TARS Agent;current_procedure;3;;BEFORE TAKEOFF
+8abcfa63-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;interaction_message;3;;
+8abcfa64-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;current_task_object;3;;Pitot-Static Switch
+8abcfa65-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;current_task_value;3;;PITOT-STATIC
+8abcfa66-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;current_task_autonomy_role;3;;
+8abcfa67-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;current_task_human_role;3;;performer
+8abcfa68-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;next_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""ENGINE ANTI-ICE Switches"", ""value"": ""AS REQUIRED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Outside air temperature, engine anti-ice switch position."", ""interaction"": ""engine_anti_ice_requirement"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+8abd2170-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;countdown_next;1;;false
+8abd2171-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;countdown_max_next;1;;false
+8abd2172-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""Pitot-Static Switch"", ""value"": ""PITOT-STATIC"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Pitot-static switch status"", ""interaction"": ""pitot_static_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": 0.0, ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+8abd2173-0178-11f1-a92d-bf6711fe544f;1770193266.055;TARS Agent;action_time;3;;action:0.03
+8abe32e0-0178-11f1-a92d-bf6711fe544f;1770193266.062;Cognitive_Model;production_selected;3;;form-task-done
+8adcb760-0178-11f1-a92d-bf6711fe544f;1770193266.263;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+8ae14b40-0178-11f1-a92d-bf6711fe544f;1770193266.292;Aircraft;cabin_altitude;2;;102.700000
+8ae47f90-0178-11f1-a92d-bf6711fe544f;1770193266.313;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+8aec20b0-0178-11f1-a92d-bf6711fe544f;1770193266.363;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+8afb62f0-0178-11f1-a92d-bf6711fe544f;1770193266.464;Cognitive_Model;production_selected;3;;encode-aoi-information
+8b124650-0178-11f1-a92d-bf6711fe544f;1770193266.614;Cognitive_Model;production_selected;3;;x-3-form-central-console-aoi-representation
+8b389300-0178-11f1-a92d-bf6711fe544f;1770193266.865;Cognitive_Model;production_selected;3;;visually-attend-central-console-right-throttle
+8b571780-0178-11f1-a92d-bf6711fe544f;1770193267.065;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+8b5edfb0-0178-11f1-a92d-bf6711fe544f;1770193267.115;Cognitive_Model;production_selected;3;;form-central-console-right-throttle-aoi-representation
+8b75c310-0178-11f1-a92d-bf6711fe544f;1770193267.265;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+8b8ca670-0178-11f1-a92d-bf6711fe544f;1770193267.416;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+8b9be8b0-0178-11f1-a92d-bf6711fe544f;1770193267.516;Cognitive_Model;production_selected;3;;encode-aoi-information
+8bbabb50-0178-11f1-a92d-bf6711fe544f;1770193267.718;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+8bd19eb0-0178-11f1-a92d-bf6711fe544f;1770193267.868;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+8bf7eb60-0178-11f1-a92d-bf6711fe544f;1770193268.119;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+8bff8c80-0178-11f1-a92d-bf6711fe544f;1770193268.169;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+8c0fb920-0178-11f1-a92d-bf6711fe544f;1770193268.274;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+8c2d7a50-0178-11f1-a92d-bf6711fe544f;1770193268.469;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+8c351b70-0178-11f1-a92d-bf6711fe544f;1770193268.519;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-both
+8c3cbc90-0178-11f1-a92d-bf6711fe544f;1770193268.569;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+8c445db0-0178-11f1-a92d-bf6711fe544f;1770193268.620;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+8c4bfed0-0178-11f1-a92d-bf6711fe544f;1770193268.669;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+8c5b4110-0178-11f1-a92d-bf6711fe544f;1770193268.770;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+8c5b6820-0178-11f1-a92d-bf6711fe544f;1770193268.770;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+8c62e230-0178-11f1-a92d-bf6711fe544f;1770193268.820;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+8c6aaa60-0178-11f1-a92d-bf6711fe544f;1770193268.870;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+8c79eca0-0178-11f1-a92d-bf6711fe544f;1770193268.970;Cognitive_Model;production_selected;3;;t-i-no-tars-input-on-pitot-heat
+8c79eca1-0178-11f1-a92d-bf6711fe544f;1770193268.971;Cognitive_Model;production_selected;3;;perform-visually-attend-pitot-static-switch
+8c818dc0-0178-11f1-a92d-bf6711fe544f;1770193269.020;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+8c892ee0-0178-11f1-a92d-bf6711fe544f;1770193269.071;Cognitive_Model;production_selected;3;;form-pitot-heat-status-representation-no-tars-input
+8ca03950-0178-11f1-a92d-bf6711fe544f;1770193269.221;Cognitive_Model;production_selected;3;;pitot-heat-no-action
+8cb71cb0-0178-11f1-a92d-bf6711fe544f;1770193269.371;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+8cbebdd0-0178-11f1-a92d-bf6711fe544f;1770193269.421;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+8cc65ef0-0178-11f1-a92d-bf6711fe544f;1770193269.472;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+8cdd6960-0178-11f1-a92d-bf6711fe544f;1770193269.622;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+8cf44cc0-0178-11f1-a92d-bf6711fe544f;1770193269.773;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+8cfbede0-0178-11f1-a92d-bf6711fe544f;1770193269.823;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+8d12f850-0178-11f1-a92d-bf6711fe544f;1770193269.974;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+8d317cd0-0178-11f1-a92d-bf6711fe544f;1770193270.174;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+8d488740-0178-11f1-a92d-bf6711fe544f;1770193270.324;Cognitive_Model;task_check;5;;
+8d488741-0178-11f1-a92d-bf6711fe544f;1770193270.324;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+8d4e0580-0178-11f1-a92d-bf6711fe544f;1770193270.361;Shared Interface;countdown_complete;5;;
+8d4e0581-0178-11f1-a92d-bf6711fe544f;1770193270.361;Shared Interface;countdown_complete;5;;
+8d4e0582-0178-11f1-a92d-bf6711fe544f;1770193270.361;TARS Agent;current_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""ENGINE ANTI-ICE Switches"", ""value"": ""AS REQUIRED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Outside air temperature, engine anti-ice switch position."", ""interaction"": ""engine_anti_ice_requirement"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+8d4e2c90-0178-11f1-a92d-bf6711fe544f;1770193270.361;TARS Agent;current_procedure;3;;BEFORE TAKEOFF
+8d4e2c91-0178-11f1-a92d-bf6711fe544f;1770193270.361;TARS Agent;interaction_message;3;;
+8d4e2c92-0178-11f1-a92d-bf6711fe544f;1770193270.361;TARS Agent;current_task_object;3;;ENGINE ANTI-ICE Switches
+8d4e2c93-0178-11f1-a92d-bf6711fe544f;1770193270.361;TARS Agent;current_task_value;3;;AS REQUIRED
+8d4e2c94-0178-11f1-a92d-bf6711fe544f;1770193270.361;TARS Agent;current_task_autonomy_role;3;;
+8d4e2c95-0178-11f1-a92d-bf6711fe544f;1770193270.362;TARS Agent;current_task_human_role;3;;performer
+8d4e2c96-0178-11f1-a92d-bf6711fe544f;1770193270.362;TARS Agent;next_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""WINDSHIELD ANTI-ICE Switches"", ""value"": ""AS REQUIRED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Windshield anti-ice switch position, current weather conditions."", ""interaction"": ""windshield_anti_ice_requirement"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+8d4e2c97-0178-11f1-a92d-bf6711fe544f;1770193270.362;TARS Agent;countdown_next;1;;false
+8d4e2c98-0178-11f1-a92d-bf6711fe544f;1770193270.362;TARS Agent;countdown_max_next;1;;false
+8d4e2c99-0178-11f1-a92d-bf6711fe544f;1770193270.362;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""ENGINE ANTI-ICE Switches"", ""value"": ""AS REQUIRED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Outside air temperature, engine anti-ice switch position."", ""interaction"": ""engine_anti_ice_requirement"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+8d4e53a0-0178-11f1-a92d-bf6711fe544f;1770193270.362;TARS Agent;action_time;3;;action:0.03
+8d500150-0178-11f1-a92d-bf6711fe544f;1770193270.374;Cognitive_Model;production_selected;3;;form-task-done
+8d6eace0-0178-11f1-a92d-bf6711fe544f;1770193270.574;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+8d764e00-0178-11f1-a92d-bf6711fe544f;1770193270.624;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+8d7def20-0178-11f1-a92d-bf6711fe544f;1770193270.675;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+8d8d5870-0178-11f1-a92d-bf6711fe544f;1770193270.775;Cognitive_Model;production_selected;3;;encode-aoi-information
+8da43bd0-0178-11f1-a92d-bf6711fe544f;1770193270.925;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+8dca6170-0178-11f1-a92d-bf6711fe544f;1770193271.176;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+8de90d00-0178-11f1-a92d-bf6711fe544f;1770193271.377;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+8df0ae20-0178-11f1-a92d-bf6711fe544f;1770193271.427;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+8dfff060-0178-11f1-a92d-bf6711fe544f;1770193271.527;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+8e1e9bf0-0178-11f1-a92d-bf6711fe544f;1770193271.728;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+8e263d10-0178-11f1-a92d-bf6711fe544f;1770193271.778;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-both
+8e2dde30-0178-11f1-a92d-bf6711fe544f;1770193271.828;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+8e357f50-0178-11f1-a92d-bf6711fe544f;1770193271.878;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+8e3d4780-0178-11f1-a92d-bf6711fe544f;1770193271.928;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+8e4c89c0-0178-11f1-a92d-bf6711fe544f;1770193272.028;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+8e542ae0-0178-11f1-a92d-bf6711fe544f;1770193272.078;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+8e542ae1-0178-11f1-a92d-bf6711fe544f;1770193272.078;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+8e636d20-0178-11f1-a92d-bf6711fe544f;1770193272.179;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+8e6b3550-0178-11f1-a92d-bf6711fe544f;1770193272.229;Cognitive_Model;production_selected;3;;engine-anti-ice-no-tars-recommendation
+8e6b3551-0178-11f1-a92d-bf6711fe544f;1770193272.229;Cognitive_Model;production_selected;3;;retrieve-last-atis-temperature
+8efc78d0-0178-11f1-a92d-bf6711fe544f;1770193273.181;Cognitive_Model;production_selected;3;;form-last-atis-temperature-representation
+8f081190-0178-11f1-a92d-bf6711fe544f;1770193273.257;Aircraft;cabin_altitude;2;;102.600000
+8f1afd50-0178-11f1-a92d-bf6711fe544f;1770193273.381;Cognitive_Model;production_selected;3;;temperature-is-5-degrees-take-action
+8f3981d0-0178-11f1-a92d-bf6711fe544f;1770193273.582;Cognitive_Model;production_selected;3;;perform-visually-attend-engine-left-anti-ice-switches
+8f48eb20-0178-11f1-a92d-bf6711fe544f;1770193273.682;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+8f48eb21-0178-11f1-a92d-bf6711fe544f;1770193273.682;Cognitive_Model;production_selected;3;;form-left-engine-anti-ice-status-representation
+8f508c40-0178-11f1-a92d-bf6711fe544f;1770193273.732;Cognitive_Model;production_selected;3;;no-action-recommendation-left-engine-anti-ice
+8f5fce80-0178-11f1-a92d-bf6711fe544f;1770193273.832;Cognitive_Model;production_selected;3;;perform-visually-attend-engine-right-anti-ice-switches
+8f76b1e0-0178-11f1-a92d-bf6711fe544f;1770193273.983;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+8f7e5300-0178-11f1-a92d-bf6711fe544f;1770193274.033;Cognitive_Model;production_selected;3;;form-engine-right-anti-ice-status-representation
+8f85f420-0178-11f1-a92d-bf6711fe544f;1770193274.083;Cognitive_Model;production_selected;3;;no-action-recommendation-right-engine-anti-ice
+8f955d70-0178-11f1-a92d-bf6711fe544f;1770193274.183;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+8fb3bae0-0178-11f1-a92d-bf6711fe544f;1770193274.383;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+8fb3e1f0-0178-11f1-a92d-bf6711fe544f;1770193274.383;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+8fca9e40-0178-11f1-a92d-bf6711fe544f;1770193274.533;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+8fe1a8b0-0178-11f1-a92d-bf6711fe544f;1770193274.684;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+8fe949d0-0178-11f1-a92d-bf6711fe544f;1770193274.734;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+90005440-0178-11f1-a92d-bf6711fe544f;1770193274.884;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+90175eb0-0178-11f1-a92d-bf6711fe544f;1770193275.035;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+9035e330-0178-11f1-a92d-bf6711fe544f;1770193275.235;Cognitive_Model;task_check;5;;
+9035e331-0178-11f1-a92d-bf6711fe544f;1770193275.236;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+90371bb0-0178-11f1-a92d-bf6711fe544f;1770193275.243;Aircraft;airspeed;2;;1.600000
+903ac530-0178-11f1-a92d-bf6711fe544f;1770193275.268;Shared Interface;countdown_complete;5;;
+903ac531-0178-11f1-a92d-bf6711fe544f;1770193275.268;Shared Interface;countdown_complete;5;;
+903aec40-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;current_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""WINDSHIELD ANTI-ICE Switches"", ""value"": ""AS REQUIRED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Windshield anti-ice switch position, current weather conditions."", ""interaction"": ""windshield_anti_ice_requirement"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+903aec41-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;current_procedure;3;;BEFORE TAKEOFF
+903aec42-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;interaction_message;3;;
+903aec43-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;current_task_object;3;;WINDSHIELD ANTI-ICE Switches
+903aec44-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;current_task_value;3;;AS REQUIRED
+903aec45-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;current_task_autonomy_role;3;;
+903b1350-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;current_task_human_role;3;;performer
+903b1351-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;next_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""PAX SAFETY Switch"", ""value"": ""PAX SAFETY"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""PAX SAFETY switch position, checklist status."", ""interaction"": ""pax_safety_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+903b1352-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;countdown_next;1;;false
+903b1353-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;countdown_max_next;1;;false
+903b1354-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""WINDSHIELD ANTI-ICE Switches"", ""value"": ""AS REQUIRED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Windshield anti-ice switch position, current weather conditions."", ""interaction"": ""windshield_anti_ice_requirement"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+903b1355-0178-11f1-a92d-bf6711fe544f;1770193275.269;TARS Agent;action_time;3;;action:0.03
+903d5d40-0178-11f1-a92d-bf6711fe544f;1770193275.285;Cognitive_Model;production_selected;3;;form-task-done
+905c08d0-0178-11f1-a92d-bf6711fe544f;1770193275.486;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+906b4b10-0178-11f1-a92d-bf6711fe544f;1770193275.586;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+906b7220-0178-11f1-a92d-bf6711fe544f;1770193275.586;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+907a8d50-0178-11f1-a92d-bf6711fe544f;1770193275.686;Cognitive_Model;production_selected;3;;encode-aoi-information
+909197c0-0178-11f1-a92d-bf6711fe544f;1770193275.836;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+90c726b0-0178-11f1-a92d-bf6711fe544f;1770193276.187;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+90d668f0-0178-11f1-a92d-bf6711fe544f;1770193276.288;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+90de0a10-0178-11f1-a92d-bf6711fe544f;1770193276.337;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+90f51480-0178-11f1-a92d-bf6711fe544f;1770193276.488;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+910bf7e0-0178-11f1-a92d-bf6711fe544f;1770193276.638;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+91139900-0178-11f1-a92d-bf6711fe544f;1770193276.689;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-object
+911b6130-0178-11f1-a92d-bf6711fe544f;1770193276.739;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+9122db40-0178-11f1-a92d-bf6711fe544f;1770193276.789;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+912a7c60-0178-11f1-a92d-bf6711fe544f;1770193276.839;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+9139e5b0-0178-11f1-a92d-bf6711fe544f;1770193276.939;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+91415fc0-0178-11f1-a92d-bf6711fe544f;1770193276.989;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+914900e0-0178-11f1-a92d-bf6711fe544f;1770193277.039;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+9150a200-0178-11f1-a92d-bf6711fe544f;1770193277.089;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+91600b50-0178-11f1-a92d-bf6711fe544f;1770193277.189;Cognitive_Model;production_selected;3;;t-i-windshield-anti-ice-no-tars-recommendation
+91600b51-0178-11f1-a92d-bf6711fe544f;1770193277.189;Cognitive_Model;production_selected;3;;retrieve-last-atis-temperature
+91f14ed0-0178-11f1-a92d-bf6711fe544f;1770193278.141;Cognitive_Model;production_selected;3;;form-last-atis-temperature-representation
+920fd350-0178-11f1-a92d-bf6711fe544f;1770193278.342;Cognitive_Model;production_selected;3;;temperature-is-5-degrees-take-action-windshield
+922e7ee0-0178-11f1-a92d-bf6711fe544f;1770193278.543;Cognitive_Model;production_selected;3;;perform-visually-attend-left-windshield-anti-ice-switches
+92364710-0178-11f1-a92d-bf6711fe544f;1770193278.593;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+923de830-0178-11f1-a92d-bf6711fe544f;1770193278.643;Cognitive_Model;production_selected;3;;form-left-windshield-anti-ice-status-representation
+92458950-0178-11f1-a92d-bf6711fe544f;1770193278.693;Cognitive_Model;production_selected;3;;no-action-recommendation-left-windshield-anti-ice
+9254cb90-0178-11f1-a92d-bf6711fe544f;1770193278.793;Cognitive_Model;production_selected;3;;perform-visually-attend-right-windshield-anti-ice-switches
+926bd600-0178-11f1-a92d-bf6711fe544f;1770193278.944;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+92737720-0178-11f1-a92d-bf6711fe544f;1770193278.994;Cognitive_Model;production_selected;3;;form-right-windshield-anti-ice-status-representation
+927af130-0178-11f1-a92d-bf6711fe544f;1770193279.044;Cognitive_Model;production_selected;3;;no-action-recommendation-right-windshield-anti-ice
+928a5a80-0178-11f1-a92d-bf6711fe544f;1770193279.145;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+92a13de0-0178-11f1-a92d-bf6711fe544f;1770193279.295;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+92a8df00-0178-11f1-a92d-bf6711fe544f;1770193279.345;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+92b84850-0178-11f1-a92d-bf6711fe544f;1770193279.445;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+92d6f3e0-0178-11f1-a92d-bf6711fe544f;1770193279.646;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+92de9500-0178-11f1-a92d-bf6711fe544f;1770193279.697;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+92edd740-0178-11f1-a92d-bf6711fe544f;1770193279.797;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+9304e1b0-0178-11f1-a92d-bf6711fe544f;1770193279.947;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+93236630-0178-11f1-a92d-bf6711fe544f;1770193280.148;Cognitive_Model;task_check;5;;
+93238d40-0178-11f1-a92d-bf6711fe544f;1770193280.148;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+9327abf0-0178-11f1-a92d-bf6711fe544f;1770193280.175;TARS Agent;current_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""PAX SAFETY Switch"", ""value"": ""PAX SAFETY"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""PAX SAFETY switch position, checklist status."", ""interaction"": ""pax_safety_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+9327abf1-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;current_procedure;3;;BEFORE TAKEOFF
+9327abf2-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;interaction_message;3;;
+9327abf3-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;current_task_object;3;;PAX SAFETY Switch
+9327abf4-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;current_task_value;3;;PAX SAFETY
+9327abf5-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;current_task_autonomy_role;3;;
+9327d300-0178-11f1-a92d-bf6711fe544f;1770193280.176;Shared Interface;countdown_complete;5;;
+9327d301-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;current_task_human_role;3;;performer
+9327d302-0178-11f1-a92d-bf6711fe544f;1770193280.176;Shared Interface;countdown_complete;5;;
+9327d303-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;next_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""LANDING Light Switch"", ""value"": ""AS DESIRED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Current runway conditions, weather, and aircraft status."", ""interaction"": ""landing_light_as_required"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+9327d304-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;countdown_next;1;;false
+9327d305-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;countdown_max_next;1;;false
+9327d306-0178-11f1-a92d-bf6711fe544f;1770193280.176;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""PAX SAFETY Switch"", ""value"": ""PAX SAFETY"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""PAX SAFETY switch position, checklist status."", ""interaction"": ""pax_safety_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+9327d307-0178-11f1-a92d-bf6711fe544f;1770193280.177;TARS Agent;action_time;3;;action:0.03
+932ae040-0178-11f1-a92d-bf6711fe544f;1770193280.197;Cognitive_Model;production_selected;3;;form-task-done
+9349b2e0-0178-11f1-a92d-bf6711fe544f;1770193280.398;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+93512cf0-0178-11f1-a92d-bf6711fe544f;1770193280.448;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+93609640-0178-11f1-a92d-bf6711fe544f;1770193280.548;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+93683760-0178-11f1-a92d-bf6711fe544f;1770193280.598;Cognitive_Model;production_selected;3;;encode-aoi-information
+937f1ac0-0178-11f1-a92d-bf6711fe544f;1770193280.749;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+93bc4ad0-0178-11f1-a92d-bf6711fe544f;1770193281.149;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+93c41300-0178-11f1-a92d-bf6711fe544f;1770193281.201;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+93cb8d10-0178-11f1-a92d-bf6711fe544f;1770193281.250;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+93e29780-0178-11f1-a92d-bf6711fe544f;1770193281.401;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+93f97ae0-0178-11f1-a92d-bf6711fe544f;1770193281.550;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+94011c00-0178-11f1-a92d-bf6711fe544f;1770193281.601;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-both
+9408bd20-0178-11f1-a92d-bf6711fe544f;1770193281.651;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+94105e40-0178-11f1-a92d-bf6711fe544f;1770193281.701;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+94182670-0178-11f1-a92d-bf6711fe544f;1770193281.751;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+942768b0-0178-11f1-a92d-bf6711fe544f;1770193281.851;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+942f09d0-0178-11f1-a92d-bf6711fe544f;1770193281.902;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+9436d200-0178-11f1-a92d-bf6711fe544f;1770193281.952;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+943e7320-0178-11f1-a92d-bf6711fe544f;1770193282.002;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+9445ed30-0178-11f1-a92d-bf6711fe544f;1770193282.051;Cognitive_Model;production_selected;3;;no-tars-input-on-pax-safety
+944d8e50-0178-11f1-a92d-bf6711fe544f;1770193282.102;Cognitive_Model;production_selected;3;;perform-visually-attend-pax-safety-switch
+94552f70-0178-11f1-a92d-bf6711fe544f;1770193282.152;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+945cd090-0178-11f1-a92d-bf6711fe544f;1770193282.202;Cognitive_Model;production_selected;3;;form-pax-safety-status-representation-no-tars-input
+946c39e0-0178-11f1-a92d-bf6711fe544f;1770193282.302;Cognitive_Model;production_selected;3;;pax-safety-is-already-on
+948a9750-0178-11f1-a92d-bf6711fe544f;1770193282.501;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+94923870-0178-11f1-a92d-bf6711fe544f;1770193282.551;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+9499d990-0178-11f1-a92d-bf6711fe544f;1770193282.602;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+94a942e0-0178-11f1-a92d-bf6711fe544f;1770193282.702;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+94c7c760-0178-11f1-a92d-bf6711fe544f;1770193282.903;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+94cf6880-0178-11f1-a92d-bf6711fe544f;1770193282.953;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+94ee1410-0178-11f1-a92d-bf6711fe544f;1770193283.153;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+94fd5650-0178-11f1-a92d-bf6711fe544f;1770193283.253;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+951bdad0-0178-11f1-a92d-bf6711fe544f;1770193283.454;Cognitive_Model;task_check;5;;
+951c01e0-0178-11f1-a92d-bf6711fe544f;1770193283.454;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+95237bf0-0178-11f1-a92d-bf6711fe544f;1770193283.504;Cognitive_Model;production_selected;3;;form-task-done
+95250290-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;current_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""LANDING Light Switch"", ""value"": ""AS DESIRED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Current runway conditions, weather, and aircraft status."", ""interaction"": ""landing_light_as_required"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+95250291-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;current_procedure;3;;BEFORE TAKEOFF
+95250292-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;interaction_message;3;;
+95250293-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;current_task_object;3;;LANDING Light Switch
+95250294-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;current_task_value;3;;AS DESIRED
+952529a0-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;current_task_autonomy_role;3;;
+952529a1-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;current_task_human_role;3;;performer
+952529a2-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;next_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""ANTI-COLL Light Switch"", ""value"": ""ON"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ANTI-COLL light switch position, checklist status."", ""interaction"": ""anti_coll_light_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+952529a3-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;countdown_next;1;;false
+952529a4-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;countdown_max_next;1;;false
+952529a5-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""LANDING Light Switch"", ""value"": ""AS DESIRED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Current runway conditions, weather, and aircraft status."", ""interaction"": ""landing_light_as_required"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+952529a6-0178-11f1-a92d-bf6711fe544f;1770193283.514;TARS Agent;action_time;3;;action:0.03
+952529a7-0178-11f1-a92d-bf6711fe544f;1770193283.515;Shared Interface;countdown_complete;5;;
+952550b0-0178-11f1-a92d-bf6711fe544f;1770193283.515;Shared Interface;countdown_complete;5;;
+95422780-0178-11f1-a92d-bf6711fe544f;1770193283.704;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+9549c8a0-0178-11f1-a92d-bf6711fe544f;1770193283.754;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+955169c0-0178-11f1-a92d-bf6711fe544f;1770193283.805;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+9560d310-0178-11f1-a92d-bf6711fe544f;1770193283.906;Cognitive_Model;production_selected;3;;encode-aoi-information
+95871fc0-0178-11f1-a92d-bf6711fe544f;1770193284.156;Cognitive_Model;production_selected;3;;x-3-form-central-console-aoi-representation
+95966200-0178-11f1-a92d-bf6711fe544f;1770193284.257;Cognitive_Model;production_selected;3;;visually-attend-central-console-right-throttle
+95b50d90-0178-11f1-a92d-bf6711fe544f;1770193284.457;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+95bc87a0-0178-11f1-a92d-bf6711fe544f;1770193284.507;Cognitive_Model;production_selected;3;;form-central-console-right-throttle-aoi-representation
+95d3b920-0178-11f1-a92d-bf6711fe544f;1770193284.658;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+95ea7570-0178-11f1-a92d-bf6711fe544f;1770193284.808;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+95f9dec0-0178-11f1-a92d-bf6711fe544f;1770193284.908;Cognitive_Model;production_selected;3;;encode-aoi-information
+96200460-0178-11f1-a92d-bf6711fe544f;1770193285.159;Cognitive_Model;production_selected;3;;x-3-form-pfd-aoi-representation
+9636e7c0-0178-11f1-a92d-bf6711fe544f;1770193285.309;Cognitive_Model;production_selected;3;;visually-attend-pfd-roll
+96559350-0178-11f1-a92d-bf6711fe544f;1770193285.509;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+965d3470-0178-11f1-a92d-bf6711fe544f;1770193285.559;Cognitive_Model;production_selected;3;;form-pfd-roll-aoi-representation
+967417d0-0178-11f1-a92d-bf6711fe544f;1770193285.710;Cognitive_Model;production_selected;3;;visually-attend-pfd-slip
+968b2240-0178-11f1-a92d-bf6711fe544f;1770193285.860;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+9692c360-0178-11f1-a92d-bf6711fe544f;1770193285.910;Cognitive_Model;production_selected;3;;form-pfd-slip-aoi-representation
+96b8e900-0178-11f1-a92d-bf6711fe544f;1770193286.161;Cognitive_Model;production_selected;3;;visually-attend-pfd-altitude
+96c08a20-0178-11f1-a92d-bf6711fe544f;1770193286.211;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+96c85250-0178-11f1-a92d-bf6711fe544f;1770193286.261;Cognitive_Model;production_selected;3;;form-pfd-altitude-aoi-representation
+96df35b0-0178-11f1-a92d-bf6711fe544f;1770193286.411;Cognitive_Model;production_selected;3;;visually-attend-pfd-airspeed
+96f61910-0178-11f1-a92d-bf6711fe544f;1770193286.562;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+96fdba30-0178-11f1-a92d-bf6711fe544f;1770193286.612;Cognitive_Model;production_selected;3;;form-pfd-airspeed-aoi-representation
+9714c4a0-0178-11f1-a92d-bf6711fe544f;1770193286.762;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+972ba800-0178-11f1-a92d-bf6711fe544f;1770193286.913;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+973aea40-0178-11f1-a92d-bf6711fe544f;1770193287.013;Cognitive_Model;production_selected;3;;encode-aoi-information
+9751f4b0-0178-11f1-a92d-bf6711fe544f;1770193287.163;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+97781a50-0178-11f1-a92d-bf6711fe544f;1770193287.414;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+9796c5e0-0178-11f1-a92d-bf6711fe544f;1770193287.615;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+979e6700-0178-11f1-a92d-bf6711fe544f;1770193287.665;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+97ada940-0178-11f1-a92d-bf6711fe544f;1770193287.765;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+97cc54d0-0178-11f1-a92d-bf6711fe544f;1770193287.965;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+97d3f5f0-0178-11f1-a92d-bf6711fe544f;1770193288.015;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-both
+97db9710-0178-11f1-a92d-bf6711fe544f;1770193288.065;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+97e33830-0178-11f1-a92d-bf6711fe544f;1770193288.115;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+97ead950-0178-11f1-a92d-bf6711fe544f;1770193288.166;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+97fa1b90-0178-11f1-a92d-bf6711fe544f;1770193288.266;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+97fa42a0-0178-11f1-a92d-bf6711fe544f;1770193288.266;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+9801e3c0-0178-11f1-a92d-bf6711fe544f;1770193288.316;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+98095dd0-0178-11f1-a92d-bf6711fe544f;1770193288.365;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+9818a010-0178-11f1-a92d-bf6711fe544f;1770193288.465;Cognitive_Model;production_selected;3;;landing-lights-no-tars-recommendation
+9818a011-0178-11f1-a92d-bf6711fe544f;1770193288.465;Cognitive_Model;production_selected;3;;perform-visually-attend-landing-lights-switch
+98204130-0178-11f1-a92d-bf6711fe544f;1770193288.515;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+9827e250-0178-11f1-a92d-bf6711fe544f;1770193288.565;Cognitive_Model;production_selected;3;;form-landing-lights-status-representation
+983ec5b0-0178-11f1-a92d-bf6711fe544f;1770193288.716;Cognitive_Model;production_selected;3;;landing-lights-take-action
+9883bdf0-0178-11f1-a92d-bf6711fe544f;1770193289.167;Cognitive_Model;landing_lights;1;;true
+9883bdf1-0178-11f1-a92d-bf6711fe544f;1770193289.167;Cognitive_Model;landing_lights;1;;true
+9883bdf2-0178-11f1-a92d-bf6711fe544f;1770193289.167;Cognitive_Model;landing_lights;1;;true
+9883bdf3-0178-11f1-a92d-bf6711fe544f;1770193289.168;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+988e1e30-0178-11f1-a92d-bf6711fe544f;1770193289.235;Aircraft;exterior_lights;1;;true
+99059820-0178-11f1-a92d-bf6711fe544f;1770193290.018;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+990d3940-0178-11f1-a92d-bf6711fe544f;1770193290.068;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+99241ca0-0178-11f1-a92d-bf6711fe544f;1770193290.218;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+993b2710-0178-11f1-a92d-bf6711fe544f;1770193290.369;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+9942c830-0178-11f1-a92d-bf6711fe544f;1770193290.420;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+9959ab90-0178-11f1-a92d-bf6711fe544f;1770193290.570;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+9970b600-0178-11f1-a92d-bf6711fe544f;1770193290.720;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+998f3a80-0178-11f1-a92d-bf6711fe544f;1770193290.921;Cognitive_Model;task_check;5;;
+998f3a81-0178-11f1-a92d-bf6711fe544f;1770193290.921;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+9996dba0-0178-11f1-a92d-bf6711fe544f;1770193290.970;Cognitive_Model;production_selected;3;;form-task-done
+999702b0-0178-11f1-a92d-bf6711fe544f;1770193290.971;Shared Interface;countdown_complete;5;;
+999702b1-0178-11f1-a92d-bf6711fe544f;1770193290.971;TARS Agent;current_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""ANTI-COLL Light Switch"", ""value"": ""ON"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ANTI-COLL light switch position, checklist status."", ""interaction"": ""anti_coll_light_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+999702b2-0178-11f1-a92d-bf6711fe544f;1770193290.971;Shared Interface;countdown_complete;5;;
+999702b3-0178-11f1-a92d-bf6711fe544f;1770193290.972;TARS Agent;current_procedure;3;;BEFORE TAKEOFF
+999702b4-0178-11f1-a92d-bf6711fe544f;1770193290.972;TARS Agent;interaction_message;3;;
+999702b5-0178-11f1-a92d-bf6711fe544f;1770193290.972;TARS Agent;current_task_object;3;;ANTI-COLL Light Switch
+999702b6-0178-11f1-a92d-bf6711fe544f;1770193290.972;TARS Agent;current_task_value;3;;ON
+999702b7-0178-11f1-a92d-bf6711fe544f;1770193290.972;TARS Agent;current_task_autonomy_role;3;;
+999729c0-0178-11f1-a92d-bf6711fe544f;1770193290.972;TARS Agent;current_task_human_role;3;;performer
+999729c1-0178-11f1-a92d-bf6711fe544f;1770193290.972;TARS Agent;next_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Parameter Check"", ""task_object"": ""EICAS"", ""value"": ""CHECKED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""EICAS visible"", ""interaction"": """", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+999750d0-0178-11f1-a92d-bf6711fe544f;1770193290.973;TARS Agent;countdown_next;1;;false
+999750d1-0178-11f1-a92d-bf6711fe544f;1770193290.973;TARS Agent;countdown_max_next;1;;false
+999750d2-0178-11f1-a92d-bf6711fe544f;1770193290.973;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Switch / Lever"", ""task_object"": ""ANTI-COLL Light Switch"", ""value"": ""ON"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ANTI-COLL light switch position, checklist status."", ""interaction"": ""anti_coll_light_switch"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+999750d3-0178-11f1-a92d-bf6711fe544f;1770193290.973;TARS Agent;action_time;3;;action:0.03
+99b56020-0178-11f1-a92d-bf6711fe544f;1770193291.171;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+99bd0140-0178-11f1-a92d-bf6711fe544f;1770193291.221;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+99c4c970-0178-11f1-a92d-bf6711fe544f;1770193291.271;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+99d40bb0-0178-11f1-a92d-bf6711fe544f;1770193291.371;Cognitive_Model;production_selected;3;;encode-aoi-information
+99eaef10-0178-11f1-a92d-bf6711fe544f;1770193291.522;Cognitive_Model;production_selected;3;;x-3-form-outside-window-aoi-representation
+9a1114b0-0178-11f1-a92d-bf6711fe544f;1770193291.771;Cognitive_Model;production_selected;3;;visually-attend-outside-window-birds
+9a2f9930-0178-11f1-a92d-bf6711fe544f;1770193291.972;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+9a376160-0178-11f1-a92d-bf6711fe544f;1770193292.022;Cognitive_Model;production_selected;3;;form-outside-window-birds-aoi-representation
+9a4e44c0-0178-11f1-a92d-bf6711fe544f;1770193292.172;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+9a654f30-0178-11f1-a92d-bf6711fe544f;1770193292.323;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+9a749170-0178-11f1-a92d-bf6711fe544f;1770193292.423;Cognitive_Model;production_selected;3;;encode-aoi-information
+9a9315f0-0178-11f1-a92d-bf6711fe544f;1770193292.624;Cognitive_Model;production_selected;3;;x-3-form-central-console-aoi-representation
+9aaa2060-0178-11f1-a92d-bf6711fe544f;1770193292.774;Cognitive_Model;production_selected;3;;visually-attend-central-console-right-throttle
+9ad04600-0178-11f1-a92d-bf6711fe544f;1770193293.025;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+9ad80e30-0178-11f1-a92d-bf6711fe544f;1770193293.075;Cognitive_Model;production_selected;3;;form-central-console-right-throttle-aoi-representation
+9ae75070-0178-11f1-a92d-bf6711fe544f;1770193293.176;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+9b05d4f0-0178-11f1-a92d-bf6711fe544f;1770193293.376;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+9b153e40-0178-11f1-a92d-bf6711fe544f;1770193293.476;Cognitive_Model;production_selected;3;;encode-aoi-information
+9b248080-0178-11f1-a92d-bf6711fe544f;1770193293.576;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+9b4aa620-0178-11f1-a92d-bf6711fe544f;1770193293.827;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+9b6951b0-0178-11f1-a92d-bf6711fe544f;1770193294.028;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+9b70f2d0-0178-11f1-a92d-bf6711fe544f;1770193294.078;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+9b87fd40-0178-11f1-a92d-bf6711fe544f;1770193294.228;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+9b9ee0a0-0178-11f1-a92d-bf6711fe544f;1770193294.378;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+9ba681c0-0178-11f1-a92d-bf6711fe544f;1770193294.429;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-both
+9bae22e0-0178-11f1-a92d-bf6711fe544f;1770193294.479;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+9bb5c400-0178-11f1-a92d-bf6711fe544f;1770193294.529;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+9bbd6520-0178-11f1-a92d-bf6711fe544f;1770193294.579;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+9bccce70-0178-11f1-a92d-bf6711fe544f;1770193294.679;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+9bd46f90-0178-11f1-a92d-bf6711fe544f;1770193294.730;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+9bdc10b0-0178-11f1-a92d-bf6711fe544f;1770193294.780;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+9be3b1d0-0178-11f1-a92d-bf6711fe544f;1770193294.830;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+9bf31b20-0178-11f1-a92d-bf6711fe544f;1770193294.930;Cognitive_Model;production_selected;3;;no-tars-input-on-anti-coll-light
+9bf31b21-0178-11f1-a92d-bf6711fe544f;1770193294.930;Cognitive_Model;production_selected;3;;perform-visually-attend-anti-coll-light-switch
+9bfabc40-0178-11f1-a92d-bf6711fe544f;1770193294.980;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+9c025d60-0178-11f1-a92d-bf6711fe544f;1770193295.030;Cognitive_Model;production_selected;3;;form-anti-coll-light-status-representation-no-tars-input
+9c1940c0-0178-11f1-a92d-bf6711fe544f;1770193295.181;Cognitive_Model;production_selected;3;;anti-coll-light-take-action
+9cb24c70-0178-11f1-a92d-bf6711fe544f;1770193296.183;Cognitive_Model;anti_coll_lights;4;;true
+9cb24c71-0178-11f1-a92d-bf6711fe544f;1770193296.183;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+9cc18eb0-0178-11f1-a92d-bf6711fe544f;1770193296.284;Aircraft;anti_coll_lights;4;;true
+9cd0a9e0-0178-11f1-a92d-bf6711fe544f;1770193296.383;Aircraft;l_gen_load;2;;33.000000
+9cd0a9e1-0178-11f1-a92d-bf6711fe544f;1770193296.383;Aircraft;r_gen_load;2;;33.000000
+9cdfec20-0178-11f1-a92d-bf6711fe544f;1770193296.482;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+9ce78d40-0178-11f1-a92d-bf6711fe544f;1770193296.533;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+9cef0750-0178-11f1-a92d-bf6711fe544f;1770193296.581;Aircraft;l_gen_load;2;;34.000000
+9cef0751-0178-11f1-a92d-bf6711fe544f;1770193296.581;Aircraft;r_gen_load;2;;34.000000
+9cf6cf80-0178-11f1-a92d-bf6711fe544f;1770193296.633;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+9d155400-0178-11f1-a92d-bf6711fe544f;1770193296.832;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+9d1cf520-0178-11f1-a92d-bf6711fe544f;1770193296.883;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+9d30cb40-0178-11f1-a92d-bf6711fe544f;1770193297.012;Aircraft;l_gen_load;2;;35.000000
+9d30cb41-0178-11f1-a92d-bf6711fe544f;1770193297.012;Aircraft;r_gen_load;2;;35.000000
+9d4ae2f0-0178-11f1-a92d-bf6711fe544f;1770193297.184;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+9d4ae2f1-0178-11f1-a92d-bf6711fe544f;1770193297.184;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+9d698e80-0178-11f1-a92d-bf6711fe544f;1770193297.384;Cognitive_Model;task_check;5;;
+9d698e81-0178-11f1-a92d-bf6711fe544f;1770193297.384;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+9d712fa0-0178-11f1-a92d-bf6711fe544f;1770193297.434;Cognitive_Model;production_selected;3;;form-task-done
+9d730460-0178-11f1-a92d-bf6711fe544f;1770193297.447;Shared Interface;countdown_complete;5;;
+9d730461-0178-11f1-a92d-bf6711fe544f;1770193297.447;Shared Interface;countdown_complete;5;;
+9d735280-0178-11f1-a92d-bf6711fe544f;1770193297.448;TARS Agent;current_state;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Parameter Check"", ""task_object"": ""EICAS"", ""value"": ""CHECKED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""EICAS visible"", ""interaction"": """", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+9d735281-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;current_procedure;3;;BEFORE TAKEOFF
+9d735282-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;interaction_message;3;;
+9d735283-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;current_task_object;3;;EICAS
+9d735284-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;current_task_value;3;;CHECKED
+9d735285-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;current_task_autonomy_role;3;;
+9d737990-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;current_task_human_role;3;;performer
+9d737991-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;next_state;3;;"{""procedure"": ""LINE-UP AND HOLD"", ""classification"": ""NORM"", ""type"": ""SOP"", ""category"": ""Environment Check"", ""task_object"": ""Winds"", ""value"": ""CHECK"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Wind speed, direction, runway alignment."", ""interaction"": ""display_winds_and_ack"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": ""Wind report from METAR : wind calm, zero niner zero degrees at four knots"", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+9d737992-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;countdown_next;1;;false
+9d737993-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;countdown_max_next;1;;false
+9d737994-0178-11f1-a92d-bf6711fe544f;1770193297.449;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""BEFORE TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Parameter Check"", ""task_object"": ""EICAS"", ""value"": ""CHECKED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""EICAS visible"", ""interaction"": """", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+9d737995-0178-11f1-a92d-bf6711fe544f;1770193297.450;TARS Agent;action_time;3;;action:0.03
+9d77bf50-0178-11f1-a92d-bf6711fe544f;1770193297.478;Aircraft;l_gen_load;2;;36.000000
+9d77bf51-0178-11f1-a92d-bf6711fe544f;1770193297.478;Aircraft;r_gen_load;2;;36.000000
+9d8fb420-0178-11f1-a92d-bf6711fe544f;1770193297.635;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+9d975540-0178-11f1-a92d-bf6711fe544f;1770193297.685;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+9d9ef660-0178-11f1-a92d-bf6711fe544f;1770193297.735;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+9dae5fb0-0178-11f1-a92d-bf6711fe544f;1770193297.835;Cognitive_Model;production_selected;3;;encode-aoi-information
+9dc54310-0178-11f1-a92d-bf6711fe544f;1770193297.985;Cognitive_Model;production_selected;3;;x-3-form-nd-aoi-representation
+9de3c790-0178-11f1-a92d-bf6711fe544f;1770193298.186;Cognitive_Model;production_selected;3;;visually-attend-nd-heading-deviation
+9e027320-0178-11f1-a92d-bf6711fe544f;1770193298.386;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+9e0a1440-0178-11f1-a92d-bf6711fe544f;1770193298.436;Cognitive_Model;production_selected;3;;form-nd-heading-deviation-aoi-representation
+9e1b2b40-0178-11f1-a92d-bf6711fe544f;1770193298.549;Aircraft;l_gen_load;2;;37.000000
+9e1b5250-0178-11f1-a92d-bf6711fe544f;1770193298.549;Aircraft;r_gen_load;2;;37.000000
+9e20f7a0-0178-11f1-a92d-bf6711fe544f;1770193298.587;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+9e380210-0178-11f1-a92d-bf6711fe544f;1770193298.737;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+9e3ce410-0178-11f1-a92d-bf6711fe544f;1770193298.770;Aircraft;e1_n1_percent;2;;23.300000
+9e3ce411-0178-11f1-a92d-bf6711fe544f;1770193298.770;Aircraft;e2_n1_percent;2;;23.300000
+9e474450-0178-11f1-a92d-bf6711fe544f;1770193298.837;Cognitive_Model;production_selected;3;;encode-aoi-information
+9e7cd340-0178-11f1-a92d-bf6711fe544f;1770193299.188;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+9e847460-0178-11f1-a92d-bf6711fe544f;1770193299.238;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+9ea2f8e0-0178-11f1-a92d-bf6711fe544f;1770193299.439;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+9eaac110-0178-11f1-a92d-bf6711fe544f;1770193299.489;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+9ec1a470-0178-11f1-a92d-bf6711fe544f;1770193299.640;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+9ed8aee0-0178-11f1-a92d-bf6711fe544f;1770193299.790;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+9ee05000-0178-11f1-a92d-bf6711fe544f;1770193299.841;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-both
+9ee7ca10-0178-11f1-a92d-bf6711fe544f;1770193299.890;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+9eef9240-0178-11f1-a92d-bf6711fe544f;1770193299.940;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+9ef73360-0178-11f1-a92d-bf6711fe544f;1770193299.990;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+9f05b250-0178-11f1-a92d-bf6711fe544f;1770193300.085;Aircraft;airspeed;2;;1.700000
+9f0675a0-0178-11f1-a92d-bf6711fe544f;1770193300.090;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+9f15b7e0-0178-11f1-a92d-bf6711fe544f;1770193300.191;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+9f15def0-0178-11f1-a92d-bf6711fe544f;1770193300.191;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+9f1d8010-0178-11f1-a92d-bf6711fe544f;1770193300.241;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+9f252130-0178-11f1-a92d-bf6711fe544f;1770193300.291;Cognitive_Model;production_selected;3;;perform-visually-attend-eicas
+9f2cc250-0178-11f1-a92d-bf6711fe544f;1770193300.341;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+9f346370-0178-11f1-a92d-bf6711fe544f;1770193300.392;Cognitive_Model;production_selected;3;;form-eicas-status-representation
+9f43ccc0-0178-11f1-a92d-bf6711fe544f;1770193300.492;Cognitive_Model;production_selected;3;;eicas-is-clear
+9f625140-0178-11f1-a92d-bf6711fe544f;1770193300.693;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+9f69cb50-0178-11f1-a92d-bf6711fe544f;1770193300.742;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+9f716c70-0178-11f1-a92d-bf6711fe544f;1770193300.792;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+9f80aeb0-0178-11f1-a92d-bf6711fe544f;1770193300.892;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+9f9f8150-0178-11f1-a92d-bf6711fe544f;1770193301.093;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+9faec390-0178-11f1-a92d-bf6711fe544f;1770193301.193;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+9fb664b0-0178-11f1-a92d-bf6711fe544f;1770193301.243;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+9fd4e930-0178-11f1-a92d-bf6711fe544f;1770193301.444;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+9ff394c0-0178-11f1-a92d-bf6711fe544f;1770193301.644;Cognitive_Model;task_check;5;;
+9ff394c1-0178-11f1-a92d-bf6711fe544f;1770193301.644;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+9ff5deb0-0178-11f1-a92d-bf6711fe544f;1770193301.659;TARS Agent;current_state;3;;"{""procedure"": ""LINE-UP AND HOLD"", ""classification"": ""NORM"", ""type"": ""SOP"", ""category"": ""Environment Check"", ""task_object"": ""Winds"", ""value"": ""CHECK"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Wind speed, direction, runway alignment."", ""interaction"": ""display_winds_and_ack"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": ""Wind report from METAR : wind calm, zero niner zero degrees at four knots"", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+9ff5deb1-0178-11f1-a92d-bf6711fe544f;1770193301.660;TARS Agent;current_procedure;3;;LINE-UP AND HOLD
+9ff5deb2-0178-11f1-a92d-bf6711fe544f;1770193301.660;TARS Agent;interaction_message;3;;
+9ff5deb3-0178-11f1-a92d-bf6711fe544f;1770193301.660;TARS Agent;current_task_object;3;;Winds
+9ff5deb4-0178-11f1-a92d-bf6711fe544f;1770193301.660;TARS Agent;current_task_value;3;;CHECK
+9ff5deb5-0178-11f1-a92d-bf6711fe544f;1770193301.660;TARS Agent;current_task_autonomy_role;3;;
+9ff605c0-0178-11f1-a92d-bf6711fe544f;1770193301.660;TARS Agent;current_task_human_role;3;;performer
+9ff605c1-0178-11f1-a92d-bf6711fe544f;1770193301.660;TARS Agent;next_state;3;;"{""procedure"": ""LINE-UP AND HOLD"", ""classification"": ""NORM"", ""type"": ""SOP"", ""category"": ""Autopilot Mgmt"", ""task_object"": ""Select Altitude"", ""value"": ""PRESET AS CLEARED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ATC clearance"", ""interaction"": ""alt_preset_as_cleared"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+9ff605c2-0178-11f1-a92d-bf6711fe544f;1770193301.660;TARS Agent;countdown_next;1;;false
+9ff605c3-0178-11f1-a92d-bf6711fe544f;1770193301.660;Shared Interface;countdown_complete;5;;
+9ff605c4-0178-11f1-a92d-bf6711fe544f;1770193301.661;TARS Agent;countdown_max_next;1;;false
+9ff605c5-0178-11f1-a92d-bf6711fe544f;1770193301.661;Shared Interface;countdown_complete;5;;
+9ff605c6-0178-11f1-a92d-bf6711fe544f;1770193301.661;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""LINE-UP AND HOLD"", ""classification"": ""NORM"", ""type"": ""SOP"", ""category"": ""Environment Check"", ""task_object"": ""Winds"", ""value"": ""CHECK"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Wind speed, direction, runway alignment."", ""interaction"": ""display_winds_and_ack"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": ""Wind report from METAR : wind calm, zero niner zero degrees at four knots"", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+9ff605c7-0178-11f1-a92d-bf6711fe544f;1770193301.661;TARS Agent;action_time;3;;action:0.03
+9ffb0ed0-0178-11f1-a92d-bf6711fe544f;1770193301.694;Cognitive_Model;production_selected;3;;form-task-done
+a011f230-0178-11f1-a92d-bf6711fe544f;1770193301.844;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+a0215b80-0178-11f1-a92d-bf6711fe544f;1770193301.944;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+a028fca0-0178-11f1-a92d-bf6711fe544f;1770193301.994;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+a0383ee0-0178-11f1-a92d-bf6711fe544f;1770193302.094;Cognitive_Model;production_selected;3;;encode-aoi-information
+a04f2240-0178-11f1-a92d-bf6711fe544f;1770193302.245;Cognitive_Model;production_selected;3;;x-3-form-eicas-aoi-representation
+a06dcdd0-0178-11f1-a92d-bf6711fe544f;1770193302.446;Cognitive_Model;production_selected;3;;visually-attend-eicas-n1-percent
+a08c7960-0178-11f1-a92d-bf6711fe544f;1770193302.646;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+a0941a80-0178-11f1-a92d-bf6711fe544f;1770193302.697;Cognitive_Model;production_selected;3;;form-eicas-e1-n1-percent-aoi-representation
+a0aafde0-0178-11f1-a92d-bf6711fe544f;1770193302.847;Cognitive_Model;production_selected;3;;visually-attend-eicas-e2-n1-percent
+a0c20850-0178-11f1-a92d-bf6711fe544f;1770193302.997;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+a0c9a970-0178-11f1-a92d-bf6711fe544f;1770193303.048;Cognitive_Model;production_selected;3;;form-eicas-e2-n1-percent-aoi-representation
+a0f79740-0178-11f1-a92d-bf6711fe544f;1770193303.348;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+a0f79741-0178-11f1-a92d-bf6711fe544f;1770193303.348;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+a106d980-0178-11f1-a92d-bf6711fe544f;1770193303.448;Cognitive_Model;production_selected;3;;encode-aoi-information
+a11dbce0-0178-11f1-a92d-bf6711fe544f;1770193303.599;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+a1440990-0178-11f1-a92d-bf6711fe544f;1770193303.849;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+a1576a80-0178-11f1-a92d-bf6711fe544f;1770193303.977;Aircraft;airspeed;2;;1.800000
+a162b520-0178-11f1-a92d-bf6711fe544f;1770193304.050;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+a16a5640-0178-11f1-a92d-bf6711fe544f;1770193304.101;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+a18160b0-0178-11f1-a92d-bf6711fe544f;1770193304.251;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+a1984410-0178-11f1-a92d-bf6711fe544f;1770193304.401;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+a19fe530-0178-11f1-a92d-bf6711fe544f;1770193304.452;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-both
+a1a78650-0178-11f1-a92d-bf6711fe544f;1770193304.502;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+a1af2770-0178-11f1-a92d-bf6711fe544f;1770193304.552;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+a1b6c890-0178-11f1-a92d-bf6711fe544f;1770193304.602;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+a1c658f0-0178-11f1-a92d-bf6711fe544f;1770193304.703;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+a1cdfa10-0178-11f1-a92d-bf6711fe544f;1770193304.753;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+a1d59b30-0178-11f1-a92d-bf6711fe544f;1770193304.803;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+a1dd3c50-0178-11f1-a92d-bf6711fe544f;1770193304.853;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+a1e4dd70-0178-11f1-a92d-bf6711fe544f;1770193304.904;Cognitive_Model;production_selected;3;;retrieve-current-wind-belief
+a20b2a20-0178-11f1-a92d-bf6711fe544f;1770193305.154;Cognitive_Model;production_selected;3;;retrieve-current-wind-belief-success-no-tars-input
+a2a40ec0-0178-11f1-a92d-bf6711fe544f;1770193306.156;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+a2b35100-0178-11f1-a92d-bf6711fe544f;1770193306.257;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+a2baf220-0178-11f1-a92d-bf6711fe544f;1770193306.307;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+a2ca3460-0178-11f1-a92d-bf6711fe544f;1770193306.407;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+a2e8dff0-0178-11f1-a92d-bf6711fe544f;1770193306.607;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+a2f08110-0178-11f1-a92d-bf6711fe544f;1770193306.657;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+a2ffc350-0178-11f1-a92d-bf6711fe544f;1770193306.758;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+a316a6b0-0178-11f1-a92d-bf6711fe544f;1770193306.908;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+a33cf360-0178-11f1-a92d-bf6711fe544f;1770193307.158;Cognitive_Model;task_check;5;;
+a33cf361-0178-11f1-a92d-bf6711fe544f;1770193307.159;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+a33cf362-0178-11f1-a92d-bf6711fe544f;1770193307.159;Cognitive_Model;production_selected;3;;form-task-done
+a33fd990-0178-11f1-a92d-bf6711fe544f;1770193307.177;Shared Interface;countdown_complete;5;;
+a33fd991-0178-11f1-a92d-bf6711fe544f;1770193307.177;Shared Interface;countdown_complete;5;;
+a33fd992-0178-11f1-a92d-bf6711fe544f;1770193307.177;TARS Agent;current_state;3;;"{""procedure"": ""LINE-UP AND HOLD"", ""classification"": ""NORM"", ""type"": ""SOP"", ""category"": ""Autopilot Mgmt"", ""task_object"": ""Select Altitude"", ""value"": ""PRESET AS CLEARED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ATC clearance"", ""interaction"": ""alt_preset_as_cleared"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+a33fd993-0178-11f1-a92d-bf6711fe544f;1770193307.177;TARS Agent;current_procedure;3;;LINE-UP AND HOLD
+a33fd994-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;interaction_message;3;;
+a33fd995-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;current_task_object;3;;Select Altitude
+a33fd996-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;current_task_value;3;;PRESET AS CLEARED
+a33fd997-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;current_task_autonomy_role;3;;
+a33fd998-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;current_task_human_role;3;;performer
+a33fd999-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;next_state;3;;"{""procedure"": ""TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""System Check"", ""task_object"": ""CAS"", ""value"": ""CHECK CLEAR"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""CAS status, system alerts, checklist progress."", ""interaction"": """", ""delay_before_action"": 2.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+a34000a0-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;countdown_next;1;;true
+a34000a1-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;countdown_max_next;1;;true
+a34000a2-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""LINE-UP AND HOLD"", ""classification"": ""NORM"", ""type"": ""SOP"", ""category"": ""Autopilot Mgmt"", ""task_object"": ""Select Altitude"", ""value"": ""PRESET AS CLEARED"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""ATC clearance"", ""interaction"": ""alt_preset_as_cleared"", ""delay_before_action"": 0.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+a34000a3-0178-11f1-a92d-bf6711fe544f;1770193307.178;TARS Agent;action_time;3;;action:0.03
+a35bc600-0178-11f1-a92d-bf6711fe544f;1770193307.360;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+a3636720-0178-11f1-a92d-bf6711fe544f;1770193307.410;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+a372a960-0178-11f1-a92d-bf6711fe544f;1770193307.511;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+a37a4a80-0178-11f1-a92d-bf6711fe544f;1770193307.561;Cognitive_Model;production_selected;3;;encode-aoi-information
+a39154f0-0178-11f1-a92d-bf6711fe544f;1770193307.711;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+a3b77a90-0178-11f1-a92d-bf6711fe544f;1770193307.962;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+a3d5ff10-0178-11f1-a92d-bf6711fe544f;1770193308.161;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+a3dda030-0178-11f1-a92d-bf6711fe544f;1770193308.211;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+a3f4aaa0-0178-11f1-a92d-bf6711fe544f;1770193308.362;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+a40b8e00-0178-11f1-a92d-bf6711fe544f;1770193308.512;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+a4132f20-0178-11f1-a92d-bf6711fe544f;1770193308.562;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-both
+a41ad040-0178-11f1-a92d-bf6711fe544f;1770193308.613;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+a4227160-0178-11f1-a92d-bf6711fe544f;1770193308.663;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+a42a1280-0178-11f1-a92d-bf6711fe544f;1770193308.713;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+a4397bd0-0178-11f1-a92d-bf6711fe544f;1770193308.813;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+a4411cf0-0178-11f1-a92d-bf6711fe544f;1770193308.863;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+a448be10-0178-11f1-a92d-bf6711fe544f;1770193308.913;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+a4505f30-0178-11f1-a92d-bf6711fe544f;1770193308.963;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+a4580050-0178-11f1-a92d-bf6711fe544f;1770193309.014;Cognitive_Model;production_selected;3;;selected-altitude-as-cleared-no-tars-input
+a45fa170-0178-11f1-a92d-bf6711fe544f;1770193309.064;Cognitive_Model;production_selected;3;;retrieve-takeof-clearance
+a46f0ac0-0178-11f1-a92d-bf6711fe544f;1770193309.164;Cognitive_Model;production_selected;3;;takeoff-clearance-retrieved-no-tars-input
+a4b2f190-0178-11f1-a92d-bf6711fe544f;1770193309.609;Aircraft;airspeed;2;;1.700000
+a50f9080-0178-11f1-a92d-bf6711fe544f;1770193310.216;Cognitive_Model;production_selected;3;;look-at-selected-altitude-on-pfd
+a52e1500-0178-11f1-a92d-bf6711fe544f;1770193310.417;Cognitive_Model;production_selected;3;;x-a-visually-encode-aircraft-component
+a535dd30-0178-11f1-a92d-bf6711fe544f;1770193310.467;Cognitive_Model;production_selected;3;;form-select-altitude-preset-as-cleared-representation
+a5451f70-0178-11f1-a92d-bf6711fe544f;1770193310.567;Cognitive_Model;production_selected;3;;select-altitude-preset-as-cleared-take-action
+a5a0fb10-0178-11f1-a92d-bf6711fe544f;1770193311.169;Cognitive_Model;production_selected;3;;check-1-visually-attend-current-task-object
+a6139300-0178-11f1-a92d-bf6711fe544f;1770193311.921;Cognitive_Model;production_selected;3;;check-2-visually-encode-task-object-item
+a61b3420-0178-11f1-a92d-bf6711fe544f;1770193311.971;Cognitive_Model;production_selected;3;;check-3-form-task-object-item-representation
+a639dfb0-0178-11f1-a92d-bf6711fe544f;1770193312.171;Cognitive_Model;production_selected;3;;check-2-1-visually-attend-current-task-value
+a64921f0-0178-11f1-a92d-bf6711fe544f;1770193312.271;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+a650c310-0178-11f1-a92d-bf6711fe544f;1770193312.321;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+a6602c60-0178-11f1-a92d-bf6711fe544f;1770193312.423;Cognitive_Model;production_selected;3;;t-i-task-was-not-autochecked-no-change
+a67eb0e0-0178-11f1-a92d-bf6711fe544f;1770193312.623;Cognitive_Model;production_selected;3;;t-i-check-task-on-tars
+a695bb50-0178-11f1-a92d-bf6711fe544f;1770193312.773;Cognitive_Model;task_check;5;;
+a695bb51-0178-11f1-a92d-bf6711fe544f;1770193312.773;Cognitive_Model;production_selected;3;;t-i-subvocalize-check-task-on-tars
+a6980540-0178-11f1-a92d-bf6711fe544f;1770193312.789;TARS Agent;current_state;3;;"{""procedure"": ""TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""System Check"", ""task_object"": ""CAS"", ""value"": ""CHECK CLEAR"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""CAS status, system alerts, checklist progress."", ""interaction"": """", ""delay_before_action"": 2.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+a6982c50-0178-11f1-a92d-bf6711fe544f;1770193312.789;TARS Agent;current_procedure;3;;TAKEOFF
+a6982c51-0178-11f1-a92d-bf6711fe544f;1770193312.789;TARS Agent;interaction_message;3;;
+a6982c52-0178-11f1-a92d-bf6711fe544f;1770193312.789;TARS Agent;current_task_object;3;;CAS
+a6982c53-0178-11f1-a92d-bf6711fe544f;1770193312.789;TARS Agent;current_task_value;3;;CHECK CLEAR
+a6982c54-0178-11f1-a92d-bf6711fe544f;1770193312.789;TARS Agent;current_task_autonomy_role;3;;
+a6982c55-0178-11f1-a92d-bf6711fe544f;1770193312.789;TARS Agent;current_task_human_role;3;;performer
+a6982c56-0178-11f1-a92d-bf6711fe544f;1770193312.790;TARS Agent;next_state;3;;"{""procedure"": ""TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""Flight Control"", ""task_object"": ""THROTTLES"", ""value"": ""TO Detent"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""Throttle position, engine parameters, runway conditions."", ""interaction"": ""display_fadec"", ""delay_before_action"": 0.0, ""delay_after_action"": 0, ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+a6982c57-0178-11f1-a92d-bf6711fe544f;1770193312.790;TARS Agent;countdown_current;1;;true
+a6982c58-0178-11f1-a92d-bf6711fe544f;1770193312.790;TARS Agent;countdown_max_current;1;;true
+a6982c59-0178-11f1-a92d-bf6711fe544f;1770193312.790;TARS Agent;countdown_next;1;;false
+a6982c5a-0178-11f1-a92d-bf6711fe544f;1770193312.790;TARS Agent;countdown_max_next;1;;false
+a6982c5b-0178-11f1-a92d-bf6711fe544f;1770193312.790;TARS Agent;action_time;3;;delay_before_action:2000.00
+a69d5c70-0178-11f1-a92d-bf6711fe544f;1770193312.823;Cognitive_Model;production_selected;3;;form-task-done
+a6bbe0f0-0178-11f1-a92d-bf6711fe544f;1770193313.024;Cognitive_Model;speech_output;3;;check-task-on-tars-interface
+a6c38210-0178-11f1-a92d-bf6711fe544f;1770193313.074;Cognitive_Model;production_selected;3;;get-where-should-i-look-next
+a6d2eb60-0178-11f1-a92d-bf6711fe544f;1770193313.174;Cognitive_Model;production_selected;3;;attend-to-next-aoi
+a6e20690-0178-11f1-a92d-bf6711fe544f;1770193313.273;Cognitive_Model;production_selected;3;;encode-aoi-information
+a6f148d0-0178-11f1-a92d-bf6711fe544f;1770193313.374;Cognitive_Model;production_selected;3;;3-form-task-object-item-representation
+a7176e70-0178-11f1-a92d-bf6711fe544f;1770193313.624;Cognitive_Model;production_selected;3;;2-1-visually-attend-current-task-value
+a7361a00-0178-11f1-a92d-bf6711fe544f;1770193313.825;Cognitive_Model;production_selected;3;;2-2-visually-encode-task-value-item
+a73de230-0178-11f1-a92d-bf6711fe544f;1770193313.875;Cognitive_Model;production_selected;3;;2-3-form-task-value-item-representation
+a7586f10-0178-11f1-a92d-bf6711fe544f;1770193314.049;Aircraft;airspeed;2;;1.800000
+a76ba8f0-0178-11f1-a92d-bf6711fe544f;1770193314.176;Cognitive_Model;production_selected;3;;x-4-not-wait-task
+a76bd000-0178-11f1-a92d-bf6711fe544f;1770193314.176;Cognitive_Model;production_selected;3;;x-5-not-n-a-task-continue
+a7737120-0178-11f1-a92d-bf6711fe544f;1770193314.226;Cognitive_Model;production_selected;3;;x-6-not-waiting-new-task-both
+a77aeb30-0178-11f1-a92d-bf6711fe544f;1770193314.276;Cognitive_Model;production_selected;3;;t-i-x-1-visually-attend-current-task-human-role
+a782b360-0178-11f1-a92d-bf6711fe544f;1770193314.326;Cognitive_Model;production_selected;3;;t-i-x-2-visually-encode-allocation-item
+a78a5480-0178-11f1-a92d-bf6711fe544f;1770193314.376;Cognitive_Model;production_selected;3;;t-i-x-3-form-task-item-allocation-human-role-representation
+a7a110d0-0178-11f1-a92d-bf6711fe544f;1770193314.526;Cognitive_Model;production_selected;3;;t-i-x-4-visually-attend-current-task-autonomy_role
+a7a137e0-0178-11f1-a92d-bf6711fe544f;1770193314.526;Cognitive_Model;production_selected;3;;t-i-x-5-visually-encode-allocation-item
+a7a8b1f0-0178-11f1-a92d-bf6711fe544f;1770193314.576;Cognitive_Model;production_selected;3;;t-i-x-6-form-task-item-allocation-autonomy-role-representation
+a7b05310-0178-11f1-a92d-bf6711fe544f;1770193314.626;Cognitive_Model;production_selected;3;;t-i-tars-n-a-allocation-go-to-perform-task
+a7bfbc60-0178-11f1-a92d-bf6711fe544f;1770193314.726;Cognitive_Model;production_selected;3;;end-run
+a7c9f590-0178-11f1-a92d-bf6711fe544f;1770193314.793;TARS Agent;action_about_to_fire;3;;"{""procedure"": ""TAKEOFF"", ""classification"": ""NORM"", ""type"": ""Checklist"", ""category"": ""System Check"", ""task_object"": ""CAS"", ""value"": ""CHECK CLEAR"", ""human_role"": ""performer"", ""autonomy_role"": """", ""information_requirement"": ""CAS status, system alerts, checklist progress."", ""interaction"": """", ""delay_before_action"": 2.0, ""delay_after_action"": ""is_acked"", ""callout"": """", ""condition"": null, ""condition_type"": null, ""condition_function"": null, ""monitor_scope"": null}"
+a7c9f591-0178-11f1-a92d-bf6711fe544f;1770193314.793;TARS Agent;interaction_message;3;;"{""message"": null, ""tars_input"": null}"
+a7ca6ac0-0178-11f1-a92d-bf6711fe544f;1770193314.796;Shared Interface;countdown_complete;5;;
+a7cadff0-0178-11f1-a92d-bf6711fe544f;1770193314.800;TARS Agent;current_task_object;3;;
+a7cb0700-0178-11f1-a92d-bf6711fe544f;1770193314.800;TARS Agent;current_task_value;3;;
+a7cb0701-0178-11f1-a92d-bf6711fe544f;1770193314.800;TARS Agent;current_task_autonomy_role;3;;
+a7cb0702-0178-11f1-a92d-bf6711fe544f;1770193314.800;TARS Agent;current_task_human_role;3;;
+a7cb0703-0178-11f1-a92d-bf6711fe544f;1770193314.800;TARS Agent;end_signal;5;;

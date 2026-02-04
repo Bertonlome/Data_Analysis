@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 import sys
+from pathlib import Path
 
 def load_workload_data(filename):
     """
@@ -25,8 +26,7 @@ def load_task_events(json_filepath):
         with open(json_filepath, 'r') as f:
             tasks = json.load(f)
         return tasks
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        print(f"Warning: Could not load task events: {e}")
+    except (FileNotFoundError, json.JSONDecodeError):
         return []
 
 
@@ -37,7 +37,7 @@ def add_task_regions(ax, tasks, min_time, max_time):
     if not tasks:
         return
     
-    # Filter tasks: skip first task (Takeoff clearance) AND only include tasks that overlap with plot range
+    # Filter tasks: only include tasks that overlap with plot range
     filtered_tasks = []
     for idx, task in enumerate(tasks):
         task_time = task['timestamp']
@@ -47,9 +47,6 @@ def add_task_regions(ax, tasks, min_time, max_time):
         else:
             next_time = max_time + 10  # Extend beyond plot
         
-        # Skip first task (Takeoff clearance) and tasks completely outside plot range
-        if idx == 0:  # Skip Takeoff clearance
-            continue
         # Include task if it overlaps with plot time range
         if task_time <= max_time and next_time >= min_time:
             filtered_tasks.append(task)
@@ -327,6 +324,60 @@ def print_statistics(df):
     print(f"{'='*70}\n")
 
 
+def export_summary_metrics(df, output_dir='workload_analyzer'):
+    """
+    Export summary metrics to CSV for comparison analysis.
+    Creates a workload_summary.csv file with mental workload statistics.
+    """
+    import csv
+    from pathlib import Path
+    
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    
+    # Calculate summary statistics
+    summary_file = output_path / 'workload_summary.csv'
+    
+    with open(summary_file, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Metric', 'Value'])
+        
+        # Overall utilization statistics
+        writer.writerow(['Overall_Mean', f'{df["Overall_Utilization"].mean():.6f}'])
+        writer.writerow(['Overall_Max', f'{df["Overall_Utilization"].max():.6f}'])
+        writer.writerow(['Overall_Min', f'{df["Overall_Utilization"].min():.6f}'])
+        
+        # Perceptual subnetwork statistics
+        writer.writerow(['Perceptual_Mean', f'{df["Perceptual_SubNetwork"].mean():.6f}'])
+        writer.writerow(['Perceptual_Max', f'{df["Perceptual_SubNetwork"].max():.6f}'])
+        writer.writerow(['Perceptual_Min', f'{df["Perceptual_SubNetwork"].min():.6f}'])
+        
+        # Cognitive subnetwork statistics
+        writer.writerow(['Cognitive_Mean', f'{df["Cognitive_SubNetwork"].mean():.6f}'])
+        writer.writerow(['Cognitive_Max', f'{df["Cognitive_SubNetwork"].max():.6f}'])
+        writer.writerow(['Cognitive_Min', f'{df["Cognitive_SubNetwork"].min():.6f}'])
+        
+        # Motor subnetwork statistics
+        writer.writerow(['Motor_Mean', f'{df["Motor_SubNetwork"].mean():.6f}'])
+        writer.writerow(['Motor_Max', f'{df["Motor_SubNetwork"].max():.6f}'])
+        writer.writerow(['Motor_Min', f'{df["Motor_SubNetwork"].min():.6f}'])
+        
+        # Individual module peaks
+        writer.writerow(['Vision_Peak', f'{df["Vision_Module"].max():.6f}'])
+        writer.writerow(['Audio_Peak', f'{df["Audio_Module"].max():.6f}'])
+        writer.writerow(['Production_Peak', f'{df["Production_Module"].max():.6f}'])
+        writer.writerow(['Declarative_Peak', f'{df["Declarative_Module"].max():.6f}'])
+        writer.writerow(['Imaginary_Peak', f'{df["Imaginary_Module"].max():.6f}'])
+        writer.writerow(['Motor_Peak', f'{df["Motor_Module"].max():.6f}'])
+        writer.writerow(['Speech_Peak', f'{df["Speech_Module"].max():.6f}'])
+        
+        # Time info
+        writer.writerow(['Duration_s', f'{df["Time"].max() - df["Time"].min():.6f}'])
+        writer.writerow(['Num_Timepoints', len(df)])
+    
+    print(f"  → Summary metrics exported to: {summary_file}")
+
+
 if __name__ == "__main__":
     # Load the workload data
     print("Loading workload data...")
@@ -334,17 +385,37 @@ if __name__ == "__main__":
     
     print(f"Loaded {len(df)} time points.\n")
     
-    # Load task events from JSON file if available
-    task_events_file = 'task_events.json'
-    tasks = load_task_events(task_events_file)
-    if tasks:
-        print(f"Loaded {len(tasks)} task events for plot annotation\n")
+    # Load task events from JSON file if available (optional)
+    # Try multiple locations: command line arg, parent directory, current directory
+    tasks = None
+    task_events_file = None
+    
+    # Check if provided as command line argument
+    if len(sys.argv) > 1:
+        task_events_file = sys.argv[1]
+    # Check in parent directory (when run from main.py)
+    elif Path('../task_events.json').exists():
+        task_events_file = '../task_events.json'
+    # Check in current directory
+    elif Path('task_events.json').exists():
+        task_events_file = 'task_events.json'
+    
+    if task_events_file:
+        tasks = load_task_events(task_events_file)
+        if tasks:
+            print(f"Loaded {len(tasks)} task events for plot annotation\n")
     
     # Print statistics
     print_statistics(df)
     
+    # Export summary metrics for comparison analysis
+    print(f"{'='*70}")
+    print("EXPORTING SUMMARY METRICS")
+    print(f"{'='*70}")
+    export_summary_metrics(df, 'workload_analyzer')
+    
     # Generate plots
-    print("Generating plots...")
+    print("\nGenerating plots...")
     plot_perceptual_modules(df, tasks=tasks)
     plot_cognitive_modules(df, tasks=tasks)
     plot_motor_modules(df, tasks=tasks)

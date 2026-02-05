@@ -440,6 +440,10 @@ def calculate_active_task_times(cognitive_starts, cognitive_ends, tars_states, s
 
 def create_active_time_bar_chart(task_data, output_dir):
     """Create a bar chart of active cognitive time on tasks"""
+    if not task_data:
+        print("⚠ Skipping active time bar chart - no data available")
+        return None
+    
     task_names = [t['task_name'] for t in task_data]
     durations = [t['duration'] for t in task_data]
     
@@ -495,17 +499,25 @@ def print_active_task_summary(task_data, start_time, end_time):
     print("="*80)
     
     # Additional statistics
-    print("\nSTATISTICS:")
-    durations = [t['duration'] for t in task_data]
-    print(f"  Mean active task duration: {np.mean(durations):.3f}s")
-    print(f"  Median active task duration: {np.median(durations):.3f}s")
-    print(f"  Min active task duration: {np.min(durations):.3f}s")
-    print(f"  Max active task duration: {np.max(durations):.3f}s")
-    print(f"  Std deviation: {np.std(durations):.3f}s")
+    if task_data:
+        print("\nSTATISTICS:")
+        durations = [t['duration'] for t in task_data]
+        print(f"  Mean active task duration: {np.mean(durations):.3f}s")
+        print(f"  Median active task duration: {np.median(durations):.3f}s")
+        print(f"  Min active task duration: {np.min(durations):.3f}s")
+        print(f"  Max active task duration: {np.max(durations):.3f}s")
+        print(f"  Std deviation: {np.std(durations):.3f}s")
+    else:
+        print("\nSTATISTICS:")
+        print("  No active cognitive task data available")
     print("="*80 + "\n")
 
 def create_comparison_chart(fsm_tasks, active_tasks, output_dir):
     """Create a comparison chart between FSM time and active cognitive time"""
+    if not fsm_tasks or not active_tasks:
+        print("⚠ Skipping comparison chart - insufficient data")
+        return None
+    
     # Match tasks by name
     task_names = [t['task_name'] for t in fsm_tasks]
     
@@ -933,16 +945,22 @@ def main():
         cognitive_starts, cognitive_ends, tars_events, start_uuid, end_uuid
     )
     
-    # Print active task summary
-    print_active_task_summary(active_task_data, tasks[0]['timestamp'], end_event['timestamp'])
+    # Print active task summary (only if we have tasks to analyze)
+    if tasks and active_task_data is not None:
+        print_active_task_summary(active_task_data, tasks[0]['timestamp'], end_event['timestamp'])
+    elif not active_task_data:
+        print("\n⚠ Warning: No active cognitive task data available")
+        print("  This may indicate missing cognitive task events in the data\n")
     
     # Create active time visualization
-    print("Generating active time bar chart...")
-    create_active_time_bar_chart(active_task_data, script_dir)
+    if active_task_data:
+        print("Generating active time bar chart...")
+        create_active_time_bar_chart(active_task_data, script_dir)
     
     # Create comparison chart
-    print("Generating comparison chart...")
-    create_comparison_chart(fsm_task_data, active_task_data, script_dir)
+    if fsm_task_data and active_task_data:
+        print("Generating comparison chart...")
+        create_comparison_chart(fsm_task_data, active_task_data, script_dir)
     
     # Calculate coordination overhead per task
     print("\n" + "="*80)

@@ -23,7 +23,7 @@ from datetime import datetime
 import time
 from echo import *
 
-RUN_NUMBER = 1
+RUN_NUMBER = 3
 analysis_number = 0
 
 # Eventlet setup for Cassandra (Python 3.14 compatibility)
@@ -259,6 +259,70 @@ def save_task_events_json(task_events, output_path):
         json.dump(task_data, f, indent=2)
     
     print(f"Saved {len(task_events)} synchronized task events to {output_path}")
+
+
+def clear_cassandra_database():
+    """
+    Clear all data from the Cassandra event table before starting a new analysis.
+    This prevents accumulation of data from previous runs.
+    
+    Returns:
+        True if successful, False otherwise
+    """
+    print_header("Clearing Cassandra Database")
+    
+    # Import Cassandra libraries (eventlet already patched at module level)
+    from cassandra.cluster import Cluster
+    from cassandra.io.eventletreactor import EventletConnection
+    
+    CASSANDRA_HOST = '127.0.0.1'
+    CASSANDRA_PORT = 9042
+    
+    cluster = None
+    session = None
+    
+    try:
+        # Connect to Cassandra
+        print(f"Connecting to Cassandra at {CASSANDRA_HOST}:{CASSANDRA_PORT}...")
+        cluster = Cluster([CASSANDRA_HOST], port=CASSANDRA_PORT, connection_class=EventletConnection)
+        session = cluster.connect()
+        session.set_keyspace('ingescape')
+        print("✓ Connected to Cassandra")
+        
+        # Truncate the event table
+        print("Clearing event table...")
+        session.execute("TRUNCATE event")
+        
+        # Verify the table is empty
+        count_query = "SELECT COUNT(*) FROM event"
+        result = session.execute(count_query)
+        row_count = result.one()[0]
+        
+        if row_count == 0:
+            print("✓ Successfully cleared all previous data from Cassandra")
+            print(f"  Verified: Event table now has {row_count} rows\n")
+        else:
+            print(f"⚠ Warning: Event table still has {row_count} rows after truncate\n")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error clearing Cassandra database: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+    finally:
+        # Always cleanup Cassandra connections
+        try:
+            if session is not None:
+                session.shutdown()
+        except:
+            pass
+        try:
+            if cluster is not None:
+                cluster.shutdown()
+        except:
+            pass
 
 
 def fetch_and_convert_cassandra_run():
@@ -731,6 +795,21 @@ def run_flight_simulation_analysis():
     
     # Step 0: Create output directory
     create_output_directory(output_dir)
+    
+    # Step 0.5: DON'T clear Cassandra - analyze existing data!
+    # IMPORTANT: Commenting this out to preserve data already in Cassandra
+    # Uncomment only if you want to wait for NEW data collection after clearing
+    # 
+    # clear_success = clear_cassandra_database()
+    # if not clear_success:
+    #     print("\n⚠ Warning: Failed to clear Cassandra database. Data may contain old entries...")
+    # 
+    # # Wait a moment for the system to be ready for new data collection
+    # print("Waiting for system to be ready for new data collection...")
+    # time.sleep(2)
+    # print("✓ Ready to collect new data\n")
+    
+    print("Skipping Cassandra clear - analyzing existing data in database\n")
     
     # Step 1: Fetch latest run from Cassandra
     cassandra_csv = fetch_and_convert_cassandra_run()

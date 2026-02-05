@@ -1,0 +1,14 @@
+Metric,Value
+Num_Conflict_Events,10
+Decide_Utility_Mean,-1.239593
+Decide_Utility_Min,-2.572801
+Decide_Utility_Max,0.198074
+Decide_U_NoNoise_Mean,-0.840296
+Decide_U_NoNoise_Min,-3.046480
+Decide_U_NoNoise_Max,0.000000
+NoCrosscheck_Utility_Mean,-1.965111
+NoCrosscheck_Utility_Min,-4.791282
+NoCrosscheck_Utility_Max,0.919978
+NoCrosscheck_U_NoNoise_Mean,-2.003592
+NoCrosscheck_U_NoNoise_Min,-4.007184
+NoCrosscheck_U_NoNoise_Max,0.000000

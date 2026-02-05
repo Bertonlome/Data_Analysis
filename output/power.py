@@ -451,11 +451,17 @@ def main():
         print(f"  - Run {run['run_number']}: {len(run['files'])} repetitions")
     
     # Analyze specified run or all runs
-    runs_to_analyze = all_runs if args.run is None else [r for r in all_runs if r['run_number'] == args.run]
-    
-    if not runs_to_analyze:
-        print(f"Error: Run {args.run} not found")
-        return
+    if args.run is not None:
+        runs_to_analyze = [r for r in all_runs if r['run_number'] == args.run]
+        if not runs_to_analyze:
+            print(f"Error: Run {args.run} not found")
+            available_runs = [r['run_number'] for r in all_runs]
+            print(f"Available runs: {available_runs}")
+            return
+        print(f"\nAnalyzing only Run {args.run} (as requested)")
+    else:
+        runs_to_analyze = all_runs
+        print(f"\nAnalyzing all runs")
     
     for run_info in runs_to_analyze:
         run_number = run_info['run_number']

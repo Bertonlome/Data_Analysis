@@ -1,0 +1,9 @@
+Metric,Value
+Total_FSM_Time_s,64.988000
+Total_Human_Active_Time_s,99.996000
+Total_TARS_Execution_Time_s,35003.010000
+Total_Active_Duration_s,35103.006000
+Total_Coordination_Time_s,8.012000
+Active_Percentage,54014.60
+Coordination_Percentage,12.33
+Num_Tasks,10

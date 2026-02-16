@@ -1,17 +1,57 @@
 [
   {
-    "timestamp": 5.400000095367432,
+    "timestamp": 4.289999961853027,
     "task_object": "Takeoff clearance",
     "value": "CONFIRM"
   },
   {
-    "timestamp": 8.473999977111816,
+    "timestamp": 38.14299988746643,
     "task_object": "Pitot-Static Switch",
     "value": "PITOT-STATIC"
   },
   {
-    "timestamp": 16.730000019073486,
+    "timestamp": 41.638999938964844,
     "task_object": "ENGINE ANTI-ICE Switches",
     "value": "AS REQUIRED"
+  },
+  {
+    "timestamp": 47.66300010681152,
+    "task_object": "WINDSHIELD ANTI-ICE Switches",
+    "value": "AS REQUIRED"
+  },
+  {
+    "timestamp": 53.68300008773804,
+    "task_object": "PAX SAFETY Switch",
+    "value": "PAX SAFETY"
+  },
+  {
+    "timestamp": 57.08299994468689,
+    "task_object": "LANDING Light Switch",
+    "value": "AS DESIRED"
+  },
+  {
+    "timestamp": 61.63599991798401,
+    "task_object": "ANTI-COLL Light Switch",
+    "value": "ON"
+  },
+  {
+    "timestamp": 66.24500012397766,
+    "task_object": "EICAS",
+    "value": "CHECKED"
+  },
+  {
+    "timestamp": 69.43600010871887,
+    "task_object": "Winds",
+    "value": "CHECK"
+  },
+  {
+    "timestamp": 73.68899989128113,
+    "task_object": "Select Altitude",
+    "value": "PRESET AS CLEARED"
+  },
+  {
+    "timestamp": 79.5569999217987,
+    "task_object": "CAS",
+    "value": "CHECK CLEAR"
   }
 ]

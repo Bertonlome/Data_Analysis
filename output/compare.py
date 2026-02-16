@@ -4,6 +4,7 @@ Cross-Run Comparison Analyzer
 Compares task durations and overall scenario times across multiple experimental runs
 """
 
+import argparse
 import csv
 import json
 import matplotlib.pyplot as plt
@@ -570,15 +571,24 @@ def calculate_confidence_interval(data, confidence=0.95):
     return mean, ci, sem
 
 
-def aggregate_run_data(run_files, run_number):
-    """Aggregate data from multiple repetitions of the same experimental run"""
+def aggregate_run_data(run_files, run_number, max_n=None):
+    """Aggregate data from multiple repetitions of the same experimental run
+    
+    Args:
+        run_files: List of file info dictionaries
+        run_number: Run number
+        max_n: Maximum number of repetitions to analyze (default: None = all)
+    """
     repetitions = []
     all_repetition_tasks = []  # Store all repetition tasks for JAE calculation
     
-    print(f"\nProcessing Run #{run_number} ({len(run_files)} repetitions)")
+    # Limit to max_n if specified
+    files_to_process = run_files[:max_n] if max_n is not None else run_files
+    
+    print(f"\nProcessing Run #{run_number} (total: {len(run_files)} repetitions, analyzing: {len(files_to_process)})")
     print("-" * 80)
     
-    for file_info in run_files:
+    for file_info in files_to_process:
         print(f"  Loading: {file_info['folder_name']}")
         run_data = extract_run_data(file_info['path'], file_info['folder_name'])
         if run_data:
@@ -700,7 +710,7 @@ def aggregate_run_data(run_files, run_number):
     
     return {
         'run_number': run_number,
-        'run_name': f'Run {run_number}',
+        'run_name': f'C{run_number}',
         'n_repetitions': len(repetitions),
         'total_time_mean': mean_total,
         'total_time_ci': ci_total,
@@ -733,66 +743,34 @@ def create_comparison_plots(runs_data, output_dir):
     
     x = np.arange(len(run_names))
     
-    # Use consistent colors for each run across all plots
-    colors = plt.cm.Set3(np.linspace(0, 1, len(run_names)))
+    # Use distinct colors for each metric
+    color_fsm = 'steelblue'
+    color_active = 'darkorange'
+    color_coord = 'mediumseagreen'
     
     # Plot 1: Total FSM Time
     bars1 = ax1.bar(x, total_times, yerr=total_times_ci, capsize=5,
-                    color=colors, alpha=0.8, edgecolor='black')
+                    color=color_fsm, alpha=0.8, edgecolor='black')
     
-    # Add value labels
-    for bar, mean, ci in zip(bars1, total_times, total_times_ci):
-        height = bar.get_height()
-        if ci > 0:
-            ax1.text(bar.get_x() + bar.get_width()/2., height + ci,
-                    f'{mean:.1f}±{ci:.1f}',
-                    ha='center', va='bottom', fontsize=9)
-        else:
-            ax1.text(bar.get_x() + bar.get_width()/2., height,
-                    f'{mean:.1f}s',
-                    ha='center', va='bottom', fontsize=9)
-    
-    ax1.set_xlabel('Experimental Run', fontsize=11, fontweight='bold')
+    ax1.set_xlabel('Experimental Condition', fontsize=11, fontweight='bold')
     ax1.set_ylabel('Total FSM Time', fontsize=11, fontweight='bold')
     ax1.set_xticks(x)
     ax1.set_xticklabels(run_names, rotation=0, ha='center')
     
     # Plot 2: Total Active Cognitive Time
     bars2 = ax2.bar(x, active_times, yerr=active_times_ci, capsize=5,
-                    color=colors, alpha=0.8, edgecolor='black')
+                    color=color_active, alpha=0.8, edgecolor='black')
     
-    for bar, mean, ci in zip(bars2, active_times, active_times_ci):
-        height = bar.get_height()
-        if ci > 0:
-            ax2.text(bar.get_x() + bar.get_width()/2., height + ci,
-                    f'{mean:.1f}±{ci:.1f}',
-                    ha='center', va='bottom', fontsize=9)
-        else:
-            ax2.text(bar.get_x() + bar.get_width()/2., height,
-                    f'{mean:.1f}s',
-                    ha='center', va='bottom', fontsize=9)
-    
-    ax2.set_xlabel('Experimental Run', fontsize=11, fontweight='bold')
+    ax2.set_xlabel('Experimental Condition', fontsize=11, fontweight='bold')
     ax2.set_ylabel('Total Active Cognitive Time', fontsize=11, fontweight='bold')
     ax2.set_xticks(x)
     ax2.set_xticklabels(run_names, rotation=0, ha='center')
     
     # Plot 3: Total Coordination Time
     bars3 = ax3.bar(x, coord_times, yerr=coord_times_ci, capsize=5,
-                    color=colors, alpha=0.8, edgecolor='black')
+                    color=color_coord, alpha=0.8, edgecolor='black')
     
-    for bar, mean, ci in zip(bars3, coord_times, coord_times_ci):
-        height = bar.get_height()
-        if ci > 0:
-            ax3.text(bar.get_x() + bar.get_width()/2., height + ci,
-                    f'{mean:.1f}±{ci:.1f}',
-                    ha='center', va='bottom', fontsize=9)
-        else:
-            ax3.text(bar.get_x() + bar.get_width()/2., height,
-                    f'{mean:.1f}s',
-                    ha='center', va='bottom', fontsize=9)
-    
-    ax3.set_xlabel('Experimental Run', fontsize=11, fontweight='bold')
+    ax3.set_xlabel('Experimental Condition', fontsize=11, fontweight='bold')
     ax3.set_ylabel('Total Coordination Time', fontsize=11, fontweight='bold')
     ax3.set_xticks(x)
     ax3.set_xticklabels(run_names, rotation=0, ha='center')
@@ -885,7 +863,7 @@ def create_comparison_plots(runs_data, output_dir):
             if i % 2 == 0:
                 cell.set_facecolor('#E7E6E6')
     
-    plt.title('Cross-Run Summary Statistics', fontsize=14, fontweight='bold', pad=20)
+    plt.title('Cross-Condition Summary Statistics', fontsize=14, fontweight='bold', pad=20)
     plt.savefig(Path(output_dir) / 'summary_statistics.png', dpi=300, bbox_inches='tight')
     plt.savefig(Path(output_dir) / 'summary_statistics.eps', format='eps', bbox_inches='tight')
     print(f"Saved summary statistics table")
@@ -897,18 +875,20 @@ def create_comparison_plots(runs_data, output_dir):
     if len(runs_with_workload) >= 1:
         fig, ax = plt.subplots(figsize=(8, 6))
         
-        # Box plot for overall utilization
-        workload_data = [r['workload']['overall']['values'] for r in runs_with_workload]
+        # Bar chart for overall workload with confidence intervals
+        workload_means = [r['workload']['overall']['mean'] for r in runs_with_workload]
+        workload_cis = [r['workload']['overall']['ci'] for r in runs_with_workload]
         run_labels = [r['run_name'] for r in runs_with_workload]
         
-        bp = ax.boxplot(workload_data, tick_labels=run_labels, patch_artist=True,
-                        boxprops=dict(facecolor='lightblue', alpha=0.7),
-                        medianprops=dict(color='red', linewidth=2),
-                        whiskerprops=dict(linewidth=1.5),
-                        capprops=dict(linewidth=1.5))
+        x = np.arange(len(run_labels))
+        bars = ax.bar(x, workload_means, yerr=workload_cis, capsize=5,
+                      color='lightblue', alpha=0.8, edgecolor='black')
         
-        ax.set_ylabel('Overall Workload Distribution Across Runs', fontsize=12, fontweight='bold')
-        ax.set_xticklabels(run_labels, rotation=45, ha='right')
+        ax.set_ylabel('Overall Workload (Mean ± 95% CI)', fontsize=12, fontweight='bold')
+        ax.set_xlabel('Experimental Condition', fontsize=11, fontweight='bold')
+        ax.set_ylim(0, 0.2)
+        ax.set_xticks(x)
+        ax.set_xticklabels(run_labels, rotation=0, ha='center')
         
         plt.tight_layout()
         plt.savefig(Path(output_dir) / 'workload_overall_comparison.png', dpi=300, bbox_inches='tight')
@@ -1056,29 +1036,16 @@ def create_comparison_plots(runs_data, output_dir):
         jae_cis = [r['jae_data_ci'] for r in runs_with_jae_global]
         
         x = np.arange(len(run_names))
-        colors = plt.cm.Set3(np.linspace(0, 1, len(run_names)))
         
         bars = ax.bar(x, jae_means, yerr=jae_cis, capsize=5,
-                     color=colors, alpha=0.8, edgecolor='black')
+                     color='steelblue', alpha=0.8, edgecolor='black')
         
         # Add reference line at JAE = 1.0 (optimal)
         ax.axhline(y=1.0, color='red', linestyle='--', linewidth=2, label='Optimal (JAE=1.0)', alpha=0.7)
         
-        # Add value labels on bars
-        for bar, mean, ci in zip(bars, jae_means, jae_cis):
-            height = bar.get_height()
-            if ci > 0:
-                ax.text(bar.get_x() + bar.get_width()/2., height + ci,
-                       f'{mean:.3f}±{ci:.3f}\n({mean*100:.1f}%)',
-                       ha='center', va='bottom', fontsize=10)
-            else:
-                ax.text(bar.get_x() + bar.get_width()/2., height,
-                       f'{mean:.3f}\n({mean*100:.1f}%)',
-                       ha='center', va='bottom', fontsize=10)
-        
-        ax.set_xlabel('Experimental Run', fontsize=12, fontweight='bold')
-        ax.set_ylabel('JAE-Data (Joint Activity Efficiency)', fontsize=12, fontweight='bold')
-        ax.set_title('Scenario-Level JAE Comparison (Mean ± 95% CI)', fontsize=14, fontweight='bold')
+        ax.set_xlabel('Experimental Condition', fontsize=12, fontweight='bold')
+        ax.set_ylabel('Joint Activity Efficiency', fontsize=12, fontweight='bold')
+        #ax.set_title('Scenario-Level JAE Comparison (Mean ± 95% CI)', fontsize=14, fontweight='bold')
         ax.set_xticks(x)
         ax.set_xticklabels(run_names, rotation=0, ha='center')
         ax.legend(fontsize=10, loc='upper right')
@@ -1223,6 +1190,11 @@ def print_summary_report(runs_data):
 
 def main():
     """Main execution function"""
+    parser = argparse.ArgumentParser(description='Cross-Run Comparison Analyzer')
+    parser.add_argument('--max-n', type=int, default=None,
+                       help='Maximum number of repetitions to analyze per run (default: None = all available)')
+    args = parser.parse_args()
+    
     # Get the directory containing this script
     script_dir = Path(__file__).parent
     
@@ -1230,6 +1202,8 @@ def main():
     print("CROSS-RUN COMPARISON ANALYZER WITH 95% CONFIDENCE INTERVALS")
     print("="*80)
     print(f"Analyzing runs in: {script_dir}")
+    if args.max_n is not None:
+        print(f"Limited to {args.max_n} repetitions per run (--max-n)")
     print()
     
     # Find all CSV files grouped by run number
@@ -1247,7 +1221,7 @@ def main():
     # Aggregate data for each run (across repetitions)
     runs_data = []
     for group in grouped_runs:
-        aggregated = aggregate_run_data(group['files'], group['run_number'])
+        aggregated = aggregate_run_data(group['files'], group['run_number'], max_n=args.max_n)
         if aggregated:
             runs_data.append(aggregated)
     

@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """
-Power Analysis for Flight Simulation Data
+Monte Carlo Convergence Analysis for Flight Simulation Data
 
-This script performs precision-based power analysis to determine required sample size
-for stable confidence intervals. It progressively analyzes runs to show convergence.
+This script performs precision-based convergence analysis to determine the number
+of simulation replications required for stable estimates. Uses iterative approach
+based on Law & Kelton (2000) methodology for determining adequate sample size.
+
+Reference:
+    Law, A. M., & Kelton, W. D. (2000). Simulation modeling and analysis (3rd ed.).
+    McGraw-Hill.
 
 Usage:
-    python power.py [--target-precision 0.05] [--confidence 0.95]
+    python convergence_analysis.py [--target-precision 0.05] [--confidence 0.95]
 """
 
 import sys
@@ -22,20 +27,29 @@ sys.path.insert(0, str(Path(__file__).parent))
 from compare import find_csv_files, aggregate_run_data, calculate_jae_data_baseline, aggregate_jae_data
 
 
-def progressive_analysis(run_files, run_number, target_precision=0.05, confidence=0.95):
+def progressive_analysis(run_files, run_number, target_precision=0.05, confidence=0.95, max_n=None):
     """
-    Progressively analyze runs to show convergence of estimates.
+    Progressively analyze simulation replications to assess convergence.
+    
+    Determines the number of replications needed such that the half-width of the
+    confidence interval is no more than a specified percentage of the sample mean.
+    Uses iterative t-distribution approach (Law & Kelton, 2000).
     
     Args:
         run_files: List of file info dictionaries for this run
-        run_number: Run number
-        target_precision: Target relative precision (e.g., 0.05 for ±5%)
+        run_number: Condition number
+        target_precision: Target relative precision (e.g., 0.05 for ±5% of mean)
         confidence: Confidence level (e.g., 0.95 for 95% CI)
+        max_n: Maximum number of replications to analyze (default: None = all)
     
     Returns:
         Dictionary with progressive statistics and required sample sizes
     """
     n_total = len(run_files)
+    
+    # Limit analysis to max_n if specified
+    if max_n is not None and max_n < n_total:
+        n_total = max_n
     
     # Metrics to track
     metrics = {
@@ -48,9 +62,13 @@ def progressive_analysis(run_files, run_number, target_precision=0.05, confidenc
     
     sample_sizes = list(range(1, n_total + 1))
     
-    print(f"\nProgressive Analysis for Run {run_number}")
-    print(f"Total available repetitions: {n_total}")
-    print(f"Target relative precision: ±{target_precision*100:.1f}%")
+    print(f"\nConvergence Analysis for Condition {run_number}")
+    print(f"Total available replications: {len(run_files)}")
+    if max_n is not None and max_n < len(run_files):
+        print(f"Analyzing up to: {n_total} replications (limited by --max-n)")
+    else:
+        print(f"Analyzing: {n_total} replications")
+    print(f"Target relative precision: ±{target_precision*100:.1f}% of mean")
     print(f"Confidence level: {confidence*100:.0f}%")
     print("="*80)
     
@@ -156,7 +174,7 @@ def progressive_analysis(run_files, run_number, target_precision=0.05, confidenc
             metrics['jae_data']['cis'].append(None)
     
     # Calculate required sample sizes for each metric
-    z_score = stats.norm.ppf(1 - (1 - confidence) / 2)  # For 95% CI, z ≈ 1.96
+    # Using iterative approach based on t-distribution (Law & Kelton, 2000)
     
     required_n = {}
     for metric_name, metric_data in metrics.items():
@@ -164,20 +182,40 @@ def progressive_analysis(run_files, run_number, target_precision=0.05, confidenc
             final_mean = metric_data['means'][-1]
             final_std = metric_data['stds'][-1]
             
-            # Target margin of error (absolute)
-            target_E = target_precision * final_mean
+            # Target margin of error (absolute): E = ε * |mean|
+            target_E = target_precision * abs(final_mean)
             
-            # Required N: N ≈ (z * s / E)²
-            n_required = (z_score * final_std / target_E) ** 2
+            if target_E == 0:
+                # If mean is exactly zero, skip this metric
+                continue
+            
+            # Iterative calculation for required N using t-distribution
+            # Starting with z-approximation for initial estimate
+            z_score = stats.norm.ppf(1 - (1 - confidence) / 2)
+            n_estimate = max(2, int(np.ceil((z_score * final_std / target_E) ** 2)))
+            
+            # Refine using t-distribution (iterate until convergence)
+            # This accounts for the fact that n appears in both sides of the equation
+            for _ in range(10):  # Usually converges in 2-3 iterations
+                if n_estimate < 2:
+                    n_estimate = 2  # Minimum for valid t-distribution
+                    break
+                t_score = stats.t.ppf(1 - (1 - confidence) / 2, n_estimate - 1)
+                n_new = max(2, int(np.ceil((t_score * final_std / target_E) ** 2)))
+                if n_new == n_estimate or np.isnan(n_new):
+                    break
+                n_estimate = n_new
+            
+            n_required = n_estimate
             
             required_n[metric_name] = {
-                'n_required': int(np.ceil(n_required)),
+                'n_required': n_required,
                 'current_n': n_total,
                 'final_mean': final_mean,
                 'final_std': final_std,
                 'final_ci_width': metric_data['cis'][-1],
                 'target_E': target_E,
-                'current_relative_precision': (metric_data['cis'][-1] / final_mean) if final_mean > 0 else None
+                'current_relative_precision': (metric_data['cis'][-1] / abs(final_mean)) if final_mean != 0 else None
             }
     
     return {
@@ -191,7 +229,7 @@ def progressive_analysis(run_files, run_number, target_precision=0.05, confidenc
 
 
 def calculate_ci_width(data, confidence=0.95):
-    """Calculate half-width of confidence interval"""
+    """Calculate half-width of confidence interval using t-distribution"""
     if len(data) == 0:
         return 0
     if len(data) == 1:
@@ -203,12 +241,11 @@ def calculate_ci_width(data, confidence=0.95):
 
 
 def plot_convergence(analysis_results, output_dir):
-    """Create convergence plots showing how metrics stabilize with sample size"""
+    """Create convergence plots showing how metrics stabilize with sample size (Mean ± CI only)"""
     
     sample_sizes = analysis_results['sample_sizes']
     metrics = analysis_results['metrics']
     run_number = analysis_results['run_number']
-    target_precision = analysis_results['target_precision']
     
     # Create figure with subplots for each metric
     metric_configs = [
@@ -227,9 +264,9 @@ def plot_convergence(analysis_results, output_dir):
         print("No metrics available for convergence plot")
         return
     
-    fig, axes = plt.subplots(n_metrics, 2, figsize=(16, 4*n_metrics))
+    fig, axes = plt.subplots(n_metrics, 1, figsize=(12, 4*n_metrics))
     if n_metrics == 1:
-        axes = axes.reshape(1, -1)
+        axes = [axes]
     
     for idx, (metric_key, metric_title, metric_short) in enumerate(active_metrics):
         metric_data = metrics[metric_key]
@@ -242,12 +279,11 @@ def plot_convergence(analysis_results, output_dir):
         valid_n = [sample_sizes[i] for i in valid_indices]
         valid_means = [metric_data['means'][i] for i in valid_indices]
         valid_cis = [metric_data['cis'][i] for i in valid_indices]
-        valid_stds = [metric_data['stds'][i] for i in valid_indices]
         
-        # Left plot: Mean ± CI convergence
-        ax1 = axes[idx, 0]
-        ax1.plot(valid_n, valid_means, 'b-', linewidth=2, label='Mean')
-        ax1.fill_between(valid_n,
+        # Mean ± CI convergence
+        ax = axes[idx]
+        ax.plot(valid_n, valid_means, 'b-', linewidth=2, label='Mean')
+        ax.fill_between(valid_n,
                          [m - ci for m, ci in zip(valid_means, valid_cis)],
                          [m + ci for m, ci in zip(valid_means, valid_cis)],
                          alpha=0.3, color='blue', label='95% CI')
@@ -255,50 +291,110 @@ def plot_convergence(analysis_results, output_dir):
         # Add horizontal line for final estimate
         if valid_means:
             final_mean = valid_means[-1]
-            ax1.axhline(y=final_mean, color='red', linestyle='--', alpha=0.5, label='Final Estimate')
+            ax.axhline(y=final_mean, color='red', linestyle='--', alpha=0.5, label='Final Estimate')
         
-        ax1.set_xlabel('Number of Repetitions (n)', fontsize=11, fontweight='bold')
-        ax1.set_ylabel(metric_title, fontsize=11, fontweight='bold')
-        ax1.set_title(f'{metric_short} Convergence - Mean ± 95% CI', fontsize=12, fontweight='bold')
-        ax1.legend(loc='best')
-        ax1.grid(True, alpha=0.3)
-        
-        # Right plot: Relative precision convergence
-        ax2 = axes[idx, 1]
-        
-        # Calculate relative precision (CI width / mean)
-        relative_precision = [(ci / m * 100) if m > 0 else 0 for m, ci in zip(valid_means, valid_cis)]
-        
-        ax2.plot(valid_n, relative_precision, 'g-', linewidth=2, marker='o', markersize=4)
-        
-        # Add target line
-        target_line = target_precision * 100
-        ax2.axhline(y=target_line, color='red', linestyle='--', linewidth=2,
-                   label=f'Target: ±{target_precision*100:.1f}%')
-        
-        # Shade acceptable region
-        ax2.fill_between([min(valid_n), max(valid_n)], 0, target_line,
-                        alpha=0.2, color='green', label='Acceptable Precision')
-        
-        ax2.set_xlabel('Number of Repetitions (n)', fontsize=11, fontweight='bold')
-        ax2.set_ylabel('Relative Precision (% of mean)', fontsize=11, fontweight='bold')
-        ax2.set_title(f'{metric_short} - CI Half-Width as % of Mean', fontsize=12, fontweight='bold')
-        ax2.legend(loc='best')
-        ax2.grid(True, alpha=0.3)
-        ax2.set_ylim(bottom=0)
+        ax.set_xlabel('Number of Replications (n)', fontsize=11, fontweight='bold')
+        ax.set_ylabel(metric_title, fontsize=11, fontweight='bold')
+        ax.set_title(f'{metric_short} Convergence - Mean ± 95% CI', fontsize=12, fontweight='bold')
+        ax.legend(loc='best')
+        ax.grid(True, alpha=0.3)
     
     plt.tight_layout()
     
     # Save plot
-    plot_path = Path(output_dir) / f'power_analysis_convergence_run{run_number}.png'
+    plot_path = Path(output_dir) / f'convergence_analysis_mean_ci_run{run_number}.png'
     plt.savefig(plot_path, dpi=300, bbox_inches='tight')
     plt.savefig(plot_path.with_suffix('.eps'), format='eps', bbox_inches='tight')
     print(f"Saved convergence plot: {plot_path}")
     plt.close()
 
 
-def print_power_analysis_report(analysis_results):
-    """Print detailed power analysis report"""
+def plot_relative_precision_consolidated(analysis_results, output_dir):
+    """Create consolidated plot showing relative precision for all metrics on one graph"""
+    
+    sample_sizes = analysis_results['sample_sizes']
+    metrics = analysis_results['metrics']
+    run_number = analysis_results['run_number']
+    target_precision = analysis_results['target_precision']
+    
+    # Metric configurations with display names
+    metric_configs = [
+        ('total_fsm_time', 'Total FSM Time', '#1f77b4'),      # Blue
+        ('active_time', 'Active Cognitive Time', '#ff7f0e'),   # Orange
+        ('coordination_time', 'Coordination Time', '#2ca02c'),  # Green
+        ('workload_overall', 'Overall Workload', '#d62728'),    # Red
+        ('jae_data', 'JAE-Data', '#9467bd'),                    # Purple
+    ]
+    
+    # Create figure
+    fig, ax = plt.subplots(figsize=(12, 8))
+    
+    # Track if we have any data
+    has_data = False
+    
+    # Plot each metric
+    for metric_key, metric_label, color in metric_configs:
+        metric_data = metrics[metric_key]
+        
+        # Filter out None values
+        valid_indices = [i for i, m in enumerate(metric_data['means']) if m is not None]
+        if not valid_indices:
+            continue
+        
+        has_data = True
+        valid_n = [sample_sizes[i] for i in valid_indices]
+        valid_means = [metric_data['means'][i] for i in valid_indices]
+        valid_cis = [metric_data['cis'][i] for i in valid_indices]
+        
+        # Calculate relative precision (CI width / mean * 100)
+        relative_precision = [(ci / abs(m) * 100) if m != 0 else 0 for m, ci in zip(valid_means, valid_cis)]
+        
+        # Plot line
+        ax.plot(valid_n, relative_precision, linewidth=2.5, marker='o', 
+                markersize=6, label=metric_label, color=color, alpha=0.8)
+    
+    if not has_data:
+        print("No metrics available for relative precision plot")
+        plt.close()
+        return
+    
+    # Add target line
+    target_line = target_precision * 100
+    ax.axhline(y=target_line, color='black', linestyle='--', linewidth=2,
+               label=f'Target Precision: ±{target_precision*100:.1f}%', zorder=10)
+    
+    # Shade acceptable region
+    y_max = ax.get_ylim()[1]
+    ax.fill_between([min(sample_sizes), max(sample_sizes)], 0, target_line,
+                    alpha=0.15, color='green', label='Acceptable Precision Zone', zorder=1)
+    
+    # Formatting
+    ax.set_xlabel('Number of Replications (n)', fontsize=13, fontweight='bold')
+    ax.set_ylabel('Relative Precision (% of Mean)', fontsize=13, fontweight='bold')
+    ax.set_title(f'Precision Convergence - All Metrics (Condition {run_number})', 
+                fontsize=14, fontweight='bold', pad=15)
+    ax.legend(loc='best', fontsize=10, framealpha=0.9)
+    ax.grid(True, alpha=0.3, linestyle=':', linewidth=0.8)
+    ax.set_ylim(bottom=0)
+    
+    # Add note about interpretation
+    note_text = f"Lower values indicate better precision\nTarget: CI half-width ≤ {target_precision*100:.1f}% of mean"
+    ax.text(0.98, 0.98, note_text, transform=ax.transAxes,
+            fontsize=9, verticalalignment='top', horizontalalignment='right',
+            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+    
+    plt.tight_layout()
+    
+    # Save plot
+    plot_path = Path(output_dir) / f'convergence_analysis_precision_run{run_number}.png'
+    plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+    plt.savefig(plot_path.with_suffix('.eps'), format='eps', bbox_inches='tight')
+    print(f"Saved precision convergence plot: {plot_path}")
+    plt.close()
+
+
+def print_convergence_report(analysis_results):
+    """Print detailed convergence analysis report"""
     
     run_number = analysis_results['run_number']
     required_n = analysis_results['required_n']
@@ -306,10 +402,11 @@ def print_power_analysis_report(analysis_results):
     confidence = analysis_results['confidence']
     
     print("\n" + "="*80)
-    print(f"POWER ANALYSIS REPORT - Run {run_number}")
+    print(f"CONVERGENCE ANALYSIS REPORT - Condition {run_number}")
     print("="*80)
     print(f"Target Relative Precision: ±{target_precision*100:.1f}% of mean")
     print(f"Confidence Level: {confidence*100:.0f}%")
+    print(f"Method: Iterative t-distribution (Law & Kelton, 2000)")
     print("="*80)
     
     # Table header
@@ -344,12 +441,12 @@ def print_power_analysis_report(analysis_results):
     print("-"*80)
     
     if current_n >= max_required:
-        print(f"✓ Current sample size (n={current_n}) is SUFFICIENT for all metrics.")
+        print(f"✓ Current number of replications (n={current_n}) is SUFFICIENT for all metrics.")
         print(f"  All metrics achieve ±{target_precision*100:.1f}% relative precision at {confidence*100:.0f}% confidence.")
     else:
-        print(f"⚠ Recommend running at least n={max_required} repetitions total.")
+        print(f"⚠ Recommend running at least n={max_required} simulation replications total.")
         print(f"  This ensures ±{target_precision*100:.1f}% precision for all metrics.")
-        print(f"  Additional runs needed: {max_required - current_n}")
+        print(f"  Additional replications needed: {max_required - current_n}")
     
     print("\nDETAILED METRICS:")
     print("-"*80)
@@ -366,11 +463,11 @@ def print_power_analysis_report(analysis_results):
     print("="*80)
 
 
-def export_power_analysis_csv(analysis_results, output_dir):
-    """Export power analysis results to CSV"""
+def export_convergence_csv(analysis_results, output_dir):
+    """Export convergence analysis results to CSV"""
     
     run_number = analysis_results['run_number']
-    csv_path = Path(output_dir) / f'power_analysis_run{run_number}.csv'
+    csv_path = Path(output_dir) / f'convergence_analysis_run{run_number}.csv'
     
     # Create detailed CSV with progressive statistics
     data_rows = []
@@ -378,7 +475,7 @@ def export_power_analysis_csv(analysis_results, output_dir):
     metrics = analysis_results['metrics']
     
     for i, n in enumerate(sample_sizes):
-        row = {'n_repetitions': n}
+        row = {'n_replications': n}
         
         for metric_name, metric_data in metrics.items():
             if i < len(metric_data['means']) and metric_data['means'][i] is not None:
@@ -387,18 +484,18 @@ def export_power_analysis_csv(analysis_results, output_dir):
                 row[f'{metric_name}_std'] = metric_data['stds'][i]
                 
                 # Relative precision
-                if metric_data['means'][i] > 0:
-                    rel_prec = metric_data['cis'][i] / metric_data['means'][i]
+                if metric_data['means'][i] != 0:
+                    rel_prec = metric_data['cis'][i] / abs(metric_data['means'][i])
                     row[f'{metric_name}_rel_precision_pct'] = rel_prec * 100
         
         data_rows.append(row)
     
     df = pd.DataFrame(data_rows)
     df.to_csv(csv_path, index=False)
-    print(f"Exported power analysis data: {csv_path}")
+    print(f"Exported convergence data: {csv_path}")
     
     # Also export summary with required sample sizes
-    summary_path = Path(output_dir) / f'power_analysis_summary_run{run_number}.csv'
+    summary_path = Path(output_dir) / f'convergence_summary_run{run_number}.csv'
     summary_rows = []
     
     for metric_name, data in analysis_results['required_n'].items():
@@ -417,17 +514,139 @@ def export_power_analysis_csv(analysis_results, output_dir):
     
     df_summary = pd.DataFrame(summary_rows)
     df_summary.to_csv(summary_path, index=False)
-    print(f"Exported power analysis summary: {summary_path}")
+    print(f"Exported convergence summary: {summary_path}")
+
+
+def plot_multi_run_precision_comparison(all_analysis_results, output_dir):
+    """
+    Create a multi-panel figure comparing precision convergence across all runs.
+    
+    Args:
+        all_analysis_results: List of analysis result dictionaries from all runs
+        output_dir: Directory to save the plot
+    """
+    if not all_analysis_results:
+        return
+    
+    n_runs = len(all_analysis_results)
+    
+    # Create figure with subplots for each run (independent y-axes)
+    fig, axes = plt.subplots(1, n_runs, figsize=(7*n_runs, 6), sharey=False)
+    
+    # Handle single run case
+    if n_runs == 1:
+        axes = [axes]
+    
+    # Metric colors
+    metric_colors = {
+        'total_fsm_time': '#1f77b4',      # Blue
+        'active_time': '#ff7f0e',          # Orange
+        'coordination_time': '#2ca02c',    # Green
+        'workload_overall': '#d62728',     # Red
+        'jae_data': '#9467bd'              # Purple
+    }
+    
+    metric_labels = {
+        'total_fsm_time': 'Total FSM Time',
+        'active_time': 'Active Time',
+        'coordination_time': 'Coordination Time',
+        'workload_overall': 'Workload',
+        'jae_data': 'JAE-Data'
+    }
+    
+    # Plot each run
+    for idx, analysis_results in enumerate(all_analysis_results):
+        ax = axes[idx]
+        run_number = analysis_results['run_number']
+        target_precision = analysis_results['target_precision']
+        sample_sizes = analysis_results['sample_sizes']
+        metrics = analysis_results['metrics']
+        
+        has_data = False
+        
+        # Plot each metric
+        for metric_name, color in metric_colors.items():
+            if metric_name not in metrics:
+                continue
+            
+            metric_data = metrics[metric_name]
+            means = metric_data['means']
+            cis = metric_data['cis']
+            
+            # Filter out invalid data
+            valid_data = [(n, m, ci) for n, m, ci in zip(sample_sizes, means, cis) 
+                         if m != 0 and not np.isnan(m) and not np.isnan(ci)]
+            
+            if not valid_data:
+                continue
+            
+            has_data = True
+            valid_n, valid_means, valid_cis = zip(*valid_data)
+            
+            # Calculate relative precision (%)
+            relative_precision = [(ci / abs(m) * 100) if m != 0 else 0 
+                                 for m, ci in zip(valid_means, valid_cis)]
+            
+            # Plot line
+            metric_label = metric_labels.get(metric_name, metric_name)
+            ax.plot(valid_n, relative_precision, linewidth=2.5, marker='o', 
+                   markersize=6, label=metric_label, color=color, alpha=0.8)
+        
+        if not has_data:
+            continue
+        
+        # Add target line
+        target_line = target_precision * 100
+        ax.axhline(y=target_line, color='black', linestyle='--', linewidth=2,
+                  label=f'Target: ±{target_precision*100:.1f}%' if idx == 0 else None, 
+                  zorder=10)
+        
+        # Shade acceptable region (PNG only - EPS doesn't handle transparency well)
+        y_max = ax.get_ylim()[1]
+        shaded_area = ax.fill_between([min(sample_sizes), max(sample_sizes)], 0, target_line,
+                                      facecolor='green', edgecolor='none', alpha=0.2, zorder=1)
+        
+        # Formatting
+        ax.set_xlabel('Number of Replications (n)', fontsize=12, fontweight='bold')
+        if idx == 0:
+            ax.set_ylabel('Relative Precision (% of Mean)', fontsize=12, fontweight='bold')
+        ax.set_title(f'Condition {run_number}', fontsize=13, fontweight='bold', pad=10)
+        # No grid for cleaner appearance
+        ax.set_ylim(bottom=0)
+        
+        # Legend only on first subplot
+        if idx == 0:
+            ax.legend(loc='best', fontsize=9, framealpha=0.9)
+    
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    
+    # Save PNG with shaded area
+    plot_path = Path(output_dir) / 'convergence_analysis_precision_all_runs.png'
+    plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+    print(f"\nSaved multi-run precision comparison: {plot_path}")
+    
+    # Remove shaded areas and save EPS
+    for ax in axes:
+        for collection in ax.collections[:]:
+            collection.remove()
+    
+    plt.savefig(plot_path.with_suffix('.eps'), format='eps', bbox_inches='tight')
+    plt.close()
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Power Analysis for Flight Simulation Data')
+    parser = argparse.ArgumentParser(
+        description='Monte Carlo Convergence Analysis for Simulation Data',
+        epilog='Determines required number of simulation replications for stable estimates.'
+    )
     parser.add_argument('--target-precision', type=float, default=0.05,
-                       help='Target relative precision (default: 0.05 for ±5%%)')
+                       help='Target relative precision (default: 0.05 for ±5%% of mean)')
     parser.add_argument('--confidence', type=float, default=0.95,
                        help='Confidence level (default: 0.95 for 95%% CI)')
     parser.add_argument('--run', type=int, default=None,
                        help='Specific run number to analyze (default: analyze all runs)')
+    parser.add_argument('--max-n', type=int, default=None,
+                       help='Maximum number of replications to analyze (default: None = all available)')
     
     args = parser.parse_args()
     
@@ -435,9 +654,10 @@ def main():
     script_dir = Path(__file__).parent.absolute()
     
     print("="*80)
-    print("PRECISION-BASED POWER ANALYSIS")
+    print("MONTE CARLO CONVERGENCE ANALYSIS")
     print("="*80)
     print(f"Output directory: {script_dir}")
+    print(f"Method: Iterative t-distribution (Law & Kelton, 2000)")
     
     # Find all run files
     all_runs = find_csv_files(script_dir)
@@ -448,20 +668,23 @@ def main():
     
     print(f"\nFound {len(all_runs)} experimental run(s)")
     for run in all_runs:
-        print(f"  - Run {run['run_number']}: {len(run['files'])} repetitions")
+        print(f"  - Condition {run['run_number']}: {len(run['files'])} replications")
     
     # Analyze specified run or all runs
     if args.run is not None:
         runs_to_analyze = [r for r in all_runs if r['run_number'] == args.run]
         if not runs_to_analyze:
-            print(f"Error: Run {args.run} not found")
+            print(f"Error: Condition {args.run} not found")
             available_runs = [r['run_number'] for r in all_runs]
             print(f"Available runs: {available_runs}")
             return
-        print(f"\nAnalyzing only Run {args.run} (as requested)")
+        print(f"\nAnalyzing only Condition {args.run} (as requested)")
     else:
         runs_to_analyze = all_runs
         print(f"\nAnalyzing all runs")
+    
+    # Store all analysis results for multi-run comparison
+    all_analysis_results = []
     
     for run_info in runs_to_analyze:
         run_number = run_info['run_number']
@@ -472,20 +695,29 @@ def main():
             run_files, 
             run_number,
             target_precision=args.target_precision,
-            confidence=args.confidence
+            confidence=args.confidence,
+            max_n=args.max_n
         )
         
-        # Print report
-        print_power_analysis_report(analysis_results)
+        # Store for multi-run comparison
+        all_analysis_results.append(analysis_results)
         
-        # Create plots
+        # Print report
+        print_convergence_report(analysis_results)
+        
+        # Create individual plots
         plot_convergence(analysis_results, script_dir)
+        plot_relative_precision_consolidated(analysis_results, script_dir)
         
         # Export CSV
-        export_power_analysis_csv(analysis_results, script_dir)
+        export_convergence_csv(analysis_results, script_dir)
+    
+    # Create multi-run comparison plot if analyzing multiple runs
+    if len(all_analysis_results) > 1:
+        plot_multi_run_precision_comparison(all_analysis_results, script_dir)
     
     print("\n" + "="*80)
-    print("POWER ANALYSIS COMPLETE")
+    print("CONVERGENCE ANALYSIS COMPLETE")
     print("="*80)
 
 

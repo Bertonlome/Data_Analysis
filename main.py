@@ -18,6 +18,7 @@ import subprocess
 import sys
 import json
 import re
+import argparse
 from pathlib import Path
 from datetime import datetime
 import time
@@ -870,6 +871,22 @@ def run_flight_simulation_analysis():
 
 
 if __name__ == "__main__":
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description='Flight Simulation Data Analysis Pipeline')
+    parser.add_argument('--run-now', action='store_true', 
+                        help='Bypass callback wait and run analysis immediately with available data')
+    parser.add_argument('--run-number', type=int, default=RUN_NUMBER,
+                        help=f'Run number for output directory naming (default: {RUN_NUMBER})')
+    args = parser.parse_args()
+    
+    # Update RUN_NUMBER if provided
+    if args.run_number != RUN_NUMBER:
+        RUN_NUMBER = args.run_number
+    
+    # If --run-now is specified, run analysis immediately and exit
+    if args.run_now:
+        print("Running analysis immediately with available data (--run-now mode)")
+        sys.exit(run_flight_simulation_analysis())
 
     if not Ingescape_Agent:
         sys.exit(run_flight_simulation_analysis())

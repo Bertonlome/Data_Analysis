@@ -202,17 +202,13 @@ def plot_utilities(times, decide_crosscheck_utilities, no_crosscheck_utilities,
     plt.savefig('trace_analyzer/utility_with_without_noise.eps', format='eps')
     print(f"Plot saved as 'utility_with_without_noise.png' and 'utility_with_without_noise.eps'")
     
-    # Plot 3: All four values on one plot with task labels
+    # Plot 3: Utility values without noise on one plot with task labels
     fig, ax = plt.subplots(figsize=(16, 8))
     
-    ax.plot(times, decide_crosscheck_utilities, 'b-o', label='x-7-decide-crosscheck (with noise)', 
-            markersize=5, linewidth=1.5, alpha=0.8, zorder=3)
-    ax.plot(times, decide_crosscheck_u_no_noise, 'b--^', label='x-7-decide-crosscheck (no noise)', 
-            markersize=5, linewidth=1.5, alpha=0.6, zorder=3)
-    ax.plot(times, no_crosscheck_utilities, 'r-s', label='x-7-no-crosscheck (with noise)', 
-            markersize=5, linewidth=1.5, alpha=0.8, zorder=3)
-    ax.plot(times, no_crosscheck_u_no_noise, 'r--D', label='x-7-no-crosscheck (no noise)', 
-            markersize=5, linewidth=1.5, alpha=0.6, zorder=3)
+    ax.plot(times, decide_crosscheck_u_no_noise, 'b-^', 
+            markersize=5, linewidth=1.5, zorder=3)
+    ax.plot(times, no_crosscheck_u_no_noise, 'r-D', 
+            markersize=5, linewidth=1.5, zorder=3)
     
     # Add vertical lines for reward events (filtered)
     has_positive = False
@@ -298,10 +294,17 @@ def plot_utilities(times, decide_crosscheck_utilities, no_crosscheck_utilities,
     
     ax.set_xlabel('Time (s)', fontsize=12)
     ax.set_ylabel('Utility', fontsize=12)
-    ax.set_title('All Utility Values: With and Without Noise (with Task Timeline)', 
-                fontsize=14, fontweight='bold')
-    ax.legend(loc='best', fontsize=10)
-    ax.grid(True, alpha=0.3, zorder=0)
+    #ax.set_title('Production Utility Values Without Noise (with Task Timeline)', 
+                #fontsize=14, fontweight='bold')
+    
+    # Add curve labels at the tips instead of legend
+    if times:
+        # Label for decide-crosscheck no noise
+        ax.text(times[-1], decide_crosscheck_u_no_noise[-1], ' crosscheck', 
+                fontsize=10, color='blue', va='center', ha='left', fontweight='bold', zorder=5)
+        # Label for no-crosscheck no noise
+        ax.text(times[-1], no_crosscheck_u_no_noise[-1], ' no-crosscheck', 
+                fontsize=10, color='red', va='center', ha='left', fontweight='bold', zorder=5)
     
     # Add extra space at the bottom for task labels
     plt.subplots_adjust(bottom=0.2)

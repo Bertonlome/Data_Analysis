@@ -29,6 +29,9 @@ Thumbs.db
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# csv files
+*.csv
+
 # Distribution / packaging
 build/
 dist/

@@ -193,15 +193,21 @@ def inspect_cassandra():
                     elif col.kind == 'clustering':
                         clustering_keys.append(col.column_name)
                 
-                # Count rows
+                # Count rows (with longer timeout for large tables)
                 count_query = f"SELECT COUNT(*) FROM {table_name}"
-                result = session.execute(count_query)
-                row_count = result.one()[0]
-                print(f"\nTotal rows: {row_count}")
-                
-                if row_count == 0:
-                    print("  (Table is empty)")
-                    continue
+                try:
+                    # Use a 60-second timeout for count queries (they can be slow)
+                    result = session.execute(count_query, timeout=60.0)
+                    row_count = result.one()[0]
+                    print(f"\nTotal rows: {row_count}")
+                    
+                    if row_count == 0:
+                        print("  (Table is empty)")
+                        continue
+                except Exception as e:
+                    print(f"\n⚠ Warning: Could not count rows (timeout or error: {e})")
+                    print("  Skipping to sample data...")
+                    row_count = None  # Unknown count
                 
                 # Get sample data
                 print(f"\nSample data (first 10 rows):")
@@ -227,22 +233,14 @@ def inspect_cassandra():
                     print("EVENT TABLE ANALYSIS")
                     print('-' * 80)
                     
-                    # Count by agent
+                    # Count by agent (manual scan — Cassandra only supports GROUP BY on PK columns)
                     print("\nRows by agent:")
-                    agent_query = "SELECT agent, COUNT(*) as count FROM event GROUP BY agent"
-                    try:
-                        agents = session.execute(agent_query)
-                        for agent in agents:
-                            print(f"  {agent.agent}: {agent.count} rows")
-                    except Exception as e:
-                        print(f"  (Cannot group by agent: {e})")
-                        # Alternative: count manually
-                        all_rows = session.execute(f"SELECT agent FROM event")
-                        agent_counts = {}
-                        for r in all_rows:
-                            agent_counts[r.agent] = agent_counts.get(r.agent, 0) + 1
-                        for agent, count in sorted(agent_counts.items()):
-                            print(f"  {agent}: {count} rows")
+                    all_rows = session.execute("SELECT agent FROM event")
+                    agent_counts = {}
+                    for r in all_rows:
+                        agent_counts[r.agent] = agent_counts.get(r.agent, 0) + 1
+                    for agent, count in sorted(agent_counts.items()):
+                        print(f"  {agent}: {count} rows")
                     
                     # Look for run markers
                     print("\nSearching for run markers:")

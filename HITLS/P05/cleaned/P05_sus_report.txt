@@ -1,0 +1,228 @@
+--- MACHINE-READABLE SUMMARY (JSON) ---
+{
+  "participant": "P05",
+  "conditions": {
+    "TARS": {
+      "sus_score": 65.0,
+      "adjective_rating": "Good",
+      "items": {
+        "sus_1": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_2": {
+          "raw": 2,
+          "converted": 3
+        },
+        "sus_3": {
+          "raw": 3,
+          "converted": 2
+        },
+        "sus_4": {
+          "raw": 2,
+          "converted": 3
+        },
+        "sus_5": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_6": {
+          "raw": 3,
+          "converted": 2
+        },
+        "sus_7": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_8": {
+          "raw": 2,
+          "converted": 3
+        },
+        "sus_9": {
+          "raw": 3,
+          "converted": 2
+        },
+        "sus_10": {
+          "raw": 3,
+          "converted": 2
+        }
+      }
+    },
+    "TARP-S": {
+      "sus_score": 62.5,
+      "adjective_rating": "Good",
+      "items": {
+        "sus_1": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_2": {
+          "raw": 2,
+          "converted": 3
+        },
+        "sus_3": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_4": {
+          "raw": 3,
+          "converted": 2
+        },
+        "sus_5": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_6": {
+          "raw": 3,
+          "converted": 2
+        },
+        "sus_7": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_8": {
+          "raw": 3,
+          "converted": 2
+        },
+        "sus_9": {
+          "raw": 3,
+          "converted": 2
+        },
+        "sus_10": {
+          "raw": 3,
+          "converted": 2
+        }
+      }
+    },
+    "TARP-F": {
+      "sus_score": 75.0,
+      "adjective_rating": "Excellent",
+      "items": {
+        "sus_1": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_2": {
+          "raw": 1,
+          "converted": 4
+        },
+        "sus_3": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_4": {
+          "raw": 2,
+          "converted": 3
+        },
+        "sus_5": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_6": {
+          "raw": 2,
+          "converted": 3
+        },
+        "sus_7": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_8": {
+          "raw": 2,
+          "converted": 3
+        },
+        "sus_9": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_10": {
+          "raw": 3,
+          "converted": 2
+        }
+      }
+    }
+  }
+}
+--- END SUMMARY ---
+
+==============================================================================
+  SYSTEM USABILITY SCALE (SUS) REPORT — P05
+==============================================================================
+
+  Scoring: odd items = raw−1 | even items = 5−raw  → sum × 2.5 → 0–100
+
+
+──────────────────────────────────────────────────────────────────────────────
+  CONDITION: TARS
+──────────────────────────────────────────────────────────────────────────────
+
+  #    Item                                                     Raw   Conv        Raw bar   Conv bar
+  ───  ───────────────────────────────────────────────────────  ────  ─────   ────────────   ────────────
+   1.  (+) I think I would like to use this system frequently.    4      3   [███████░░░]   [███████░░░]
+   2.  (–) I found the system unnecessarily complex.              2      3   [██░░░░░░░░]   [███████░░░]
+   3.  (+) I thought the system was easy to use.                  3      2   [█████░░░░░]   [█████░░░░░]
+   4.  (–) I would need support of a technical person to use …    2      3   [██░░░░░░░░]   [███████░░░]
+   5.  (+) The various functions were well integrated.            4      3   [███████░░░]   [███████░░░]
+   6.  (–) There was too much inconsistency in this system.       3      2   [█████░░░░░]   [█████░░░░░]
+   7.  (+) Most people would learn to use this system very qu…    4      3   [███████░░░]   [███████░░░]
+   8.  (–) I found the system very cumbersome to use.             2      3   [██░░░░░░░░]   [███████░░░]
+   9.  (+) I felt very confident using the system.                3      2   [█████░░░░░]   [█████░░░░░]
+  10.  (–) I needed to learn a lot before I could get going w…    3      2   [█████░░░░░]   [█████░░░░░]
+
+  ────────────────────────────────────────────────────────────
+  SUS Score    : 65.0 / 100  [███████████████████░░░░░░░░░░░]
+  Adjective    : Good
+
+──────────────────────────────────────────────────────────────────────────────
+  CONDITION: TARP-S
+──────────────────────────────────────────────────────────────────────────────
+
+  #    Item                                                     Raw   Conv        Raw bar   Conv bar
+  ───  ───────────────────────────────────────────────────────  ────  ─────   ────────────   ────────────
+   1.  (+) I think I would like to use this system frequently.    4      3   [███████░░░]   [███████░░░]
+   2.  (–) I found the system unnecessarily complex.              2      3   [██░░░░░░░░]   [███████░░░]
+   3.  (+) I thought the system was easy to use.                  4      3   [███████░░░]   [███████░░░]
+   4.  (–) I would need support of a technical person to use …    3      2   [█████░░░░░]   [█████░░░░░]
+   5.  (+) The various functions were well integrated.            4      3   [███████░░░]   [███████░░░]
+   6.  (–) There was too much inconsistency in this system.       3      2   [█████░░░░░]   [█████░░░░░]
+   7.  (+) Most people would learn to use this system very qu…    4      3   [███████░░░]   [███████░░░]
+   8.  (–) I found the system very cumbersome to use.             3      2   [█████░░░░░]   [█████░░░░░]
+   9.  (+) I felt very confident using the system.                3      2   [█████░░░░░]   [█████░░░░░]
+  10.  (–) I needed to learn a lot before I could get going w…    3      2   [█████░░░░░]   [█████░░░░░]
+
+  ────────────────────────────────────────────────────────────
+  SUS Score    : 62.5 / 100  [██████████████████░░░░░░░░░░░░]
+  Adjective    : Good
+
+──────────────────────────────────────────────────────────────────────────────
+  CONDITION: TARP-F
+──────────────────────────────────────────────────────────────────────────────
+
+  #    Item                                                     Raw   Conv        Raw bar   Conv bar
+  ───  ───────────────────────────────────────────────────────  ────  ─────   ────────────   ────────────
+   1.  (+) I think I would like to use this system frequently.    4      3   [███████░░░]   [███████░░░]
+   2.  (–) I found the system unnecessarily complex.              1      4   [░░░░░░░░░░]   [██████████]
+   3.  (+) I thought the system was easy to use.                  4      3   [███████░░░]   [███████░░░]
+   4.  (–) I would need support of a technical person to use …    2      3   [██░░░░░░░░]   [███████░░░]
+   5.  (+) The various functions were well integrated.            4      3   [███████░░░]   [███████░░░]
+   6.  (–) There was too much inconsistency in this system.       2      3   [██░░░░░░░░]   [███████░░░]
+   7.  (+) Most people would learn to use this system very qu…    4      3   [███████░░░]   [███████░░░]
+   8.  (–) I found the system very cumbersome to use.             2      3   [██░░░░░░░░]   [███████░░░]
+   9.  (+) I felt very confident using the system.                4      3   [███████░░░]   [███████░░░]
+  10.  (–) I needed to learn a lot before I could get going w…    3      2   [█████░░░░░]   [█████░░░░░]
+
+  ────────────────────────────────────────────────────────────
+  SUS Score    : 75.0 / 100  [██████████████████████░░░░░░░░]
+  Adjective    : Excellent
+
+
+──────────────────────────────────────────────────────────────────────────────
+  SUMMARY
+──────────────────────────────────────────────────────────────────────────────
+
+  Condition                    SUS Score   Adjective Rating
+  ─────────────────────────   ────────────   ────────────────────
+  TARS                            65.0/100   Good
+  TARP-S                          62.5/100   Good
+  TARP-F                          75.0/100   Excellent
+
+==============================================================================

@@ -1,0 +1,349 @@
+--- MACHINE-READABLE SUMMARY (JSON) ---
+{
+  "participant": "P03",
+  "conditions": {
+    "TARS": {
+      "base_score": {
+        "mean": 1.6667,
+        "items": {
+          "ob_a2": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_a3": {
+            "raw": 3,
+            "scored": 3
+          },
+          "ob_b1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_b3": {
+            "raw": 5,
+            "scored": 1
+          },
+          "ob_c1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_c2": {
+            "raw": 3,
+            "scored": 3
+          }
+        }
+      },
+      "extended_score": {
+        "mean": 2.2222,
+        "items": {
+          "ob_a2": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_a3": {
+            "raw": 3,
+            "scored": 3
+          },
+          "ob_b1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_b2": {
+            "raw": 4,
+            "scored": 4
+          },
+          "ob_b3": {
+            "raw": 5,
+            "scored": 1
+          },
+          "ob_c1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_c2": {
+            "raw": 3,
+            "scored": 3
+          },
+          "ob_d1": {
+            "raw": 2,
+            "scored": 2
+          },
+          "ob_d2": {
+            "raw": 2,
+            "scored": 4
+          }
+        }
+      }
+    },
+    "TARP-S": {
+      "base_score": {
+        "mean": 2.3333,
+        "items": {
+          "ob_a2": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_a3": {
+            "raw": 1,
+            "scored": 5
+          },
+          "ob_b1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_b3": {
+            "raw": 1,
+            "scored": 5
+          },
+          "ob_c1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_c2": {
+            "raw": 1,
+            "scored": 1
+          }
+        }
+      },
+      "extended_score": {
+        "mean": 2.3333,
+        "items": {
+          "ob_a2": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_a3": {
+            "raw": 1,
+            "scored": 5
+          },
+          "ob_b1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_b2": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_b3": {
+            "raw": 1,
+            "scored": 5
+          },
+          "ob_c1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_c2": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_d1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_d2": {
+            "raw": 1,
+            "scored": 5
+          }
+        }
+      }
+    },
+    "TARP-F": {
+      "base_score": {
+        "mean": 2.0,
+        "items": {
+          "ob_a2": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_a3": {
+            "raw": 2,
+            "scored": 4
+          },
+          "ob_b1": {
+            "raw": 2,
+            "scored": 2
+          },
+          "ob_b3": {
+            "raw": 5,
+            "scored": 1
+          },
+          "ob_c1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_c2": {
+            "raw": 3,
+            "scored": 3
+          }
+        }
+      },
+      "extended_score": {
+        "mean": 2.1111,
+        "items": {
+          "ob_a2": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_a3": {
+            "raw": 2,
+            "scored": 4
+          },
+          "ob_b1": {
+            "raw": 2,
+            "scored": 2
+          },
+          "ob_b2": {
+            "raw": 2,
+            "scored": 2
+          },
+          "ob_b3": {
+            "raw": 5,
+            "scored": 1
+          },
+          "ob_c1": {
+            "raw": 1,
+            "scored": 1
+          },
+          "ob_c2": {
+            "raw": 3,
+            "scored": 3
+          },
+          "ob_d1": {
+            "raw": 4,
+            "scored": 4
+          },
+          "ob_d2": {
+            "raw": 5,
+            "scored": 1
+          }
+        }
+      }
+    }
+  }
+}
+--- END SUMMARY ---
+
+========================================================================
+  OVERSIGHT BESPOKE (OB) REPORT — P03
+========================================================================
+
+  Items marked (*) are included only in the Extended score.
+  Negative-valence items (–) are reverse-scored.
+
+
+────────────────────────────────────────────────────────────────────────
+  CONDITION: TARS
+────────────────────────────────────────────────────────────────────────
+
+  ── BASE SCORE (items without *) ──────────────────────────────────
+
+  Item                                           Val   Scored        Raw bar   Scored bar
+  ─────────────────────────────────────────────   ────   ──────   ────────────   ────────────
+   (+) A2 – Enough time/attention to oversee        1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (–) A3 – Difficult to follow system actions      3        3   [█████░░░░░]   [█████░░░░░]
+   (+) B1 – Actively verified system's actions      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (–) B3 – May have missed check opportunities     5        1   [██████████]   [░░░░░░░░░░]
+   (+) C1 – Could detect system errors quickly      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (+) C2 – Enough time to react to actions         3        3   [█████░░░░░]   [█████░░░░░]
+
+  ────────────────────────────────────────────────────────────
+  Base OB Mean Score : 1.667 / 5.0
+
+  ── EXTENDED SCORE (all items including *) ────────────────────────
+
+  Item                                           Val   Scored        Raw bar   Scored bar
+  ─────────────────────────────────────────────   ────   ──────   ────────────   ────────────
+   (+) A2 – Enough time/attention to oversee        1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (–) A3 – Difficult to follow system actions      3        3   [█████░░░░░]   [█████░░░░░]
+   (+) B1 – Actively verified system's actions      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+  *(+) B2 – No need to monitor closely              4        4   [███████░░░]   [███████░░░]
+   (–) B3 – May have missed check opportunities     5        1   [██████████]   [░░░░░░░░░░]
+   (+) C1 – Could detect system errors quickly      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (+) C2 – Enough time to react to actions         3        3   [█████░░░░░]   [█████░░░░░]
+  *(+) D1 – System helped work efficiently          2        2   [██░░░░░░░░]   [██░░░░░░░░]
+  *(–) D2 – Efficiency came at cost of oversight    2        4   [██░░░░░░░░]   [███████░░░]
+
+  ────────────────────────────────────────────────────────────
+  Extended OB Mean Score : 2.222 / 5.0
+
+────────────────────────────────────────────────────────────────────────
+  CONDITION: TARP-S
+────────────────────────────────────────────────────────────────────────
+
+  ── BASE SCORE (items without *) ──────────────────────────────────
+
+  Item                                           Val   Scored        Raw bar   Scored bar
+  ─────────────────────────────────────────────   ────   ──────   ────────────   ────────────
+   (+) A2 – Enough time/attention to oversee        1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (–) A3 – Difficult to follow system actions      1        5   [░░░░░░░░░░]   [██████████]
+   (+) B1 – Actively verified system's actions      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (–) B3 – May have missed check opportunities     1        5   [░░░░░░░░░░]   [██████████]
+   (+) C1 – Could detect system errors quickly      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (+) C2 – Enough time to react to actions         1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+
+  ────────────────────────────────────────────────────────────
+  Base OB Mean Score : 2.333 / 5.0
+
+  ── EXTENDED SCORE (all items including *) ────────────────────────
+
+  Item                                           Val   Scored        Raw bar   Scored bar
+  ─────────────────────────────────────────────   ────   ──────   ────────────   ────────────
+   (+) A2 – Enough time/attention to oversee        1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (–) A3 – Difficult to follow system actions      1        5   [░░░░░░░░░░]   [██████████]
+   (+) B1 – Actively verified system's actions      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+  *(+) B2 – No need to monitor closely              1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (–) B3 – May have missed check opportunities     1        5   [░░░░░░░░░░]   [██████████]
+   (+) C1 – Could detect system errors quickly      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (+) C2 – Enough time to react to actions         1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+  *(+) D1 – System helped work efficiently          1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+  *(–) D2 – Efficiency came at cost of oversight    1        5   [░░░░░░░░░░]   [██████████]
+
+  ────────────────────────────────────────────────────────────
+  Extended OB Mean Score : 2.333 / 5.0
+
+────────────────────────────────────────────────────────────────────────
+  CONDITION: TARP-F
+────────────────────────────────────────────────────────────────────────
+
+  ── BASE SCORE (items without *) ──────────────────────────────────
+
+  Item                                           Val   Scored        Raw bar   Scored bar
+  ─────────────────────────────────────────────   ────   ──────   ────────────   ────────────
+   (+) A2 – Enough time/attention to oversee        1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (–) A3 – Difficult to follow system actions      2        4   [██░░░░░░░░]   [███████░░░]
+   (+) B1 – Actively verified system's actions      2        2   [██░░░░░░░░]   [██░░░░░░░░]
+   (–) B3 – May have missed check opportunities     5        1   [██████████]   [░░░░░░░░░░]
+   (+) C1 – Could detect system errors quickly      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (+) C2 – Enough time to react to actions         3        3   [█████░░░░░]   [█████░░░░░]
+
+  ────────────────────────────────────────────────────────────
+  Base OB Mean Score : 2.000 / 5.0
+
+  ── EXTENDED SCORE (all items including *) ────────────────────────
+
+  Item                                           Val   Scored        Raw bar   Scored bar
+  ─────────────────────────────────────────────   ────   ──────   ────────────   ────────────
+   (+) A2 – Enough time/attention to oversee        1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (–) A3 – Difficult to follow system actions      2        4   [██░░░░░░░░]   [███████░░░]
+   (+) B1 – Actively verified system's actions      2        2   [██░░░░░░░░]   [██░░░░░░░░]
+  *(+) B2 – No need to monitor closely              2        2   [██░░░░░░░░]   [██░░░░░░░░]
+   (–) B3 – May have missed check opportunities     5        1   [██████████]   [░░░░░░░░░░]
+   (+) C1 – Could detect system errors quickly      1        1   [░░░░░░░░░░]   [░░░░░░░░░░]
+   (+) C2 – Enough time to react to actions         3        3   [█████░░░░░]   [█████░░░░░]
+  *(+) D1 – System helped work efficiently          4        4   [███████░░░]   [███████░░░]
+  *(–) D2 – Efficiency came at cost of oversight    5        1   [██████████]   [░░░░░░░░░░]
+
+  ────────────────────────────────────────────────────────────
+  Extended OB Mean Score : 2.111 / 5.0
+
+
+────────────────────────────────────────────────────────────────────────
+  SUMMARY
+────────────────────────────────────────────────────────────────────────
+
+  Condition               Base Score (/5)    Extended Score (/5)
+  ────────────────────   ──────────────────────   ────────────────────────
+  TARS                                1.667 / 5                 2.222  / 5
+  TARP-S                              2.333 / 5                 2.333  / 5
+  TARP-F                              2.000 / 5                 2.111  / 5
+
+========================================================================

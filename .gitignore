@@ -2,6 +2,19 @@
 *.png
 *.eps
 
+# video files
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Audio files
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.m4a
+
 # Python
 __pycache__/
 *.py[cod]

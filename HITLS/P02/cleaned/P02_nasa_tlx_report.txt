@@ -1,0 +1,267 @@
+--- MACHINE-READABLE SUMMARY (JSON) ---
+{
+  "participant": "P02",
+  "weights": {
+    "mental_demand": 3,
+    "physical_demand": 2,
+    "temporal_demand": 2,
+    "performance": 2,
+    "effort": 2,
+    "frustration": 4
+  },
+  "conditions": {
+    "baseline_no_system": {
+      "nasa_tlx_weighted_score": 50.6667,
+      "subscales": {
+        "mental_demand": {
+          "rating_0_20": 12.0,
+          "rating_0_100": 60.0,
+          "weight": 3,
+          "weighted": 180.0
+        },
+        "physical_demand": {
+          "rating_0_20": 11.0,
+          "rating_0_100": 55.0,
+          "weight": 2,
+          "weighted": 110.0
+        },
+        "temporal_demand": {
+          "rating_0_20": 13.0,
+          "rating_0_100": 65.0,
+          "weight": 2,
+          "weighted": 130.0
+        },
+        "performance": {
+          "rating_0_20": 7.0,
+          "rating_0_100": 35.0,
+          "weight": 2,
+          "weighted": 70.0
+        },
+        "effort": {
+          "rating_0_20": 13.0,
+          "rating_0_100": 65.0,
+          "weight": 2,
+          "weighted": 130.0
+        },
+        "frustration": {
+          "rating_0_20": 7.0,
+          "rating_0_100": 35.0,
+          "weight": 4,
+          "weighted": 140.0
+        }
+      }
+    },
+    "TARS": {
+      "nasa_tlx_weighted_score": 57.3333,
+      "subscales": {
+        "mental_demand": {
+          "rating_0_20": 14.0,
+          "rating_0_100": 70.0,
+          "weight": 3,
+          "weighted": 210.0
+        },
+        "physical_demand": {
+          "rating_0_20": 8.0,
+          "rating_0_100": 40.0,
+          "weight": 2,
+          "weighted": 80.0
+        },
+        "temporal_demand": {
+          "rating_0_20": 13.0,
+          "rating_0_100": 65.0,
+          "weight": 2,
+          "weighted": 130.0
+        },
+        "performance": {
+          "rating_0_20": 9.0,
+          "rating_0_100": 45.0,
+          "weight": 2,
+          "weighted": 90.0
+        },
+        "effort": {
+          "rating_0_20": 13.0,
+          "rating_0_100": 65.0,
+          "weight": 2,
+          "weighted": 130.0
+        },
+        "frustration": {
+          "rating_0_20": 11.0,
+          "rating_0_100": 55.0,
+          "weight": 4,
+          "weighted": 220.0
+        }
+      }
+    },
+    "TARP-S": {
+      "nasa_tlx_weighted_score": 37.3333,
+      "subscales": {
+        "mental_demand": {
+          "rating_0_20": 8.0,
+          "rating_0_100": 40.0,
+          "weight": 3,
+          "weighted": 120.0
+        },
+        "physical_demand": {
+          "rating_0_20": 7.0,
+          "rating_0_100": 35.0,
+          "weight": 2,
+          "weighted": 70.0
+        },
+        "temporal_demand": {
+          "rating_0_20": 11.0,
+          "rating_0_100": 55.0,
+          "weight": 2,
+          "weighted": 110.0
+        },
+        "performance": {
+          "rating_0_20": 6.0,
+          "rating_0_100": 30.0,
+          "weight": 2,
+          "weighted": 60.0
+        },
+        "effort": {
+          "rating_0_20": 8.0,
+          "rating_0_100": 40.0,
+          "weight": 2,
+          "weighted": 80.0
+        },
+        "frustration": {
+          "rating_0_20": 6.0,
+          "rating_0_100": 30.0,
+          "weight": 4,
+          "weighted": 120.0
+        }
+      }
+    },
+    "TARP-F": {
+      "nasa_tlx_weighted_score": 67.6667,
+      "subscales": {
+        "mental_demand": {
+          "rating_0_20": 15.0,
+          "rating_0_100": 75.0,
+          "weight": 3,
+          "weighted": 225.0
+        },
+        "physical_demand": {
+          "rating_0_20": 13.0,
+          "rating_0_100": 65.0,
+          "weight": 2,
+          "weighted": 130.0
+        },
+        "temporal_demand": {
+          "rating_0_20": 13.0,
+          "rating_0_100": 65.0,
+          "weight": 2,
+          "weighted": 130.0
+        },
+        "performance": {
+          "rating_0_20": 13.0,
+          "rating_0_100": 65.0,
+          "weight": 2,
+          "weighted": 130.0
+        },
+        "effort": {
+          "rating_0_20": 14.0,
+          "rating_0_100": 70.0,
+          "weight": 2,
+          "weighted": 140.0
+        },
+        "frustration": {
+          "rating_0_20": 13.0,
+          "rating_0_100": 65.0,
+          "weight": 4,
+          "weighted": 260.0
+        }
+      }
+    }
+  }
+}
+--- END SUMMARY ---
+
+========================================================================
+  NASA-TLX REPORT — P02
+========================================================================
+
+── PAIRWISE WEIGHTS (collected after familiarization) ───────────────────
+
+  Subscale             Weight (tally/15 pairs)
+  ────────────────────   ───────────────────────────────────
+  Mental Demand          [██████░░░░] 3/5  (3 selections)
+  Physical Demand        [████░░░░░░] 2/5  (2 selections)
+  Temporal Demand        [████░░░░░░] 2/5  (2 selections)
+  Performance            [████░░░░░░] 2/5  (2 selections)
+  Effort                 [████░░░░░░] 2/5  (2 selections)
+  Frustration            [████████░░] 4/5  (4 selections)
+
+  Total tallied: 15 / 15
+
+── CONDITION: baseline_no_system ─────────────────────────────────────
+
+  Subscale                     Rating    Weight    Weighted   Bar (rating/20)
+  ────────────────────   ──────────────   ───────   ─────────   ─────────────────────────
+  Mental Demand            12/20 ( 60/100)       3/5     180.0    [████████████░░░░░░░░]   12/20
+  Physical Demand          11/20 ( 55/100)       2/5     110.0    [███████████░░░░░░░░░]   11/20
+  Temporal Demand          13/20 ( 65/100)       2/5     130.0    [█████████████░░░░░░░]   13/20
+  Performance               7/20 ( 35/100)       2/5      70.0    [███████░░░░░░░░░░░░░]    7/20
+  Effort                   13/20 ( 65/100)       2/5     130.0    [█████████████░░░░░░░]   13/20
+  Frustration               7/20 ( 35/100)       4/5     140.0    [███████░░░░░░░░░░░░░]    7/20
+
+  ────────────────────────────────────────────────────────────
+  NASA-TLX Weighted Score : 50.67 / 100
+  Interpretation          : Moderate workload
+
+── CONDITION: TARS ───────────────────────────────────────────────────
+
+  Subscale                     Rating    Weight    Weighted   Bar (rating/20)
+  ────────────────────   ──────────────   ───────   ─────────   ─────────────────────────
+  Mental Demand            14/20 ( 70/100)       3/5     210.0    [██████████████░░░░░░]   14/20
+  Physical Demand           8/20 ( 40/100)       2/5      80.0    [████████░░░░░░░░░░░░]    8/20
+  Temporal Demand          13/20 ( 65/100)       2/5     130.0    [█████████████░░░░░░░]   13/20
+  Performance               9/20 ( 45/100)       2/5      90.0    [█████████░░░░░░░░░░░]    9/20
+  Effort                   13/20 ( 65/100)       2/5     130.0    [█████████████░░░░░░░]   13/20
+  Frustration              11/20 ( 55/100)       4/5     220.0    [███████████░░░░░░░░░]   11/20
+
+  ────────────────────────────────────────────────────────────
+  NASA-TLX Weighted Score : 57.33 / 100
+  Interpretation          : Moderate workload
+
+── CONDITION: TARP-S ─────────────────────────────────────────────────
+
+  Subscale                     Rating    Weight    Weighted   Bar (rating/20)
+  ────────────────────   ──────────────   ───────   ─────────   ─────────────────────────
+  Mental Demand             8/20 ( 40/100)       3/5     120.0    [████████░░░░░░░░░░░░]    8/20
+  Physical Demand           7/20 ( 35/100)       2/5      70.0    [███████░░░░░░░░░░░░░]    7/20
+  Temporal Demand          11/20 ( 55/100)       2/5     110.0    [███████████░░░░░░░░░]   11/20
+  Performance               6/20 ( 30/100)       2/5      60.0    [██████░░░░░░░░░░░░░░]    6/20
+  Effort                    8/20 ( 40/100)       2/5      80.0    [████████░░░░░░░░░░░░]    8/20
+  Frustration               6/20 ( 30/100)       4/5     120.0    [██████░░░░░░░░░░░░░░]    6/20
+
+  ────────────────────────────────────────────────────────────
+  NASA-TLX Weighted Score : 37.33 / 100
+  Interpretation          : Low workload
+
+── CONDITION: TARP-F ─────────────────────────────────────────────────
+
+  Subscale                     Rating    Weight    Weighted   Bar (rating/20)
+  ────────────────────   ──────────────   ───────   ─────────   ─────────────────────────
+  Mental Demand            15/20 ( 75/100)       3/5     225.0    [███████████████░░░░░]   15/20
+  Physical Demand          13/20 ( 65/100)       2/5     130.0    [█████████████░░░░░░░]   13/20
+  Temporal Demand          13/20 ( 65/100)       2/5     130.0    [█████████████░░░░░░░]   13/20
+  Performance              13/20 ( 65/100)       2/5     130.0    [█████████████░░░░░░░]   13/20
+  Effort                   14/20 ( 70/100)       2/5     140.0    [██████████████░░░░░░]   14/20
+  Frustration              13/20 ( 65/100)       4/5     260.0    [█████████████░░░░░░░]   13/20
+
+  ────────────────────────────────────────────────────────────
+  NASA-TLX Weighted Score : 67.67 / 100
+  Interpretation          : High workload
+
+── SUMMARY ─────────────────────────────────────────────────────────────
+
+  Condition                   NASA-TLX Score
+  ─────────────────────────   ────────────────
+  baseline_no_system               50.67 / 100
+  TARS                             57.33 / 100
+  TARP-S                           37.33 / 100
+  TARP-F                           67.67 / 100
+
+========================================================================

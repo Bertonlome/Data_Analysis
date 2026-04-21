@@ -1,0 +1,69 @@
+--- MACHINE-READABLE SUMMARY (JSON) ---
+{
+  "participant": "P02",
+  "conditions": {
+    "TARS": {
+      "trust_vas": 60,
+      "risk_vas": 70
+    },
+    "TARP-S": {
+      "trust_vas": 65,
+      "risk_vas": 70
+    },
+    "TARP-F": {
+      "trust_vas": 30,
+      "risk_vas": 90
+    }
+  }
+}
+--- END SUMMARY ---
+
+==============================================================================
+  TRUST & PERCEIVED RISK (VAS) REPORT — P02
+  trust_risk_bespoke — Visual Analogue Scale 0–100
+==============================================================================
+
+  Items are reported independently (no aggregation).
+  Scale: 0 = not at all / no risk  →  100 = completely / extremely high risk
+
+──────────────────────────────────────────────────────────────────────────────
+  CONDITION: TARS
+──────────────────────────────────────────────────────────────────────────────
+
+  How would you rate your level of trust in the system?
+    Score :  60 / 100   [██████████████████░░░░░░░░░░░░]
+
+  How would you rate the level of perceived risk associated with using the system?
+    Score :  70 / 100   [█████████████████████░░░░░░░░░]
+
+──────────────────────────────────────────────────────────────────────────────
+  CONDITION: TARP-S
+──────────────────────────────────────────────────────────────────────────────
+
+  How would you rate your level of trust in the system?
+    Score :  65 / 100   [███████████████████░░░░░░░░░░░]
+
+  How would you rate the level of perceived risk associated with using the system?
+    Score :  70 / 100   [█████████████████████░░░░░░░░░]
+
+──────────────────────────────────────────────────────────────────────────────
+  CONDITION: TARP-F
+──────────────────────────────────────────────────────────────────────────────
+
+  How would you rate your level of trust in the system?
+    Score :  30 / 100   [█████████░░░░░░░░░░░░░░░░░░░░░]
+
+  How would you rate the level of perceived risk associated with using the system?
+    Score :  90 / 100   [███████████████████████████░░░]
+
+──────────────────────────────────────────────────────────────────────────────
+  SUMMARY
+──────────────────────────────────────────────────────────────────────────────
+
+  Condition                  trust_vas      risk_vas
+  ──────────────────────────────────────────────────
+  TARS                          60/100        70/100
+  TARP-S                        65/100        70/100
+  TARP-F                        30/100        90/100
+
+==============================================================================

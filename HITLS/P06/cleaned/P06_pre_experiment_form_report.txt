@@ -1,0 +1,100 @@
+--- MACHINE-READABLE SUMMARY (JSON) ---
+{
+  "participant": "P06",
+  "age": "27",
+  "gender": "Homme",
+  "total_flight_hours": "700",
+  "pic_hours": "500",
+  "years_professional_pilot": "5",
+  "automation_exposure": "moyenne",
+  "automation_familiarity": "Très familier",
+  "pts": {
+    "Q1": {
+      "raw_answer": "Strongly agree",
+      "score": 5
+    },
+    "Q2": {
+      "raw_answer": "Disagree",
+      "score": 4
+    },
+    "Q3": {
+      "raw_answer": "Agree",
+      "score": 4
+    },
+    "Q4": {
+      "raw_answer": "Agree",
+      "score": 4
+    },
+    "Q5": {
+      "raw_answer": "Agree",
+      "score": 4
+    },
+    "Q6": {
+      "raw_answer": "Disagree",
+      "score": 2
+    },
+    "Q7": {
+      "raw_answer": "Strongly agree",
+      "score": 5
+    }
+  },
+  "pts_total": 28,
+  "pts_mean": 4.0,
+  "pts_max": 35
+}
+--- END SUMMARY ---
+
+======================================================================
+  PRE-EXPERIMENT FORM — P06
+======================================================================
+
+── GENERAL INFORMATION ─────────────────────────────────────────────
+
+  Timestamp                                     2026/04/17 3:35:55 PM UTC−4
+  Participant ID                                P06
+  Age                                           27
+  Gender                                        Homme
+  Primary working language                      Français
+  Dominant hand                                 Droite
+  Aeronautical licences held                    BIA, PPL, NR, ME, CPL, ATPL examens, MCC, DÉC ATPLi, Instructeur en vol, Instructeur CRM, Type rating A330
+  Usual type of operations                      Aviation générale
+  Aircraft type mainly operated                 Tout type d’appareil d’aviation général incluant Cirrus, Piper, Cessnas
+  Total flight hours (approx.)                  700
+  Total hours as PIC (approx.)                  500
+  Years as professional pilot (approx.)         5
+  Days since last flight                        90
+  Exposure to highly automated cockpits         moyenne
+  Automation types used in flight               FMS;autopilot;autothrottle;EICAS/ECAM;Checklists électroniques;TCAS;EGPWS
+  Perceived familiarity with advanced automation Très familier
+
+── PROPENSITY TO TRUST SCALE (PTS) ─────────────────────────────────
+
+  (5-point Likert | Q2 is reverse-scored)
+
+  (+) Q1: I usually trust machines until there is a reason not to.
+       [██████████████████████████████] Strongly agree  → score: 5/5
+
+  (–) Q2: For the most part, I distrust machines.
+       [████████████░░░░░░░░░░░░░░░░░░] Disagree  → score: 4/5
+
+  (+) Q3: In general, I would rely on a machine to assist me.
+       [████████████████████████░░░░░░] Agree  → score: 4/5
+
+  (+) Q4: My tendency to trust machines is high.
+       [████████████████████████░░░░░░] Agree  → score: 4/5
+
+  (+) Q5: It is easy for me to trust machines to do their job.
+       [████████████████████████░░░░░░] Agree  → score: 4/5
+
+  (+) Q6: I am likely to trust a machine even when I have little knowledge about it.
+       [████████████░░░░░░░░░░░░░░░░░░] Disagree  → score: 2/5
+
+  (+) Q7: I have a generally positive attitude toward advanced automation in aviation.
+       [██████████████████████████████] Strongly agree  → score: 5/5
+
+  ────────────────────────────────────────────────────────────
+  PTS Total Score : 28 / 35
+  PTS Mean Score  : 4.00 / 5.00
+  Interpretation  : High propensity to trust
+
+======================================================================

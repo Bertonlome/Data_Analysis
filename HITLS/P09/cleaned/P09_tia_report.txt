@@ -1,161 +1,23 @@
 --- MACHINE-READABLE SUMMARY (JSON) ---
 {
-  "participant": "P07",
+  "participant": "P09",
   "familiarity_after_briefing": 4,
-  "pts_mean_pre_experiment": 4.1429,
+  "pts_mean_pre_experiment": null,
   "conditions": {
     "TARS": {
-      "global_mean_excl_traits": 4.3611,
-      "global_mean_incl_traits": 4.2452,
+      "global_mean_excl_traits": 3.4167,
+      "global_mean_incl_traits": 3.5625,
       "subscales": {
         "reliability_competence": {
-          "mean": 4.3333,
+          "mean": 3.5,
           "items": {
             "kta_01": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 4,
+              "recoded": 4
             },
             "kta_03": {
-              "raw": 5,
-              "recoded": 5
-            },
-            "kta_06": {
-              "raw": 2,
-              "recoded": 4
-            },
-            "kta_08": {
-              "raw": 5,
-              "recoded": 5
-            },
-            "kta_10": {
-              "raw": 3,
-              "recoded": 3
-            },
-            "kta_12": {
               "raw": 4,
               "recoded": 4
-            }
-          }
-        },
-        "understanding_predictability": {
-          "mean": 4.75,
-          "items": {
-            "kta_02": {
-              "raw": 5,
-              "recoded": 5
-            },
-            "kta_04": {
-              "raw": 1,
-              "recoded": 5
-            },
-            "kta_07": {
-              "raw": 4,
-              "recoded": 4
-            },
-            "kta_11": {
-              "raw": 1,
-              "recoded": 5
-            }
-          }
-        },
-        "trust_in_automation": {
-          "mean": 4.0,
-          "items": {
-            "kta_05": {
-              "raw": 4,
-              "recoded": 4
-            },
-            "kta_09": {
-              "raw": 4,
-              "recoded": 4
-            }
-          }
-        }
-      }
-    },
-    "TARC": {
-      "global_mean_excl_traits": 4.6111,
-      "global_mean_incl_traits": 4.3952,
-      "subscales": {
-        "reliability_competence": {
-          "mean": 4.3333,
-          "items": {
-            "kta_01": {
-              "raw": 5,
-              "recoded": 5
-            },
-            "kta_03": {
-              "raw": 5,
-              "recoded": 5
-            },
-            "kta_06": {
-              "raw": 3,
-              "recoded": 3
-            },
-            "kta_08": {
-              "raw": 5,
-              "recoded": 5
-            },
-            "kta_10": {
-              "raw": 3,
-              "recoded": 3
-            },
-            "kta_12": {
-              "raw": 5,
-              "recoded": 5
-            }
-          }
-        },
-        "understanding_predictability": {
-          "mean": 4.5,
-          "items": {
-            "kta_02": {
-              "raw": 5,
-              "recoded": 5
-            },
-            "kta_04": {
-              "raw": 2,
-              "recoded": 4
-            },
-            "kta_07": {
-              "raw": 4,
-              "recoded": 4
-            },
-            "kta_11": {
-              "raw": 1,
-              "recoded": 5
-            }
-          }
-        },
-        "trust_in_automation": {
-          "mean": 5.0,
-          "items": {
-            "kta_05": {
-              "raw": 5,
-              "recoded": 5
-            },
-            "kta_09": {
-              "raw": 5,
-              "recoded": 5
-            }
-          }
-        }
-      }
-    },
-    "TARP-S": {
-      "global_mean_excl_traits": 3.6389,
-      "global_mean_incl_traits": 3.8119,
-      "subscales": {
-        "reliability_competence": {
-          "mean": 3.1667,
-          "items": {
-            "kta_01": {
-              "raw": 3,
-              "recoded": 3
-            },
-            "kta_03": {
-              "raw": 3,
-              "recoded": 3
             },
             "kta_06": {
               "raw": 3,
@@ -176,19 +38,157 @@
           }
         },
         "understanding_predictability": {
-          "mean": 4.25,
+          "mean": 3.25,
           "items": {
             "kta_02": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 3,
+              "recoded": 3
             },
             "kta_04": {
-              "raw": 2,
-              "recoded": 4
+              "raw": 3,
+              "recoded": 3
             },
             "kta_07": {
               "raw": 4,
               "recoded": 4
+            },
+            "kta_11": {
+              "raw": 3,
+              "recoded": 3
+            }
+          }
+        },
+        "trust_in_automation": {
+          "mean": 3.5,
+          "items": {
+            "kta_05": {
+              "raw": 4,
+              "recoded": 4
+            },
+            "kta_09": {
+              "raw": 3,
+              "recoded": 3
+            }
+          }
+        }
+      }
+    },
+    "TARC": {
+      "global_mean_excl_traits": 3.6667,
+      "global_mean_incl_traits": 3.75,
+      "subscales": {
+        "reliability_competence": {
+          "mean": 3.5,
+          "items": {
+            "kta_01": {
+              "raw": 4,
+              "recoded": 4
+            },
+            "kta_03": {
+              "raw": 5,
+              "recoded": 5
+            },
+            "kta_06": {
+              "raw": 3,
+              "recoded": 3
+            },
+            "kta_08": {
+              "raw": 3,
+              "recoded": 3
+            },
+            "kta_10": {
+              "raw": 3,
+              "recoded": 3
+            },
+            "kta_12": {
+              "raw": 3,
+              "recoded": 3
+            }
+          }
+        },
+        "understanding_predictability": {
+          "mean": 3.0,
+          "items": {
+            "kta_02": {
+              "raw": 4,
+              "recoded": 4
+            },
+            "kta_04": {
+              "raw": 4,
+              "recoded": 2
+            },
+            "kta_07": {
+              "raw": 4,
+              "recoded": 4
+            },
+            "kta_11": {
+              "raw": 4,
+              "recoded": 2
+            }
+          }
+        },
+        "trust_in_automation": {
+          "mean": 4.5,
+          "items": {
+            "kta_05": {
+              "raw": 5,
+              "recoded": 5
+            },
+            "kta_09": {
+              "raw": 4,
+              "recoded": 4
+            }
+          }
+        }
+      }
+    },
+    "TARP-S": {
+      "global_mean_excl_traits": 3.6111,
+      "global_mean_incl_traits": 3.7083,
+      "subscales": {
+        "reliability_competence": {
+          "mean": 2.8333,
+          "items": {
+            "kta_01": {
+              "raw": 4,
+              "recoded": 4
+            },
+            "kta_03": {
+              "raw": 2,
+              "recoded": 2
+            },
+            "kta_06": {
+              "raw": 4,
+              "recoded": 2
+            },
+            "kta_08": {
+              "raw": 4,
+              "recoded": 4
+            },
+            "kta_10": {
+              "raw": 4,
+              "recoded": 2
+            },
+            "kta_12": {
+              "raw": 3,
+              "recoded": 3
+            }
+          }
+        },
+        "understanding_predictability": {
+          "mean": 4.5,
+          "items": {
+            "kta_02": {
+              "raw": 4,
+              "recoded": 4
+            },
+            "kta_04": {
+              "raw": 1,
+              "recoded": 5
+            },
+            "kta_07": {
+              "raw": 5,
+              "recoded": 5
             },
             "kta_11": {
               "raw": 2,
@@ -200,81 +200,81 @@
           "mean": 3.5,
           "items": {
             "kta_05": {
-              "raw": 3,
-              "recoded": 3
-            },
-            "kta_09": {
               "raw": 4,
               "recoded": 4
+            },
+            "kta_09": {
+              "raw": 3,
+              "recoded": 3
             }
           }
         }
       }
     },
     "TARP-F": {
-      "global_mean_excl_traits": 4.8056,
-      "global_mean_incl_traits": 4.5119,
+      "global_mean_excl_traits": 3.0,
+      "global_mean_incl_traits": 3.25,
       "subscales": {
         "reliability_competence": {
-          "mean": 4.6667,
+          "mean": 3.0,
           "items": {
             "kta_01": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 4,
+              "recoded": 4
             },
             "kta_03": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 2,
+              "recoded": 2
             },
             "kta_06": {
-              "raw": 1,
-              "recoded": 5
+              "raw": 4,
+              "recoded": 2
             },
             "kta_08": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 4,
+              "recoded": 4
             },
             "kta_10": {
-              "raw": 3,
-              "recoded": 3
+              "raw": 4,
+              "recoded": 2
             },
             "kta_12": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 4,
+              "recoded": 4
             }
           }
         },
         "understanding_predictability": {
-          "mean": 4.75,
+          "mean": 3.0,
           "items": {
             "kta_02": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 2,
+              "recoded": 2
             },
             "kta_04": {
-              "raw": 2,
-              "recoded": 4
+              "raw": 3,
+              "recoded": 3
             },
             "kta_07": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 3,
+              "recoded": 3
             },
             "kta_11": {
-              "raw": 1,
-              "recoded": 5
+              "raw": 2,
+              "recoded": 4
             }
           }
         },
         "trust_in_automation": {
-          "mean": 5.0,
+          "mean": 3.0,
           "items": {
             "kta_05": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 3,
+              "recoded": 3
             },
             "kta_09": {
-              "raw": 5,
-              "recoded": 5
+              "raw": 3,
+              "recoded": 3
             }
           }
         }
@@ -285,7 +285,7 @@
 --- END SUMMARY ---
 
 ==============================================================================
-  TRUST IN AUTOMATION (TiA) REPORT — P07
+  TRUST IN AUTOMATION (TiA) REPORT — P09
   Körber (2019) — 12-item subset
 ==============================================================================
 
@@ -295,7 +295,7 @@
   and included in the G.incl global mean alongside condition subscales.
 
   Familiarity (after_briefing, trait) : 4.0 / 5   [███████████████░░░░░]
-  PTS         (pre-experiment, trait) : 4.143 / 5   [███████████████░░░░░]
+  PTS         (pre-experiment, trait) : not available
 
 
 ──────────────────────────────────────────────────────────────────────────────
@@ -306,38 +306,38 @@
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   1      The system is capable of interpreting situations co…    5     5   [████████████]
-   6      The system works reliably.                              5     5   [████████████]
-  10 (*)  A system malfunction is likely.                         2     4   [█████████░░░]
-  13      The system is capable of taking over complicated ta…    5     5   [████████████]
-  15 (*)  The system might make sporadic errors.                  3     3   [██████░░░░░░]
+   1      The system is capable of interpreting situations co…    4     4   [█████████░░░]
+   6      The system works reliably.                              4     4   [█████████░░░]
+  10 (*)  A system malfunction is likely.                         3     3   [██████░░░░░░]
+  13      The system is capable of taking over complicated ta…    4     4   [█████████░░░]
+  15 (*)  The system might make sporadic errors.                  4     2   [███░░░░░░░░░]
   19      I am confident about the system's capabilities.         4     4   [█████████░░░]
 
-                                               Subscale mean 4.333 / 5   [████████████████░░░░]
+                                               Subscale mean 3.500 / 5   [████████████░░░░░░░░]
 
   ── Understanding / Predictability (─────────────────────────)
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   2      The system state was always clear to me.                5     5   [████████████]
-   7 (*)  The system reacts unpredictably.                        1     5   [████████████]
+   2      The system state was always clear to me.                3     3   [██████░░░░░░]
+   7 (*)  The system reacts unpredictably.                        3     3   [██████░░░░░░]
   11      I was able to understand why things happened.           4     4   [█████████░░░]
-  16 (*)  It is difficult to identify what the system will do…    1     5   [████████████]
+  16 (*)  It is difficult to identify what the system will do…    3     3   [██████░░░░░░]
 
-                                               Subscale mean 4.750 / 5   [██████████████████░░]
+                                               Subscale mean 3.250 / 5   [███████████░░░░░░░░░]
 
   ── Trust in Automation (────────────────────────────────────)
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
    9      I trust the system.                                     4     4   [█████████░░░]
-  14      I can rely on the system.                               4     4   [█████████░░░]
+  14      I can rely on the system.                               3     3   [██████░░░░░░]
 
-                                               Subscale mean 4.000 / 5   [███████████████░░░░░]
+                                               Subscale mean 3.500 / 5   [████████████░░░░░░░░]
 
   ────────────────────────────────────────────────────────────
-  Global mean  (excl. traits)        : 4.361 / 5   [████████████████░░░░]
-  Global mean  (incl. Fam + PTS)     : 4.245 / 5   [████████████████░░░░]
+  Global mean  (excl. traits)        : 3.417 / 5   [████████████░░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 3.562 / 5   [████████████░░░░░░░░]
 
 ──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARC
@@ -347,38 +347,38 @@
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   1      The system is capable of interpreting situations co…    5     5   [████████████]
+   1      The system is capable of interpreting situations co…    4     4   [█████████░░░]
    6      The system works reliably.                              5     5   [████████████]
   10 (*)  A system malfunction is likely.                         3     3   [██████░░░░░░]
-  13      The system is capable of taking over complicated ta…    5     5   [████████████]
+  13      The system is capable of taking over complicated ta…    3     3   [██████░░░░░░]
   15 (*)  The system might make sporadic errors.                  3     3   [██████░░░░░░]
-  19      I am confident about the system's capabilities.         5     5   [████████████]
+  19      I am confident about the system's capabilities.         3     3   [██████░░░░░░]
 
-                                               Subscale mean 4.333 / 5   [████████████████░░░░]
+                                               Subscale mean 3.500 / 5   [████████████░░░░░░░░]
 
   ── Understanding / Predictability (─────────────────────────)
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   2      The system state was always clear to me.                5     5   [████████████]
-   7 (*)  The system reacts unpredictably.                        2     4   [█████████░░░]
+   2      The system state was always clear to me.                4     4   [█████████░░░]
+   7 (*)  The system reacts unpredictably.                        4     2   [███░░░░░░░░░]
   11      I was able to understand why things happened.           4     4   [█████████░░░]
-  16 (*)  It is difficult to identify what the system will do…    1     5   [████████████]
+  16 (*)  It is difficult to identify what the system will do…    4     2   [███░░░░░░░░░]
 
-                                               Subscale mean 4.500 / 5   [█████████████████░░░]
+                                               Subscale mean 3.000 / 5   [██████████░░░░░░░░░░]
 
   ── Trust in Automation (────────────────────────────────────)
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
    9      I trust the system.                                     5     5   [████████████]
-  14      I can rely on the system.                               5     5   [████████████]
+  14      I can rely on the system.                               4     4   [█████████░░░]
 
-                                               Subscale mean 5.000 / 5   [████████████████████]
+                                               Subscale mean 4.500 / 5   [█████████████████░░░]
 
   ────────────────────────────────────────────────────────────
-  Global mean  (excl. traits)        : 4.611 / 5   [██████████████████░░]
-  Global mean  (incl. Fam + PTS)     : 4.395 / 5   [████████████████░░░░]
+  Global mean  (excl. traits)        : 3.667 / 5   [█████████████░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 3.750 / 5   [█████████████░░░░░░░]
 
 ──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARP-S
@@ -388,38 +388,38 @@
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   1      The system is capable of interpreting situations co…    3     3   [██████░░░░░░]
-   6      The system works reliably.                              3     3   [██████░░░░░░]
-  10 (*)  A system malfunction is likely.                         3     3   [██████░░░░░░]
+   1      The system is capable of interpreting situations co…    4     4   [█████████░░░]
+   6      The system works reliably.                              2     2   [███░░░░░░░░░]
+  10 (*)  A system malfunction is likely.                         4     2   [███░░░░░░░░░]
   13      The system is capable of taking over complicated ta…    4     4   [█████████░░░]
   15 (*)  The system might make sporadic errors.                  4     2   [███░░░░░░░░░]
-  19      I am confident about the system's capabilities.         4     4   [█████████░░░]
+  19      I am confident about the system's capabilities.         3     3   [██████░░░░░░]
 
-                                               Subscale mean 3.167 / 5   [██████████░░░░░░░░░░]
+                                               Subscale mean 2.833 / 5   [█████████░░░░░░░░░░░]
 
   ── Understanding / Predictability (─────────────────────────)
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   2      The system state was always clear to me.                5     5   [████████████]
-   7 (*)  The system reacts unpredictably.                        2     4   [█████████░░░]
-  11      I was able to understand why things happened.           4     4   [█████████░░░]
+   2      The system state was always clear to me.                4     4   [█████████░░░]
+   7 (*)  The system reacts unpredictably.                        1     5   [████████████]
+  11      I was able to understand why things happened.           5     5   [████████████]
   16 (*)  It is difficult to identify what the system will do…    2     4   [█████████░░░]
 
-                                               Subscale mean 4.250 / 5   [████████████████░░░░]
+                                               Subscale mean 4.500 / 5   [█████████████████░░░]
 
   ── Trust in Automation (────────────────────────────────────)
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   9      I trust the system.                                     3     3   [██████░░░░░░]
-  14      I can rely on the system.                               4     4   [█████████░░░]
+   9      I trust the system.                                     4     4   [█████████░░░]
+  14      I can rely on the system.                               3     3   [██████░░░░░░]
 
                                                Subscale mean 3.500 / 5   [████████████░░░░░░░░]
 
   ────────────────────────────────────────────────────────────
-  Global mean  (excl. traits)        : 3.639 / 5   [█████████████░░░░░░░]
-  Global mean  (incl. Fam + PTS)     : 3.812 / 5   [██████████████░░░░░░]
+  Global mean  (excl. traits)        : 3.611 / 5   [█████████████░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 3.708 / 5   [█████████████░░░░░░░]
 
 ──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARP-F
@@ -429,38 +429,38 @@
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   1      The system is capable of interpreting situations co…    5     5   [████████████]
-   6      The system works reliably.                              5     5   [████████████]
-  10 (*)  A system malfunction is likely.                         1     5   [████████████]
-  13      The system is capable of taking over complicated ta…    5     5   [████████████]
-  15 (*)  The system might make sporadic errors.                  3     3   [██████░░░░░░]
-  19      I am confident about the system's capabilities.         5     5   [████████████]
+   1      The system is capable of interpreting situations co…    4     4   [█████████░░░]
+   6      The system works reliably.                              2     2   [███░░░░░░░░░]
+  10 (*)  A system malfunction is likely.                         4     2   [███░░░░░░░░░]
+  13      The system is capable of taking over complicated ta…    4     4   [█████████░░░]
+  15 (*)  The system might make sporadic errors.                  4     2   [███░░░░░░░░░]
+  19      I am confident about the system's capabilities.         4     4   [█████████░░░]
 
-                                               Subscale mean 4.667 / 5   [██████████████████░░]
+                                               Subscale mean 3.000 / 5   [██████████░░░░░░░░░░]
 
   ── Understanding / Predictability (─────────────────────────)
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   2      The system state was always clear to me.                5     5   [████████████]
-   7 (*)  The system reacts unpredictably.                        2     4   [█████████░░░]
-  11      I was able to understand why things happened.           5     5   [████████████]
-  16 (*)  It is difficult to identify what the system will do…    1     5   [████████████]
+   2      The system state was always clear to me.                2     2   [███░░░░░░░░░]
+   7 (*)  The system reacts unpredictably.                        3     3   [██████░░░░░░]
+  11      I was able to understand why things happened.           3     3   [██████░░░░░░]
+  16 (*)  It is difficult to identify what the system will do…    2     4   [█████████░░░]
 
-                                               Subscale mean 4.750 / 5   [██████████████████░░]
+                                               Subscale mean 3.000 / 5   [██████████░░░░░░░░░░]
 
   ── Trust in Automation (────────────────────────────────────)
 
    #  inv  Item                                                  Raw   Rec   Bar
   ──  ───  ────────────────────────────────────────────────────  ────  ────   ──────────────
-   9      I trust the system.                                     5     5   [████████████]
-  14      I can rely on the system.                               5     5   [████████████]
+   9      I trust the system.                                     3     3   [██████░░░░░░]
+  14      I can rely on the system.                               3     3   [██████░░░░░░]
 
-                                               Subscale mean 5.000 / 5   [████████████████████]
+                                               Subscale mean 3.000 / 5   [██████████░░░░░░░░░░]
 
   ────────────────────────────────────────────────────────────
-  Global mean  (excl. traits)        : 4.806 / 5   [███████████████████░]
-  Global mean  (incl. Fam + PTS)     : 4.512 / 5   [█████████████████░░░]
+  Global mean  (excl. traits)        : 3.000 / 5   [██████████░░░░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 3.250 / 5   [███████████░░░░░░░░░]
 
 
 ──────────────────────────────────────────────────────────────────────────────
@@ -469,9 +469,9 @@
 
   Condition             Reliabilit  Understand  Trust in A      G.excl      G.incl
   ────────────────────────────────────────────────────────────────────────────────
-  TARS                       4.333       4.750       4.000       4.361       4.245
-  TARC                       4.333       4.500       5.000       4.611       4.395
-  TARP-S                     3.167       4.250       3.500       3.639       3.812
-  TARP-F                     4.667       4.750       5.000       4.806       4.512
+  TARS                       3.500       3.250       3.500       3.417       3.562
+  TARC                       3.500       3.000       4.500       3.667       3.750
+  TARP-S                     2.833       4.500       3.500       3.611       3.708
+  TARP-F                     3.000       3.000       3.000       3.000       3.250
 
 ==============================================================================

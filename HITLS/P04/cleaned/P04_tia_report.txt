@@ -2,11 +2,11 @@
 {
   "participant": "P04",
   "familiarity_after_briefing": 1,
-  "pts_mean_pre_experiment": null,
+  "pts_mean_pre_experiment": 3.1429,
   "conditions": {
     "TARS": {
       "global_mean_excl_traits": 3.0556,
-      "global_mean_incl_traits": 2.5417,
+      "global_mean_incl_traits": 2.6619,
       "subscales": {
         "reliability_competence": {
           "mean": 2.6667,
@@ -75,7 +75,7 @@
     },
     "TARP-S": {
       "global_mean_excl_traits": 3.4444,
-      "global_mean_incl_traits": 2.8333,
+      "global_mean_incl_traits": 2.8952,
       "subscales": {
         "reliability_competence": {
           "mean": 3.8333,
@@ -144,7 +144,7 @@
     },
     "TARP-F": {
       "global_mean_excl_traits": 3.2778,
-      "global_mean_incl_traits": 2.7083,
+      "global_mean_incl_traits": 2.7952,
       "subscales": {
         "reliability_competence": {
           "mean": 3.3333,
@@ -226,7 +226,7 @@
   and included in the G.incl global mean alongside condition subscales.
 
   Familiarity (after_briefing, trait) : 1.0 / 5   [░░░░░░░░░░░░░░░░░░░░]
-  PTS         (pre-experiment, trait) : not available
+  PTS         (pre-experiment, trait) : 3.143 / 5   [██████████░░░░░░░░░░]
 
 
 ──────────────────────────────────────────────────────────────────────────────
@@ -268,7 +268,7 @@
 
   ────────────────────────────────────────────────────────────
   Global mean  (excl. traits)        : 3.056 / 5   [██████████░░░░░░░░░░]
-  Global mean  (incl. Fam + PTS)     : 2.542 / 5   [███████░░░░░░░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 2.662 / 5   [████████░░░░░░░░░░░░]
 
 ──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARP-S
@@ -309,7 +309,7 @@
 
   ────────────────────────────────────────────────────────────
   Global mean  (excl. traits)        : 3.444 / 5   [████████████░░░░░░░░]
-  Global mean  (incl. Fam + PTS)     : 2.833 / 5   [█████████░░░░░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 2.895 / 5   [█████████░░░░░░░░░░░]
 
 ──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARP-F
@@ -350,7 +350,7 @@
 
   ────────────────────────────────────────────────────────────
   Global mean  (excl. traits)        : 3.278 / 5   [███████████░░░░░░░░░]
-  Global mean  (incl. Fam + PTS)     : 2.708 / 5   [████████░░░░░░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 2.795 / 5   [████████░░░░░░░░░░░░]
 
 
 ──────────────────────────────────────────────────────────────────────────────
@@ -359,8 +359,8 @@
 
   Condition             Reliabilit  Understand  Trust in A      G.excl      G.incl
   ────────────────────────────────────────────────────────────────────────────────
-  TARS                       2.667       4.000       2.500       3.056       2.542
-  TARP-S                     3.833       4.000       2.500       3.444       2.833
-  TARP-F                     3.333       4.000       2.500       3.278       2.708
+  TARS                       2.667       4.000       2.500       3.056       2.662
+  TARP-S                     3.833       4.000       2.500       3.444       2.895
+  TARP-F                     3.333       4.000       2.500       3.278       2.795
 
 ==============================================================================

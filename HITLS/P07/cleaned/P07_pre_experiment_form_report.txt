@@ -1,0 +1,100 @@
+--- MACHINE-READABLE SUMMARY (JSON) ---
+{
+  "participant": "P07",
+  "age": "23",
+  "gender": "Homme",
+  "total_flight_hours": "230.7",
+  "pic_hours": "100",
+  "years_professional_pilot": "2",
+  "automation_exposure": "faible",
+  "automation_familiarity": "Moyennement familier",
+  "pts": {
+    "Q1": {
+      "raw_answer": "Agree",
+      "score": 4
+    },
+    "Q2": {
+      "raw_answer": "Strongly disagree",
+      "score": 5
+    },
+    "Q3": {
+      "raw_answer": "Neither agree nor disagree",
+      "score": 3
+    },
+    "Q4": {
+      "raw_answer": "Agree",
+      "score": 4
+    },
+    "Q5": {
+      "raw_answer": "Agree",
+      "score": 4
+    },
+    "Q6": {
+      "raw_answer": "Agree",
+      "score": 4
+    },
+    "Q7": {
+      "raw_answer": "Strongly agree",
+      "score": 5
+    }
+  },
+  "pts_total": 29,
+  "pts_mean": 4.1429,
+  "pts_max": 35
+}
+--- END SUMMARY ---
+
+======================================================================
+  PRE-EXPERIMENT FORM — P07
+======================================================================
+
+── GENERAL INFORMATION ─────────────────────────────────────────────
+
+  Timestamp                                     2026/04/17 7:36:30 PM UTC−4
+  Participant ID                                P07
+  Age                                           23
+  Gender                                        Homme
+  Primary working language                      Français
+  Dominant hand                                 Droite
+  Aeronautical licences held                    CPL
+  Usual type of operations                      Aviation générale
+  Aircraft type mainly operated                 Cessna 152, Piper Aztec
+  Total flight hours (approx.)                  230.7
+  Total hours as PIC (approx.)                  100
+  Years as professional pilot (approx.)         2
+  Days since last flight                        43
+  Exposure to highly automated cockpits         faible
+  Automation types used in flight               FMS;autopilot
+  Perceived familiarity with advanced automation Moyennement familier
+
+── PROPENSITY TO TRUST SCALE (PTS) ─────────────────────────────────
+
+  (5-point Likert | Q2 is reverse-scored)
+
+  (+) Q1: I usually trust machines until there is a reason not to.
+       [████████████████████████░░░░░░] Agree  → score: 4/5
+
+  (–) Q2: For the most part, I distrust machines.
+       [██████░░░░░░░░░░░░░░░░░░░░░░░░] Strongly disagree  → score: 5/5
+
+  (+) Q3: In general, I would rely on a machine to assist me.
+       [██████████████████░░░░░░░░░░░░] Neither agree nor disagree  → score: 3/5
+
+  (+) Q4: My tendency to trust machines is high.
+       [████████████████████████░░░░░░] Agree  → score: 4/5
+
+  (+) Q5: It is easy for me to trust machines to do their job.
+       [████████████████████████░░░░░░] Agree  → score: 4/5
+
+  (+) Q6: I am likely to trust a machine even when I have little knowledge about it.
+       [████████████████████████░░░░░░] Agree  → score: 4/5
+
+  (+) Q7: I have a generally positive attitude toward advanced automation in aviation.
+       [██████████████████████████████] Strongly agree  → score: 5/5
+
+  ────────────────────────────────────────────────────────────
+  PTS Total Score : 29 / 35
+  PTS Mean Score  : 4.14 / 5.00
+  Interpretation  : High propensity to trust
+
+======================================================================

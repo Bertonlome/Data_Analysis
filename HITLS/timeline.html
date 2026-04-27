@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scenario Timeline</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      background: #e8eaed;
+      color: #1a1a2e;
+      font-size: 12px;
+    }
+
+    /* ── page layout ──────────────────────────────────────────────────── */
+    #page {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+
+    /* left panel: pilot actions */
+    #left-panel {
+      flex: 1;
+      background: #f5f6f8;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #d0d5de;
+      overflow: hidden;
+      min-width: 0;
+    }
+    #left-tabbar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: stretch;
+      background: #ffffff;
+      border-bottom: 2px solid #c8cdd6;
+      height: 40px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    #left-panels-row {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+    #plt-scroll {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #fafbfc;
+    }
+    .plt-wrap {
+      position: relative;
+      overflow: visible;
+    }
+    .plt-item {
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      min-height: 18px;
+      padding: 2px 5px;
+      border-left: 3px solid #9aa0ae;
+      background: #f0f2f5;
+      border-radius: 0 3px 3px 0;
+    }
+    .plt-ts  { flex-shrink:0; font-size:9px; color:#7a8898; font-family:monospace; padding-top:1px; }
+    .plt-src { flex-shrink:0; font-size:9px; font-weight:700; white-space:nowrap; padding-top:1px; }
+    .plt-val { flex:1; font-size:9px; white-space:normal; overflow-wrap:anywhere; color:#2c3a50; }
+
+    /* ── Gaze AoI panel ─────────────────────────────────────────────── */
+    #gaze-scroll {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #f8f9fb;
+    }
+    .gaze-wrap { position: relative; overflow: visible; }
+    .gaze-band {
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-top-width: 2px;
+      border-top-style: solid;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      overflow: hidden;
+    }
+    .gaze-label { font-size: 10px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+
+    /* ── Saccade / Fixation bands ───────────────────────────────────────── */
+    #sacfix-scroll, #blink-scroll { flex:1; overflow-y:auto; overflow-x:hidden; background:#f8f9fb; }
+    .sacfix-saccade { background:#ffe4e6; border-top-color:#e11d48; }
+    .sacfix-saccade .gaze-label { color:#881337; }
+    .sacfix-fixation { background:#dbeafe; border-top-color:#1d4ed8; }
+    .sacfix-fixation .gaze-label { color:#1e3a8a; }
+    .sacfix-blink { background:#fef9c3; border-top-color:#ca8a04; }
+    .sacfix-blink .gaze-label { color:#713f12; }
+
+    /* ── Pupil diameter panel ───────────────────────────────────────────── */
+    .pupil-controls {
+      display:flex; align-items:center; gap:12px;
+      padding:5px 8px; background:#f0f2f5;
+      border-bottom:1px solid #dde0e8;
+      font-size:11px; color:#5a6478; flex-shrink:0; flex-wrap:wrap;
+    }
+    .pupil-controls label { display:flex; align-items:center; gap:4px; white-space:nowrap; }
+    .pupil-controls input[type=number] {
+      width:48px; font-family:inherit; font-size:11px;
+      padding:2px 4px; border:1px solid #c8cdd6;
+      border-radius:3px; background:#fff;
+    }
+
+    /* center panel: timeline (one third of screen) */
+    #center-panel {
+      width: 33.333%;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-left: 2px solid #b0b8c8;
+      border-right: 2px solid #b0b8c8;
+      background: #f0f2f5;
+      overflow: hidden;
+    }
+
+    /* right panel: tabbed charts */
+    #right-panel {
+      flex: 1;
+      background: #f5f6f8;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid #d0d5de;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    #chart-tabbar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: stretch;
+      background: #ffffff;
+      border-bottom: 2px solid #c8cdd6;
+      height: 40px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-right: 1px solid #e0e4ec;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      padding: 0 16px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      color: #9aa0ae;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: #2c3a50; background: #f5f6f8; }
+    .tab-btn.active { color: #1e5a9e; border-bottom-color: #1e5a9e; }
+
+    .chart-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 0;
+      min-width: 160px;
+      border-right: 1px solid #d0d5de;
+    }
+    .chart-panel.hidden { display: none; }
+
+    /* row that holds all chart panels side by side */
+    #panels-row {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .chart-axis-wrap {
+      flex-shrink: 0;
+      background: #e2e6ed;
+      border-bottom: 1px solid #b8c0cc;
+      height: 28px;
+      overflow: hidden;
+    }
+
+    .chart-scroll {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* ── agent panel ─────────────────────────────────────────────────── */
+    #agt-scroll {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #fafbfc;
+    }
+    .agt-wrap {
+      position: relative;
+      overflow: visible;
+    }
+    .agt-item {
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      min-height: 18px;
+      padding: 2px 5px;
+      border-left: 3px solid #9aa0ae;
+      background: #f0f2f5;
+      border-radius: 0 3px 3px 0;
+    }
+    .agt-ts   { flex-shrink:0; font-size:9px; color:#7a8898; font-family:monospace; padding-top:1px; }
+    .agt-src  { flex-shrink:0; font-size:9px; font-weight:700; white-space:nowrap; padding-top:1px; }
+    .agt-val  { flex:1; font-size:9px; white-space:normal; overflow-wrap:anywhere; color:#2c3a50; }
+
+    /* ── ATC items (rendered inside #content, pinned to right edge) ──────────── */
+    .atc-item {
+      position: absolute;
+      right: 3px;
+      width: 210px;
+      min-height: 18px;
+      padding: 2px 5px 2px 7px;
+      border-left: 3px solid #1e5a9e;
+      background: rgba(232,240,250,0.92);
+      border-radius: 0 3px 3px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      z-index: 3;
+    }
+    .atc-item.atc-silent {
+      border-left-color: #9aa0ae;
+      background: rgba(240,242,245,0.88);
+    }
+    .atc-ts  { flex-shrink:0; font-size:9px; color:#7a8898; font-family:monospace; padding-top:1px; }
+    .atc-val { flex:1; font-size:9px; white-space:normal; overflow-wrap:anywhere; color:#1a3060; }
+
+    /* ── top bar ──────────────────────────────────────────────────────── */
+    #topbar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px;
+      background: #ffffff;
+      border-bottom: 1px solid #c8cdd6;
+      height: 40px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    #topbar h1 { font-size: 13px; font-weight: 600; color: #2c3a50; white-space: nowrap; }
+
+    .btn {
+      background: #2c5282;
+      color: #ffffff;
+      border: none;
+      padding: 4px 11px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 11px;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .btn:hover { background: #2a4a75; }
+
+    #file-label {
+      color: #5a6478;
+      font-size: 11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 220px;
+    }
+
+    #stats { margin-left: auto; color: #6a7488; font-size: 11px; white-space: nowrap; }
+
+    #phase-badge {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ── scroll area ──────────────────────────────────────────────────── */
+    #scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* ── empty state ──────────────────────────────────────────────────── */
+    #empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #9aa0ae;
+      gap: 10px;
+    }
+    #empty .big  { font-size: 16px; color: #6a7488; font-weight: 600; }
+    #empty .hint { font-size: 11px; color: #9aa0ae; }
+    #empty code  { font-family: inherit; background: #e2e6ed; padding: 1px 5px; border-radius: 3px; }
+
+    /* ── timeline wrapper ─────────────────────────────────────────────── */
+    #timeline-wrap {
+      display: none;
+      flex-direction: row;
+    }
+
+    /* ruler */
+    #ruler {
+      width: 68px;
+      flex-shrink: 0;
+      position: relative;
+      background: #e2e6ed;
+      border-right: 1px solid #b8c0cc;
+    }
+
+    .tick {
+      position: absolute;
+      right: 0;
+      height: 0;
+      overflow: visible;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      padding-right: 7px;
+      color: #9aa0ae;
+      white-space: nowrap;
+      font-size: 10px;
+    }
+    .tick::after {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 1px;
+      background: #b8c0cc;
+      flex-shrink: 0;
+    }
+    .tick.major { color: #3a4a60; font-weight: 600; }
+    .tick.major::after { width: 10px; background: #7a8898; }
+    .tick.band-tick::after { width: 4px; background: #c8cdd6; }
+
+    /* content */
+    #content {
+      flex: 1;
+      position: relative;
+      min-width: 0;
+    }
+
+    .band {
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-top-width: 2px;
+      border-top-style: solid;
+    }
+
+    .band-label {
+      position: absolute;
+      top: 3px;
+      left: 10px;
+      right: 6px;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 2;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* left portion of the label: proc / task / val — truncates if too narrow */
+    .band-text {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* absolute clock timestamp on the right of each band */
+    .abs-ts {
+      flex-shrink: 0;
+      font-size: 9px;
+      color: #7a8898;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .proc { font-weight: 700; color: #1a2540; }
+    .task { color: #3a5278; margin-left: 10px; }
+    .val  { color: #7a8898; margin-left: 6px; font-style: italic; }
+
+    /* timestamp prefix inside each band label */
+    .ts-label {
+      font-size: 9px;
+      color: #6a7888;
+      font-variant-numeric: tabular-nums;
+      margin-right: 7px;
+      flex-shrink: 0;
+    }
+
+    /* right-side ] bracket on visually-expanded bands */
+    .expand-bracket {
+      position: absolute;
+      right: 3px;
+      top: 3px;
+      bottom: 3px;
+      width: 7px;
+      border: 1.5px solid rgba(70, 100, 160, 0.50);
+      border-left: none;
+      border-radius: 0 3px 3px 0;
+      pointer-events: none;
+    }
+
+    /* actual-duration badge shown when a band is expanded */
+    .expand-badge {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 9px;
+      color: rgba(50, 80, 140, 0.80);
+      background: rgba(255, 255, 255, 0.85);
+      padding: 0 3px;
+      border-radius: 2px;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<div id="page">
+
+<!-- ── LEFT PANEL: pilot actions ────────────────────────────────────────── -->
+<div id="left-panel">
+  <div id="left-tabbar">
+    <button class="tab-btn active" id="tab-plt" onclick="switchLeftTab('plt')">Pilot Actions</button>
+    <button class="tab-btn" id="tab-croll" onclick="switchLeftTab('croll')">Control Roll</button>
+    <button class="tab-btn" id="tab-cpitch" onclick="switchLeftTab('cpitch')">Control Pitch</button>
+    <button class="tab-btn" id="tab-cyaw" onclick="switchLeftTab('cyaw')">Control Yaw</button>
+    <button class="tab-btn" id="tab-gaze" onclick="switchLeftTab('gaze')">Gaze AoI</button>
+    <button class="tab-btn" id="tab-sacfix" onclick="switchLeftTab('sacfix')">Sac / Fix</button>
+    <button class="tab-btn" id="tab-blink" onclick="switchLeftTab('blink')">Blinks</button>
+    <button class="tab-btn" id="tab-pupil" onclick="switchLeftTab('pupil')">Pupil &Oslash;</button>
+  </div>
+  <div id="left-panels-row">
+    <div id="panel-plt" class="chart-panel">
+      <div id="plt-scroll">
+        <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see pilot actions</div>
+      </div>
+    </div>
+    <div id="panel-croll" class="chart-panel hidden">
+      <div class="chart-axis-wrap"><svg id="croll-axis-svg" width="100%" height="28"></svg></div>
+      <div class="chart-scroll" id="croll-scroll">
+        <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see control roll</div>
+      </div>
+    </div>
+    <div id="panel-cpitch" class="chart-panel hidden">
+      <div class="chart-axis-wrap"><svg id="cpitch-axis-svg" width="100%" height="28"></svg></div>
+      <div class="chart-scroll" id="cpitch-scroll">
+        <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see control pitch</div>
+      </div>
+    </div>
+    <div id="panel-cyaw" class="chart-panel hidden">
+      <div class="chart-axis-wrap"><svg id="cyaw-axis-svg" width="100%" height="28"></svg></div>
+      <div class="chart-scroll" id="cyaw-scroll">
+        <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see control yaw</div>
+      </div>
+    </div>
+    <div id="panel-gaze" class="chart-panel hidden">
+      <div id="gaze-scroll">
+        <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see gaze AoI</div>
+      </div>
+    </div>
+    <div id="panel-sacfix" class="chart-panel hidden">
+      <div id="sacfix-scroll">
+        <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see saccades &amp; fixations</div>
+      </div>
+    </div>
+    <div id="panel-blink" class="chart-panel hidden">
+      <div id="blink-scroll">
+        <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see blinks</div>
+      </div>
+    </div>
+    <div id="panel-pupil" class="chart-panel hidden">
+      <div class="pupil-controls">
+        <label>Quality &ge;
+          <input id="pupil-qual" type="number" min="0" max="1" step="0.05" value="0.5"
+            oninput="updatePupilChart()">
+        </label>
+        <label>Window (s)
+          <input id="pupil-win" type="number" min="0" max="30" step="1" value="0"
+            oninput="updatePupilChart()">
+        </label>
+      </div>
+      <div class="chart-axis-wrap"><svg id="pupil-axis-svg" width="100%" height="28"></svg></div>
+      <div class="chart-scroll" id="pupil-scroll">
+        <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see pupil diameter</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CENTER PANEL: timeline ────────────────────────────────────────────── -->
+<div id="center-panel">
+
+  <div id="topbar">
+    <h1>Scenario Timeline</h1>
+    <button class="btn" onclick="document.getElementById('file-input').click()">&#9658; Load CSV</button>
+    <input type="file" id="file-input" accept=".csv" style="display:none" onchange="loadFile(this)">
+    <span id="file-label">No file loaded</span>
+    <span id="stats"></span>
+    <label style="font-size:11px;color:#5a6478;white-space:nowrap;margin-left:auto">
+      UTC offset&nbsp;
+      <input id="utc-offset" type="number" value="-8" min="-14" max="14" step="1"
+        style="width:44px;font-family:inherit;font-size:11px;padding:2px 4px;
+               border:1px solid #c8cdd6;border-radius:3px;background:#fff;"
+        onchange="rerender()">
+    </label>
+  </div>
+
+  <div id="scroll-area">
+    <div id="empty">
+      <div class="big">Scenario Timeline Viewer</div>
+      <div class="hint">Load a <code>scenario_XX_&hellip;_ingescape.csv</code> file to begin</div>
+    </div>
+
+    <div id="timeline-wrap">
+      <div id="ruler"></div>
+      <div id="content"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── RIGHT PANEL: tabbed charts ──────────────────────────────────────────────── -->
+<div id="right-panel">
+  <div id="chart-tabbar">
+    <button class="tab-btn" id="tab-alt" onclick="switchTab('alt')">Altitude</button>
+    <button class="tab-btn" id="tab-spd" onclick="switchTab('spd')">Airspeed</button>
+    <button class="tab-btn" id="tab-hdg" onclick="switchTab('hdg')">Heading</button>
+    <button class="tab-btn active" id="tab-agt" onclick="switchTab('agt')">Agent</button>
+  </div>
+
+  <div id="panels-row">
+
+  <!-- altitude panel -->
+  <div id="panel-alt" class="chart-panel hidden">
+    <div class="chart-axis-wrap"><svg id="alt-axis-svg" width="100%" height="28"></svg></div>
+    <div class="chart-scroll" id="alt-scroll">
+      <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see altitude chart</div>
+    </div>
+  </div>
+
+  <!-- airspeed panel -->
+  <div id="panel-spd" class="chart-panel hidden">
+    <div class="chart-axis-wrap"><svg id="spd-axis-svg" width="100%" height="28"></svg></div>
+    <div class="chart-scroll" id="spd-scroll">
+      <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see airspeed chart</div>
+    </div>
+  </div>
+
+  <!-- heading panel -->
+  <div id="panel-hdg" class="chart-panel hidden">
+    <div class="chart-axis-wrap"><svg id="hdg-axis-svg" width="100%" height="28"></svg></div>
+    <div class="chart-scroll" id="hdg-scroll">
+      <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see heading chart</div>
+    </div>
+  </div>
+
+  <!-- agent panel -->
+  <div id="panel-agt" class="chart-panel">
+    <div id="agt-scroll">
+      <div style="padding:20px;color:#9aa0ae;font-size:11px">Load a CSV to see agent actions</div>
+    </div>
+  </div>
+
+  </div><!-- #panels-row -->
+
+</div><!-- #page -->
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// Constants
+// ─────────────────────────────────────────────────────────────────────────────
+const PX_PER_SEC  = 37.795;  // 1 cm at 96 dpi
+const TICK_MINOR  = 10;       // unlabelled tick every N seconds
+const TICK_MAJOR  = 60;       // labelled tick every N seconds
+const MIN_BAND_PX = 28;       // minimum visual band height; shorter bands are expanded
+
+// Background fill per procedure
+const PROC_BG = {
+  'IDLE':                                   '#eef0f4',
+  'CREW BRIEFING':                          '#e8f5ee',
+  'BEFORE TAKEOFF':                         '#e8f0fa',
+  'LINE-UP AND HOLD':                       '#fdf6e3',
+  'TAKEOFF':                                '#fff0f0',
+  'ENG FAILURE DURING TAKEOFF':             '#fff4e8',
+  'ENGINE FIRE':                            '#ffe8e8',
+  'DECLARE PANPAN':                         '#f3e8ff',
+  'AFTER TAKEOFF':                          '#e8f8f5',
+  'ENGINE FAILURE/PRECAUTIONARY SHUTDOWN':  '#fdeaea',
+};
+
+// Top border colour per procedure
+const PROC_BORDER = {
+  'IDLE':                                   '#b0b8c8',
+  'CREW BRIEFING':                          '#2e7d52',
+  'BEFORE TAKEOFF':                         '#1e5a9e',
+  'LINE-UP AND HOLD':                       '#a07820',
+  'TAKEOFF':                                '#c03030',
+  'ENG FAILURE DURING TAKEOFF':             '#c06020',
+  'ENGINE FIRE':                            '#c01818',
+  'DECLARE PANPAN':                         '#7030a0',
+  'AFTER TAKEOFF':                          '#207080',
+  'ENGINE FAILURE/PRECAUTIONARY SHUTDOWN':  '#a03030',
+};
+
+function bg(p)  { return PROC_BG[p]     || '#f0f2f5'; }
+function brd(p) { return PROC_BORDER[p] || '#9aa0ae'; }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CSV parser — handles quoted multiline fields (RFC 4180 style with ; delimiter)
+// ─────────────────────────────────────────────────────────────────────────────
+function parseCSV(text, delim = ';') {
+  const rows = [];
+  let row = [], field = '', inQ = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQ) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }   // escaped quote
+        else inQ = false;
+      } else {
+        field += ch;
+      }
+    } else {
+      if      (ch === '"')  { inQ = true; }
+      else if (ch === delim){ row.push(field); field = ''; }
+      else if (ch === '\n') {
+        row.push(field); field = '';
+        if (row.some(c => c !== '')) rows.push(row);
+        row = [];
+      } else if (ch !== '\r') { field += ch; }
+    }
+  }
+  // flush last row (file without trailing newline)
+  if (row.length || field !== '') {
+    row.push(field);
+    if (row.some(c => c !== '')) rows.push(row);
+  }
+  return rows;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// File loader
+// ─────────────────────────────────────────────────────────────────────────────
+function loadFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  document.getElementById('file-label').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    window._lastCSV = e.target.result;
+    renderTimeline(e.target.result);
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+function rerender() {
+  if (window._lastCSV) renderTimeline(window._lastCSV);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Timeline renderer
+// ─────────────────────────────────────────────────────────────────────────────
+function renderTimeline(text) {
+  const allRows = parseCSV(text);
+  if (allRows.length < 2) { alert('Empty or unrecognised CSV.'); return; }
+
+  // columns: uuid(0) timestamp(1) agent(2) source(3) type(4) igs_ts(5) value(6)
+  const data = [];
+  for (let i = 1; i < allRows.length; i++) {
+    const r = allRows[i];
+    if (r.length < 7) continue;
+    const ts = parseFloat(r[1]);
+    if (!isFinite(ts) || ts <= 0) continue;
+    data.push({ ts, agent: r[2], source: r[3], value: r[6] });
+  }
+
+  if (!data.length) { alert('No valid data rows found.'); return; }
+
+  const t0       = data[0].ts;
+  const t1       = data[data.length - 1].ts;
+  const duration = t1 - t0;
+
+  // ── Collect TARS Agent / current_state unique-task_object events ───────
+  const states = [];
+  let lastTask = null;
+
+  for (const row of data) {
+    if (row.agent !== 'TARS Agent' || row.source !== 'current_state') continue;
+    let j;
+    try { j = JSON.parse(row.value); } catch { continue; }
+    const task = j.task_object ?? '';
+    if (task === lastTask) continue;
+    lastTask = task;
+    states.push({
+      relSec:  row.ts - t0,
+      epochTs: row.ts,
+      proc:    j.procedure ?? '',
+      task:    task,
+      jsval:   j.value ?? '',
+    });
+  }
+
+  // ── Stats ──────────────────────────────────────────────────────────────
+  document.getElementById('stats').textContent =
+    `${data.length.toLocaleString()} rows · ${fmtDur(duration)} · ${states.length} state changes`;
+
+  // ── Collect altitude data ───────────────────────────────────────────────────
+  const altData = [];
+  for (const row of data) {
+    if (row.agent !== 'Aircraft' || row.source !== 'altitude') continue;
+    const alt = parseFloat(row.value);
+    if (isFinite(alt) && alt >= 0) altData.push({ relSec: row.ts - t0, alt });
+  }
+
+  // ── Collect airspeed data ──────────────────────────────────────────────────
+  const spdData = [];
+  for (const row of data) {
+    if (row.agent !== 'Aircraft' || row.source !== 'airspeed') continue;
+    const spd = parseFloat(row.value);
+    if (isFinite(spd) && spd >= 0) spdData.push({ relSec: row.ts - t0, spd });
+  }
+  // ── Collect heading data ──────────────────────────────────────────────────────────────────────────────────
+  const hdgData = [];
+  let hdg0 = null;
+  for (const row of data) {
+    if (row.agent !== 'Aircraft' || row.source !== 'heading') continue;
+    const hdg = parseFloat(row.value);
+    if (!isFinite(hdg)) continue;
+    if (hdg0 === null) hdg0 = hdg;
+    hdgData.push({ relSec: row.ts - t0, hdg });
+  }
+
+  // ── Collect TARS Agent action data ─────────────────────────────────────────────────────────
+  const AGT_EXCLUDE = new Set([
+    'MAPPING','EXITED','ENTERED', 
+    'current_procedure','current_task_object','current_task_value',
+    'current_task_autonomy_role','current_task_human_role',
+    'allocation_reloaded','current_state','interaction_message', "action_time", 'countdown_current', 'countdown_next', 'countdown_max_current', 'countdown_max_next', 'action_about_to_fire', 'next_state'
+  ]);
+  const agtData = [];
+  for (const row of data) {
+    if (row.agent !== 'TARS Agent') continue;
+    if (!row.source || AGT_EXCLUDE.has(row.source)) continue;
+    agtData.push({ relSec: row.ts - t0, epochTs: row.ts, source: row.source, value: row.value });
+  }
+
+  // ── Collect Gaze AoI data (SmartEyeProBridge) ────────────────────────────
+  // object_name rows only appear when count>0, so collect them directly.
+  const gazePoints = [];
+  for (const row of data) {
+    if (row.agent !== 'SmartEyeProBridge') continue;
+    if (row.source !== 'filtered_closest_world_object_name') continue;
+    const name = row.value ? row.value.trim() : '';
+    if (!name) continue;
+    gazePoints.push({ relSec: row.ts - t0, name });
+  }
+  // Merge consecutive same-AoI samples within 100 ms into fixation bouts.
+  const GAZE_MERGE_GAP = 0.1;
+  const gazeSegs = [];
+  let _gSeg = null;
+  for (const pt of gazePoints) {
+    if (!_gSeg || _gSeg.name !== pt.name || pt.relSec - _gSeg.end > GAZE_MERGE_GAP) {
+      if (_gSeg) gazeSegs.push(_gSeg);
+      _gSeg = { name: pt.name, start: pt.relSec, end: pt.relSec };
+    } else {
+      _gSeg.end = pt.relSec;
+    }
+  }
+  if (_gSeg) gazeSegs.push(_gSeg);
+
+  // ── Collect Saccade / Fixation data (SmartEyeProBridge an_saccade / an_fixation) ──
+  // Each source emits a non-zero integer ID for the entire duration of the event.
+  // Consecutive rows with the same non-zero ID belong to the same bout.
+  const sacfixSegs = [];
+  let _curSac = null, _curFix = null;
+  for (const row of data) {
+    if (row.agent !== 'SmartEyeProBridge') continue;
+    if (row.source !== 'an_saccade' && row.source !== 'an_fixation') continue;
+    const id = parseInt(row.value);
+    const relSec = row.ts - t0;
+    if (row.source === 'an_saccade') {
+      if (id !== 0) {
+        if (!_curSac || _curSac.id !== id) { if (_curSac) sacfixSegs.push(_curSac); _curSac = { type: 'saccade', id, start: relSec, end: relSec }; }
+        else { _curSac.end = relSec; }
+      } else { if (_curSac) { sacfixSegs.push(_curSac); _curSac = null; } }
+    } else {
+      if (id !== 0) {
+        if (!_curFix || _curFix.id !== id) { if (_curFix) sacfixSegs.push(_curFix); _curFix = { type: 'fixation', id, start: relSec, end: relSec }; }
+        else { _curFix.end = relSec; }
+      } else { if (_curFix) { sacfixSegs.push(_curFix); _curFix = null; } }
+    }
+  }
+  if (_curSac) sacfixSegs.push(_curSac);
+  if (_curFix) sacfixSegs.push(_curFix);
+  sacfixSegs.sort((a, b) => a.start - b.start);
+
+  // ── Collect Blink data (SmartEyeProBridge an_blink) ───────────────────────
+  const blinkSegs = [];
+  let _curBlink = null;
+  for (const row of data) {
+    if (row.agent !== 'SmartEyeProBridge' || row.source !== 'an_blink') continue;
+    const id = parseInt(row.value);
+    const relSec = row.ts - t0;
+    if (id !== 0) {
+      if (!_curBlink || _curBlink.id !== id) { if (_curBlink) blinkSegs.push(_curBlink); _curBlink = { id, start: relSec, end: relSec }; }
+      else { _curBlink.end = relSec; }
+    } else { if (_curBlink) { blinkSegs.push(_curBlink); _curBlink = null; } }
+  }
+  if (_curBlink) blinkSegs.push(_curBlink);
+
+  // ── Collect Pupil Diameter data (SmartEyeProBridge pupil_diameter / pupil_diameter_quality) ──
+  const qualMap = new Map();
+  for (const row of data) {
+    if (row.agent === 'SmartEyeProBridge' && row.source === 'pupil_diameter_quality') {
+      const q = parseFloat(row.value);
+      if (!isNaN(q)) qualMap.set(row.ts, q);
+    }
+  }
+  const pupilRawLocal = [];
+  for (const row of data) {
+    if (row.agent !== 'SmartEyeProBridge' || row.source !== 'pupil_diameter') continue;
+    const diam = parseFloat(row.value);
+    if (isNaN(diam) || diam <= 0) continue;
+    const qual = qualMap.has(row.ts) ? qualMap.get(row.ts) : 1.0;
+    pupilRawLocal.push({ relSec: row.ts - t0, diam, qual });
+  }
+
+  // ── Collect control axis data (Aircraft / controlRoll|Pitch|Yaw) ────────
+  const crollData = [], cpitchData = [], cyawData = [];
+  for (const row of data) {
+    if (row.agent !== 'Aircraft') continue;
+    const v = parseFloat(row.value);
+    if (isNaN(v)) continue;
+    if (row.source === 'controlRoll')  crollData.push({ relSec: row.ts - t0, v });
+    else if (row.source === 'controlPitch') cpitchData.push({ relSec: row.ts - t0, v });
+    else if (row.source === 'controlYaw')   cyawData.push({ relSec: row.ts - t0, v });
+  }
+
+  // ── Collect Pilot Action data ──────────────────────────────────────────
+  const PLT_AGENTS = new Set(['Remote_Control_Agent','PanelListener','Pedestal','Shared Interface']);
+  const PLT_EXCLUDE_SRC = new Set(['emergency_inject','countdown_complete']);
+  const pltData = [];
+  for (const row of data) {
+    if (!PLT_AGENTS.has(row.agent)) continue;
+    if (!row.source || PLT_EXCLUDE_SRC.has(row.source)) continue;
+    pltData.push({ relSec: row.ts - t0, epochTs: row.ts, agent: row.agent, source: row.source, value: row.value });
+  }
+
+  // ── Collect ATC Agent data ─────────────────────────────────────────────
+  const atcRaw = [];
+  for (const row of data) {
+    if (row.agent !== 'ATC_Agent') continue;
+    if (row.source !== 'speech_output' && row.source !== 'is_speaking') continue;
+    atcRaw.push({ relSec: row.ts - t0, epochTs: row.ts, source: row.source, value: row.value });
+  }
+  const atcEvents = [];
+  for (const d of atcRaw) {
+    const last = atcEvents[atcEvents.length - 1];
+    if (last && d.relSec - last.relSec < 0.05) { last.items.push(d); }
+    else { atcEvents.push({ relSec: d.relSec, epochTs: d.epochTs, items: [d] }); }
+  }
+
+  // ── Layout pass ─────────────────────────────────────────────────────────
+  // Compute visual top/height for each band. Bands shorter than MIN_BAND_PX
+  // are expanded; subsequent bands are shifted down to avoid overlap.
+  const layout = [];
+  let cursor = 0;
+  for (let i = 0; i < states.length; i++) {
+    const ev         = states[i];
+    const next       = states[i + 1];
+    const naturalTop = ev.relSec * PX_PER_SEC;
+    const naturalBot = next ? (next.relSec * PX_PER_SEC) : (duration * PX_PER_SEC + 40);
+    const naturalH   = naturalBot - naturalTop;
+    const visualTop  = Math.max(naturalTop, cursor);
+    const expanded   = naturalH < MIN_BAND_PX;
+    const visualH    = expanded ? MIN_BAND_PX : naturalH;
+    cursor = visualTop + visualH;
+    layout.push({ ev, next, naturalTop, naturalH, visualTop, visualH, expanded });
+  }
+  const totalPx = Math.ceil(cursor) + 20;
+
+  // ── Ruler (ticks at visual positions, labelled with real time) ──────────
+  const ruler = document.getElementById('ruler');
+  ruler.innerHTML = '';
+  ruler.style.height = totalPx + 'px';
+
+  // Regular minor/major ticks mapped through the visual layout
+  function naturalToVisual(sec) {
+    const naturalPx = sec * PX_PER_SEC;
+    // find the layout band that contains this natural position
+    for (let i = 0; i < layout.length; i++) {
+      const b = layout[i];
+      const nextNaturalTop = layout[i + 1] ? layout[i + 1].naturalTop : (duration * PX_PER_SEC + 40);
+      if (naturalPx >= b.naturalTop && naturalPx < nextNaturalTop) {
+        // interpolate within the band's visual stretch
+        const frac = (naturalPx - b.naturalTop) / Math.max(b.naturalH, 0.001);
+        return b.visualTop + frac * b.visualH;
+      }
+    }
+    // after last band
+    const last = layout[layout.length - 1];
+    if (!last) return naturalPx;
+    const lastNaturalEnd = last.naturalTop + last.naturalH;
+    return last.visualTop + last.visualH + (naturalPx - lastNaturalEnd);
+  }
+
+  const maxTick = Math.ceil(duration / TICK_MINOR) * TICK_MINOR + TICK_MAJOR;
+  for (let s = 0; s <= maxTick; s += TICK_MINOR) {
+    const major = (s % TICK_MAJOR === 0);
+    const el = document.createElement('div');
+    el.className = 'tick' + (major ? ' major' : '');
+    el.style.top = naturalToVisual(s) + 'px';
+    if (major) el.textContent = fmtRel(s);
+    ruler.appendChild(el);
+  }
+
+  // Tick at every band start (labelled with exact time, minor style)
+  for (const b of layout) {
+    const el = document.createElement('div');
+    el.className = 'tick band-tick';
+    el.style.top = b.visualTop + 'px';
+    ruler.appendChild(el);
+  }
+
+  // ── Content bands ──────────────────────────────────────────────────────
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+  content.style.height = totalPx + 'px';
+
+  for (const b of layout) {
+    const { ev, next, naturalH, visualTop, visualH, expanded } = b;
+
+    const band = document.createElement('div');
+    band.className = 'band';
+    band.style.cssText =
+      `top:${visualTop}px;height:${visualH}px;` +
+      `background:${bg(ev.proc)};border-top-color:${brd(ev.proc)};`;
+
+    if (visualH >= 14) {
+      const lbl = document.createElement('div');
+      lbl.className = 'band-label';
+      if (expanded) lbl.style.right = '78px';  // leave room for badge + bracket
+      lbl.innerHTML =
+        `<span class="band-text">` +
+        `<span class="ts-label">${fmtSec(ev.relSec)}</span>` +
+        `<span class="proc">${esc(ev.proc)}</span>` +
+        (ev.task
+          ? `<span class="task">${esc(ev.task)}</span>`
+          : '') +
+        (ev.jsval && ev.jsval !== ev.task
+          ? `<span class="val">${esc(ev.jsval)}</span>`
+          : '') +
+        `</span>` +
+        `<span class="abs-ts">${fmtEpoch(ev.epochTs)}</span>`;
+      band.appendChild(lbl);
+    }
+
+    if (expanded) {
+      // badge shows actual duration
+      const actualDur = next ? next.relSec - ev.relSec : 0;
+      const badge = document.createElement('div');
+      badge.className = 'expand-badge';
+      badge.textContent = actualDur < 1
+        ? `${(actualDur * 1000).toFixed(0)}ms`
+        : `${actualDur.toFixed(2)}s`;
+      band.appendChild(badge);
+
+      // ] bracket on right edge
+      const brk = document.createElement('div');
+      brk.className = 'expand-bracket';
+      band.appendChild(brk);
+    }
+
+    content.appendChild(band);
+  }
+
+  // ── Show timeline ──────────────────────────────────────────────────────
+  document.getElementById('empty').style.display = 'none';
+  const wrap = document.getElementById('timeline-wrap');
+  wrap.style.display   = 'flex';
+  wrap.style.minHeight = totalPx + 'px';
+  ruler.style.minHeight = totalPx + 'px';
+
+  renderAltChart(altData, totalPx, naturalToVisual);
+  renderSpeedChart(spdData, totalPx, naturalToVisual);
+  renderHeadingChart(hdgData, hdg0, totalPx, naturalToVisual);
+  renderAgentPanel(agtData, totalPx, naturalToVisual);
+  renderAtcCol(atcEvents, totalPx, naturalToVisual);
+  renderPilotPanel(pltData, totalPx, naturalToVisual);
+  renderControlChart('croll',  crollData,  totalPx, naturalToVisual);
+  renderControlChart('cpitch', cpitchData, totalPx, naturalToVisual);
+  renderControlChart('cyaw',   cyawData,   totalPx, naturalToVisual);
+  renderGazePanel(gazeSegs, totalPx, naturalToVisual);
+  renderSacfixPanel(sacfixSegs, totalPx, naturalToVisual);
+  renderBlinkPanel(blinkSegs, totalPx, naturalToVisual);
+  renderPupilChart(pupilRawLocal, totalPx, naturalToVisual);
+}
+
+// ── Pupil diameter renderer ─────────────────────────────────────────────────
+function renderPupilChart(raw, totalPx, natToVis) {
+  _pupilRaw      = raw;
+  _pupilTotalPx  = totalPx;
+  _pupilNatToVis = natToVis;
+  updatePupilChart();
+}
+
+function updatePupilChart() {
+  if (!_pupilNatToVis) return;
+  const qualThresh = Math.max(0, Math.min(1, parseFloat(document.getElementById('pupil-qual').value) || 0));
+  const winSec     = Math.max(0, Math.min(30, parseFloat(document.getElementById('pupil-win').value)  || 0));
+
+  const filtered = _pupilRaw.filter(p => p.qual >= qualThresh);
+  const smoothed = winSec > 0 ? _slidingWindowAvg(filtered, winSec) : filtered;
+
+  const emptyMsg = _pupilRaw.length === 0
+    ? 'No pupil data in this CSV'
+    : 'No data above quality threshold — lower the threshold';
+
+  const axisSvg = document.getElementById('pupil-axis-svg');
+
+  if (!smoothed.length) {
+    axisSvg.innerHTML = '';
+    _renderChartSvg(document.getElementById('pupil-scroll'), [], [],
+      _pupilTotalPx, _pupilNatToVis, '#0e7490', emptyMsg);
+    return;
+  }
+
+  // Auto-scale: compute min/max of the visible (filtered+smoothed) data
+  let dMin = Infinity, dMax = -Infinity;
+  for (const p of smoothed) { if (p.diam < dMin) dMin = p.diam; if (p.diam > dMax) dMax = p.diam; }
+
+  // Choose a "nice" tick step that gives ~5-8 ticks
+  const rawRange = dMax - dMin || 1;
+  const rawStep  = rawRange / 6;
+  const mag      = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const niceStep = [1, 2, 2.5, 5, 10].map(f => f * mag).find(s => rawRange / s <= 8) || mag * 10;
+
+  const axMin = Math.floor(dMin / niceStep) * niceStep;
+  const axMax = Math.ceil(dMax  / niceStep) * niceStep;
+  const VW = 300;
+  const span = axMax - axMin || 1;
+  const xOf  = d => ((d - axMin) / span) * VW;
+
+  const ticks = [];
+  for (let v = axMin; v <= axMax + niceStep * 0.001; v = parseFloat((v + niceStep).toFixed(10)))
+    ticks.push(parseFloat(v.toFixed(10)));
+
+  // Midpoint reference line
+  const mid = (axMin + axMax) / 2;
+  const midTick = ticks.reduce((best, t) => Math.abs(t - mid) < Math.abs(best - mid) ? t : best, ticks[0]);
+
+  const fmtTick = v => {
+    // Show up to 3 significant figures, strip trailing zeros
+    const s = parseFloat(v.toPrecision(3));
+    return String(s);
+  };
+
+  _renderAxisSvg(axisSvg, ticks, xOf, VW,
+    v => v === midTick,
+    fmtTick);
+
+  const pts       = smoothed.map(p => ({ relSec: p.relSec, x: xOf(p.diam) }));
+  const gridLines = ticks.map(t => ({ x: xOf(t), ref: t === midTick }));
+
+  _renderChartSvg(document.getElementById('pupil-scroll'), pts, gridLines,
+    _pupilTotalPx, _pupilNatToVis, '#0e7490', emptyMsg);
+}
+
+function _slidingWindowAvg(pts, windowSec) {
+  if (!windowSec || pts.length < 2) return pts;
+  const half = windowSec / 2;
+  const result = [];
+  let lo = 0, hi = 0, sum = 0, cnt = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const t = pts[i].relSec;
+    while (hi < pts.length && pts[hi].relSec <= t + half) { sum += pts[hi].diam; cnt++; hi++; }
+    while (lo < hi && pts[lo].relSec < t - half)          { sum -= pts[lo].diam; cnt--; lo++; }
+    result.push({ relSec: t, diam: cnt > 0 ? sum / cnt : pts[i].diam, qual: pts[i].qual });
+  }
+  return result;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────────────────────────────────────
+function fmtRel(sec) {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = Math.floor(sec % 60);
+  if (h > 0) return `${h}:${pad(m)}:${pad(s)}`;
+  return `${pad(m)}:${pad(s)}`;
+}
+
+// Exact relative time with one decimal second, e.g. "02:34.7"
+function fmtSec(sec) {
+  const m  = Math.floor(sec / 60);
+  const s  = sec % 60;
+  const si = Math.floor(s);
+  const d  = Math.floor((s - si) * 10);
+  return `${pad(m)}:${pad(si)}.${d}`;
+}
+
+// Absolute wall-clock time with configurable UTC offset
+function fmtEpoch(epochSec) {
+  const offset = parseInt(document.getElementById('utc-offset').value) || 0;
+  const d = new Date((epochSec + offset * 3600) * 1000);
+  return `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
+}
+
+function fmtDur(sec) {
+  const m = Math.floor(sec / 60), s = Math.round(sec % 60);
+  return `${m}m ${s}s`;
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// ───────────────────────────────────────────────────────────────────────────────
+// Altitude chart renderer
+// ───────────────────────────────────────────────────────────────────────────────
+function renderAltChart(altData, totalPx, natToVis) {
+  const scroll  = document.getElementById('alt-scroll');
+  const axisSvg = document.getElementById('alt-axis-svg');
+  const ns = 'http://www.w3.org/2000/svg';
+  const VW = 300;
+
+  const ALT_MIN = 100;
+  const ALT_MAX = 6000;
+  const xOf = alt => ((alt - ALT_MIN) / (ALT_MAX - ALT_MIN)) * VW;
+
+  const step = 500;
+  const ticks = [];
+  for (let a = 0; a <= ALT_MAX; a += step) { if (a >= ALT_MIN) ticks.push(a); }
+
+  _renderAxisSvg(axisSvg, ticks, xOf, VW, v => v === 5000,
+    v => v >= 1000 ? `${(v/1000).toFixed(0)}k` : String(v));
+  _renderChartSvg(scroll, altData.map(d => ({ relSec: d.relSec, x: xOf(d.alt) })),
+    ticks.map(a => ({ x: xOf(a), ref: a === 5000 })), totalPx, natToVis,
+    '#1e5a9e', 'No altitude data in this CSV');
+}
+
+function renderSpeedChart(spdData, totalPx, natToVis) {
+  const scroll  = document.getElementById('spd-scroll');
+  const axisSvg = document.getElementById('spd-axis-svg');
+  const ns = 'http://www.w3.org/2000/svg';
+  const VW = 300;
+
+  const SPD_MIN = 0;
+  const SPD_MAX = 200;
+  const xOf = spd => ((spd - SPD_MIN) / (SPD_MAX - SPD_MIN)) * VW;
+
+  const step = 20;
+  const ticks = [];
+  for (let s = SPD_MIN; s <= SPD_MAX; s += step) ticks.push(s);
+
+  _renderAxisSvg(axisSvg, ticks, xOf, VW, () => false,
+    v => String(v));
+  _renderChartSvg(scroll, spdData.map(d => ({ relSec: d.relSec, x: xOf(d.spd) })),
+    ticks.map(s => ({ x: xOf(s), ref: false })), totalPx, natToVis,
+    '#2e7d52', 'No airspeed data in this CSV');
+}
+
+// ── Shared chart helpers ───────────────────────────────────────────────────────────
+function _renderAxisSvg(svg, ticks, xOf, VW, isRef, fmtLabel) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const AH = 28;
+  svg.setAttribute('viewBox', `0 0 ${VW} ${AH}`);
+  svg.innerHTML = '';
+  for (const v of ticks) {
+    const x = xOf(v); const ref = isRef(v);
+    const tl = document.createElementNS(ns, 'line');
+    tl.setAttribute('x1', x); tl.setAttribute('x2', x);
+    tl.setAttribute('y1', 14); tl.setAttribute('y2', AH);
+    tl.setAttribute('stroke', ref ? '#c03030' : '#b8c0cc');
+    tl.setAttribute('stroke-width', ref ? '1.5' : '1');
+    svg.appendChild(tl);
+    const txt = document.createElementNS(ns, 'text');
+    txt.setAttribute('x', x); txt.setAttribute('y', 11);
+    txt.setAttribute('text-anchor', 'middle');
+    txt.setAttribute('font-size', '9');
+    txt.setAttribute('fill', ref ? '#c03030' : '#6a7488');
+    txt.setAttribute('font-weight', ref ? 'bold' : 'normal');
+    txt.setAttribute('font-family', 'monospace');
+    txt.textContent = fmtLabel(v);
+    svg.appendChild(txt);
+  }
+}
+
+function _renderChartSvg(scroll, pts, gridLines, totalPx, natToVis, colour, emptyMsg) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const VW = 300;
+  scroll.innerHTML = '';
+  if (!pts.length) {
+    scroll.innerHTML = `<div style="padding:20px;color:#9aa0ae;font-size:11px">${emptyMsg}</div>`;
+    return;
+  }
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${VW} ${totalPx}`);
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', totalPx);
+  svg.style.display = 'block';
+  for (const { x, ref } of gridLines) {
+    const gl = document.createElementNS(ns, 'line');
+    gl.setAttribute('x1', x); gl.setAttribute('x2', x);
+    gl.setAttribute('y1', 0); gl.setAttribute('y2', totalPx);
+    gl.setAttribute('stroke', ref ? '#e08080' : '#dde0e8');
+    gl.setAttribute('stroke-width', ref ? '1' : '0.5');
+    if (ref) gl.setAttribute('stroke-dasharray', '6 4');
+    svg.appendChild(gl);
+  }
+  const polyPts = pts.map(p =>
+    `${p.x.toFixed(1)},${natToVis(p.relSec).toFixed(1)}`
+  ).join(' ');
+  const poly = document.createElementNS(ns, 'polyline');
+  poly.setAttribute('points', polyPts);
+  poly.setAttribute('fill', 'none');
+  poly.setAttribute('stroke', colour);
+  poly.setAttribute('stroke-width', '1.5');
+  poly.setAttribute('stroke-linejoin', 'round');
+  poly.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(poly);
+  scroll.appendChild(svg);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────────
+// Agent panel renderer
+// ─────────────────────────────────────────────────────────────────────────────────
+// ── Pilot panel style: colour by agent name ─────────────────────────────
+const PLT_AGENT_STYLE = {
+  'PanelListener':        { bg: '#e8f5ee', brd: '#2e7d52', col: '#1a4d30' },
+  'Shared Interface':     { bg: '#f3e8ff', brd: '#7030a0', col: '#3d0e6e' },
+  'Remote_Control_Agent': { bg: '#fff4e8', brd: '#c06020', col: '#7c3010' },
+  'Pedestal':             { bg: '#e8f0fa', brd: '#1e5a9e', col: '#0a3060' },
+};
+const PLT_STYLE_DEF = { bg: '#f0f2f5', brd: '#9aa0ae', col: '#4a5568' };
+function pltStyle(agent) {
+  return PLT_AGENT_STYLE[agent] || PLT_STYLE_DEF;
+}
+
+const AGT_STYLE = {
+  tts_request:               { bg: '#fff8e8', brd: '#d97706', col: '#7c4600' },
+  tts_unmute:                { bg: '#fff8e8', brd: '#d97706', col: '#7c4600' },
+  tts_stop:                  { bg: '#fff8e8', brd: '#d97706', col: '#7c4600' },
+  action_time:               { bg: '#f3e8ff', brd: '#7030a0', col: '#3d0e6e' },
+  action_about_to_fire:      { bg: '#fff0f0', brd: '#c03030', col: '#7c1a1a' },
+  alert_clear:               { bg: '#fff0f0', brd: '#c03030', col: '#7c1a1a' },
+  next_state:                { bg: '#e8f0fa', brd: '#1e5a9e', col: '#0a3060' },
+  countdown_next:            { bg: '#f0f2f5', brd: '#b0b8c8', col: '#4a5568' },
+  countdown_max_next:        { bg: '#f0f2f5', brd: '#b0b8c8', col: '#4a5568' },
+  countdown_current:         { bg: '#f0f2f5', brd: '#b0b8c8', col: '#4a5568' },
+  countdown_max_current:     { bg: '#f0f2f5', brd: '#b0b8c8', col: '#4a5568' },
+};
+const AGT_STYLE_CTRL = { bg: '#e8f8f0', brd: '#2e7d52', col: '#1a4d30' };
+const AGT_STYLE_DEF  = { bg: '#f0f2f5', brd: '#9aa0ae', col: '#4a5568' };
+const AGT_CTRL_SRCS  = new Set(['flaps','heading_mode','flight_director','alt_sel',
+  'set_freq_1','runway_number','request_takeoff_clearance']);
+
+function agtStyle(src) {
+  return AGT_STYLE[src] || (AGT_CTRL_SRCS.has(src) ? AGT_STYLE_CTRL : AGT_STYLE_DEF);
+}
+
+function fmtAgentValue(source, raw) {
+  if (!raw || !raw.trim()) return '';
+  let j;
+  try { j = JSON.parse(raw); } catch { /* not JSON */ }
+  if (j && typeof j === 'object') {
+    if (j.procedure !== undefined) {
+      const parts = [j.procedure];
+      if (j.task_object)  parts.push(j.task_object);
+      else if (j.category) parts.push(j.category);
+      return parts.join(' › ');
+    }
+    // compact: first 2 key:value pairs
+    return Object.entries(j).slice(0, 2).map(([k, v]) => `${k}:${v}`).join(' · ');
+  }
+  return String(raw).replace(/[\r\n]+/g, ' ').trim();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────────
+// ATC renderer — items appended into #content (right edge)
+// ─────────────────────────────────────────────────────────────────────────────────
+function renderAtcCol(atcEvents, totalPx, natToVis) {
+  // Items are appended directly into #content so they share the same
+  // coordinate space as state bands and scroll together naturally.
+  const content = document.getElementById('content');
+  if (!atcEvents.length) return;
+
+  const ATC_ITEM_H = 38;
+  let cursor = 0;
+
+  for (const ev of atcEvents) {
+    const naturalCenter = natToVis(ev.relSec);
+    const naturalTop    = naturalCenter - ATC_ITEM_H / 2;
+    const visualTop     = Math.max(naturalTop, cursor);
+    const expanded      = visualTop > naturalTop + 0.5;
+    cursor = visualTop + ATC_ITEM_H;
+
+    const speech  = ev.items.find(i => i.source === 'speech_output');
+    const spkItem = ev.items.find(i => i.source === 'is_speaking');
+    const isSilent = !speech && spkItem && spkItem.value.trim() === 'false';
+
+    const item = document.createElement('div');
+    item.className = 'atc-item' + (isSilent ? ' atc-silent' : '');
+    item.style.top = visualTop + 'px';
+    item.title = speech ? speech.value : (spkItem ? spkItem.value : '');
+
+    const ts = document.createElement('span');
+    ts.className   = 'atc-ts';
+    ts.textContent = fmtSec(ev.relSec);
+
+    const val = document.createElement('span');
+    val.className = 'atc-val';
+    if (speech) {
+      val.textContent = speech.value.trim();
+    } else if (spkItem) {
+      val.style.fontStyle = 'italic';
+      val.style.color = '#9aa0ae';
+      val.textContent = spkItem.value.trim() === 'true' ? '▶ speaking…' : '◼ silent';
+    }
+
+    item.append(ts, val);
+
+    if (expanded) {
+      const brk = document.createElement('div');
+      brk.className = 'expand-bracket';
+      item.appendChild(brk);
+      const tick = document.createElement('div');
+      tick.style.cssText =
+        `position:absolute;right:3px;width:210px;top:${naturalCenter}px;` +
+        `height:1px;background:#1e5a9e;opacity:0.4;pointer-events:none;`;
+      content.appendChild(tick);
+    }
+
+    content.appendChild(item);
+  }
+}
+
+function renderPilotPanel(pltData, totalPx, natToVis) {
+  const scroll = document.getElementById('plt-scroll');
+  scroll.innerHTML = '';
+
+  if (!pltData.length) {
+    scroll.innerHTML = '<div style="padding:20px;color:#9aa0ae;font-size:11px">No pilot actions in this CSV</div>';
+    return;
+  }
+
+  const PLT_ITEM_H = 40;
+
+  const layout = [];
+  let cursor = 0;
+  for (const ev of pltData) {
+    const naturalCenter = natToVis(ev.relSec);
+    const naturalTop    = naturalCenter - PLT_ITEM_H / 2;
+    const visualTop     = Math.max(naturalTop, cursor);
+    const expanded      = visualTop > naturalTop + 0.5;
+    cursor = visualTop + PLT_ITEM_H;
+    layout.push({ ev, naturalCenter, visualTop, expanded });
+  }
+
+  const wrapH = Math.max(totalPx, cursor + 8);
+  const wrap = document.createElement('div');
+  wrap.className = 'plt-wrap';
+  wrap.style.height = wrapH + 'px';
+
+  for (const { ev, naturalCenter, visualTop, expanded } of layout) {
+    const st = pltStyle(ev.agent);
+
+    const item = document.createElement('div');
+    item.className = 'plt-item';
+    item.style.top             = visualTop + 'px';
+    item.style.background      = st.bg;
+    item.style.borderLeftColor = st.brd;
+    if (expanded) item.style.paddingRight = '14px';
+    item.title = ev.agent + ' / ' + ev.source + (ev.value ? ': ' + ev.value : '');
+
+    const ts = document.createElement('span');
+    ts.className   = 'plt-ts';
+    ts.textContent = fmtSec(ev.relSec);
+
+    const src = document.createElement('span');
+    src.className   = 'plt-src';
+    src.style.color = st.col;
+    src.textContent = ev.source;
+
+    const val = document.createElement('span');
+    val.className   = 'plt-val';
+    val.textContent = fmtAgentValue(ev.source, ev.value);
+
+    item.append(ts, src, val);
+
+    if (expanded) {
+      const brk = document.createElement('div');
+      brk.className = 'expand-bracket';
+      item.appendChild(brk);
+
+      const tick = document.createElement('div');
+      tick.style.cssText =
+        `position:absolute;left:3px;right:3px;top:${naturalCenter}px;` +
+        `height:1px;background:${st.brd};opacity:0.4;pointer-events:none;`;
+      wrap.appendChild(tick);
+    }
+
+    wrap.appendChild(item);
+  }
+
+  scroll.appendChild(wrap);
+}
+
+function renderAgentPanel(agtData, totalPx, natToVis) {
+  const scroll = document.getElementById('agt-scroll');
+  scroll.innerHTML = '';
+
+  if (!agtData.length) {
+    scroll.innerHTML = '<div style="padding:20px;color:#9aa0ae;font-size:11px">No agent actions in this CSV</div>';
+    return;
+  }
+
+  const AGT_ITEM_H = 40;  // layout pass step — generous to accommodate wrapped text
+
+  // ── Layout pass: push items down to avoid overlap, same logic as centre panel ──
+  const layout = [];
+  let cursor = 0;
+  for (const ev of agtData) {
+    const naturalCenter = natToVis(ev.relSec);
+    const naturalTop    = naturalCenter - AGT_ITEM_H / 2;
+    const visualTop     = Math.max(naturalTop, cursor);
+    const expanded      = visualTop > naturalTop + 0.5;  // pushed from natural pos
+    cursor = visualTop + AGT_ITEM_H;
+    layout.push({ ev, naturalCenter, visualTop, expanded });
+  }
+
+  const wrapH = Math.max(totalPx, cursor + 8);
+  const wrap = document.createElement('div');
+  wrap.className = 'agt-wrap';
+  wrap.style.height = wrapH + 'px';
+
+  for (const { ev, naturalCenter, visualTop, expanded } of layout) {
+    const st = agtStyle(ev.source);
+
+    const item = document.createElement('div');
+    item.className = 'agt-item';
+    item.style.top             = visualTop + 'px';
+    item.style.background      = st.bg;
+    item.style.borderLeftColor = st.brd;
+    if (expanded) item.style.paddingRight = '14px';  // room for bracket
+    item.title = ev.value;
+
+    const ts = document.createElement('span');
+    ts.className   = 'agt-ts';
+    ts.textContent = fmtSec(ev.relSec);
+
+    const src = document.createElement('span');
+    src.className   = 'agt-src';
+    src.style.color = st.col;
+    src.textContent = ev.source;
+
+    const val = document.createElement('span');
+    val.className   = 'agt-val';
+    val.textContent = fmtAgentValue(ev.source, ev.value);
+
+    item.append(ts, src, val);
+
+    if (expanded) {
+      // ] bracket shows item was pushed down from its natural timestamp position
+      const brk = document.createElement('div');
+      brk.className = 'expand-bracket';
+      item.appendChild(brk);
+
+      // small tick at the natural timestamp position in the wrap (not inside item)
+      const tick = document.createElement('div');
+      tick.style.cssText =
+        `position:absolute;left:3px;right:3px;top:${naturalCenter}px;` +
+        `height:1px;background:${st.brd};opacity:0.4;pointer-events:none;`;
+      wrap.appendChild(tick);
+    }
+
+    wrap.appendChild(item);
+  }
+
+  scroll.appendChild(wrap);
+}
+
+// ── Blink renderer ───────────────────────────────────────────────────────────────────
+function renderBlinkPanel(blinkSegs, totalPx, natToVis) {
+  const scroll = document.getElementById('blink-scroll');
+  scroll.innerHTML = '';
+  if (!blinkSegs.length) {
+    scroll.innerHTML = '<div style="padding:20px;color:#9aa0ae;font-size:11px">No blink data in this CSV</div>';
+    return;
+  }
+  const MIN_BLK_PX = 3;
+  const wrap = document.createElement('div');
+  wrap.className = 'gaze-wrap';
+  wrap.style.height = totalPx + 'px';
+  for (const seg of blinkSegs) {
+    const top = natToVis(seg.start);
+    const h   = Math.max(natToVis(seg.end) - top, MIN_BLK_PX);
+    const band = document.createElement('div');
+    band.className = 'gaze-band sacfix-blink';
+    band.style.cssText = `top:${top}px;height:${h}px;`;
+    band.title = 'blink #' + seg.id + '  (' + fmtSec(seg.start) + ' – ' + fmtSec(seg.end) + ')';
+    if (h >= 14) {
+      const lbl = document.createElement('span');
+      lbl.className = 'gaze-label';
+      lbl.textContent = '■ #' + seg.id;
+      band.appendChild(lbl);
+    }
+    wrap.appendChild(band);
+  }
+  scroll.appendChild(wrap);
+}
+
+// ── Saccade / Fixation renderer ─────────────────────────────────────────────────────────
+function renderSacfixPanel(sacfixSegs, totalPx, natToVis) {
+  const scroll = document.getElementById('sacfix-scroll');
+  scroll.innerHTML = '';
+  if (!sacfixSegs.length) {
+    scroll.innerHTML = '<div style="padding:20px;color:#9aa0ae;font-size:11px">No saccade/fixation data in this CSV</div>';
+    return;
+  }
+  const MIN_SF_PX = 3;
+  const wrap = document.createElement('div');
+  wrap.className = 'gaze-wrap';
+  wrap.style.height = totalPx + 'px';
+  for (const seg of sacfixSegs) {
+    const top = natToVis(seg.start);
+    const h   = Math.max(natToVis(seg.end) - top, MIN_SF_PX);
+    const band = document.createElement('div');
+    band.className = 'gaze-band sacfix-' + seg.type;
+    band.style.cssText = `top:${top}px;height:${h}px;`;
+    band.title = seg.type + ' #' + seg.id + '  (' + fmtSec(seg.start) + ' – ' + fmtSec(seg.end) + ')';
+    if (h >= 14) {
+      const lbl = document.createElement('span');
+      lbl.className = 'gaze-label';
+      lbl.textContent = seg.type === 'saccade' ? '▶ #' + seg.id : '● #' + seg.id;
+      band.appendChild(lbl);
+    }
+    wrap.appendChild(band);
+  }
+  scroll.appendChild(wrap);
+}
+
+// ── Gaze AoI renderer ──────────────────────────────────────────────────────────────
+const GAZE_AOI_STYLE = {
+  'PFD':           { bg: '#dbeafe', brd: '#1d4ed8', txt: '#1e3a8a' },
+  'ND':            { bg: '#ccfbf1', brd: '#0f766e', txt: '#134e4a' },
+  'TARS':          { bg: '#ede9fe', brd: '#7c3aed', txt: '#4c1d95' },
+  'pedestal':      { bg: '#fef9c3', brd: '#ca8a04', txt: '#713f12' },
+  'center_OTW':    { bg: '#dcfce7', brd: '#16a34a', txt: '#14532d' },
+  'left_OTW':      { bg: '#cffafe', brd: '#0891b2', txt: '#164e63' },
+  'leftmost_OTW':  { bg: '#e0f2fe', brd: '#0284c7', txt: '#0c4a6e' },
+  'right_OTW':     { bg: '#ffe4e6', brd: '#e11d48', txt: '#881337' },
+  'rightmost_OTW': { bg: '#ffedd5', brd: '#ea580c', txt: '#7c2d12' },
+};
+const GAZE_STYLE_DEF = { bg: '#f0f2f5', brd: '#9aa0ae', txt: '#4a5568' };
+
+function renderGazePanel(gazeSegs, totalPx, natToVis) {
+  const scroll = document.getElementById('gaze-scroll');
+  scroll.innerHTML = '';
+  if (!gazeSegs.length) {
+    scroll.innerHTML = '<div style="padding:20px;color:#9aa0ae;font-size:11px">No gaze AoI data in this CSV</div>';
+    return;
+  }
+  const MIN_GAZE_PX = 4;
+  const wrap = document.createElement('div');
+  wrap.className = 'gaze-wrap';
+  wrap.style.height = totalPx + 'px';
+  for (const seg of gazeSegs) {
+    const st  = GAZE_AOI_STYLE[seg.name] || GAZE_STYLE_DEF;
+    const top = natToVis(seg.start);
+    const h   = Math.max(natToVis(seg.end) - top, MIN_GAZE_PX);
+    const band = document.createElement('div');
+    band.className = 'gaze-band';
+    band.style.cssText = `top:${top}px;height:${h}px;background:${st.bg};border-top-color:${st.brd};`;
+    band.title = seg.name;
+    if (h >= 14) {
+      const lbl = document.createElement('span');
+      lbl.className = 'gaze-label';
+      lbl.style.color = st.txt;
+      lbl.textContent = seg.name;
+      band.appendChild(lbl);
+    }
+    wrap.appendChild(band);
+  }
+  scroll.appendChild(wrap);
+}
+
+// ── Control axis chart renderer (Roll / Pitch / Yaw, range -1..+1) ─────────────
+function renderControlChart(key, ctlData, totalPx, natToVis) {
+  const scroll  = document.getElementById(key + '-scroll');
+  const axisSvg = document.getElementById(key + '-axis-svg');
+  const VW = 300;
+  const CTRL_TICKS = [-1, -0.5, 0, 0.5, 1];
+  const xOf = v => (v + 1) / 2 * VW;  // maps -1..+1 to 0..VW
+
+  _renderAxisSvg(axisSvg, CTRL_TICKS, xOf, VW,
+    v => v === 0,
+    v => v === 0 ? '0' : (v > 0 ? '+' + v : String(v)));
+
+  const COLOURS = { croll: '#c06020', cpitch: '#1e5a9e', cyaw: '#2e7d52' };
+  _renderChartSvg(scroll,
+    ctlData.map(d => ({ relSec: d.relSec, x: xOf(d.v) })),
+    CTRL_TICKS.map(v => ({ x: xOf(v), ref: v === 0 })),
+    totalPx, natToVis,
+    COLOURS[key] || '#9aa0ae',
+    `No ${key.replace('c','')} data in this CSV`);
+}
+
+// ── Heading chart renderer ──────────────────────────────────────────────────────
+function renderHeadingChart(hdgData, hdg0, totalPx, natToVis) {
+  const scroll  = document.getElementById('hdg-scroll');
+  const axisSvg = document.getElementById('hdg-axis-svg');
+  const VW = 300;
+
+  // x-axis: delta from hdg0, range [-180, +180], center = 150
+  const xOf = delta => (delta + 180) / 360 * VW;
+  // shortest circular delta from hdg0 to any heading
+  function cirDelta(h) {
+    let d = h - (hdg0 ?? h);
+    while (d >  180) d -= 360;
+    while (d < -180) d += 360;
+    return d;
+  }
+  const normHdg = h => ((h % 360) + 360) % 360;
+
+  const deltaTicks = [-180, -120, -60, 0, 60, 120, 180];
+
+  // Axis SVG: ticks labeled as absolute heading, origin highlighted
+  _renderAxisSvg(axisSvg, deltaTicks, xOf, VW,
+    d => d === 0,
+    d => hdg0 !== null ? Math.round(normHdg(hdg0 + d)) + '\u00b0' : d + '\u00b0');
+
+  if (!hdgData.length || hdg0 === null) {
+    scroll.innerHTML = '<div style="padding:20px;color:#9aa0ae;font-size:11px">No heading data in this CSV</div>';
+    return;
+  }
+
+  // Convert heading to delta-space x
+  const pts = hdgData.map(d => ({ relSec: d.relSec, x: xOf(cirDelta(d.hdg)) }));
+  const gridLines = deltaTicks.map(d => ({ x: xOf(d), ref: d === 0 }));
+
+  _renderChartSvg(scroll, pts, gridLines, totalPx, natToVis,
+    '#7030a0', 'No heading data in this CSV');
+}
+
+// ── Pupil panel re-render state ──────────────────────────────────────────────────────────
+let _pupilRaw = [], _pupilTotalPx = 0, _pupilNatToVis = null;
+
+// ── Panel toggle (independent, multiple can be open simultaneously) ─────────────────────
+const _activePanels = new Set(['agt']);
+const _activeLeftPanels = new Set(['plt']);
+function switchLeftTab(id) {
+  if (_activeLeftPanels.has(id)) {
+    _activeLeftPanels.delete(id);
+  } else {
+    _activeLeftPanels.add(id);
+    document.getElementById(id + '-scroll').scrollTop =
+      document.getElementById('scroll-area').scrollTop;
+  }
+  document.getElementById('panel-' + id).classList.toggle('hidden', !_activeLeftPanels.has(id));
+  document.getElementById('tab-'   + id).classList.toggle('active',  _activeLeftPanels.has(id));
+}
+function switchTab(id) {
+  if (_activePanels.has(id)) {
+    _activePanels.delete(id);
+  } else {
+    _activePanels.add(id);
+    // sync scroll position immediately
+    document.getElementById(id + '-scroll').scrollTop =
+      document.getElementById('scroll-area').scrollTop;
+  }
+  document.getElementById('panel-' + id).classList.toggle('hidden', !_activePanels.has(id));
+  document.getElementById('tab-'   + id).classList.toggle('active',  _activePanels.has(id));
+}
+
+// ───────────────────────────────────────────────────────────────────────────────
+// Scroll sync: center timeline ↔ altitude chart
+// ───────────────────────────────────────────────────────────────────────────────
+(function () {
+  let syncing = false;
+  const ctr    = document.getElementById('scroll-area');
+  const alt    = document.getElementById('alt-scroll');
+  const spd    = document.getElementById('spd-scroll');
+  const hdg    = document.getElementById('hdg-scroll');
+  const agt    = document.getElementById('agt-scroll');
+  const plt    = document.getElementById('plt-scroll');
+  const croll  = document.getElementById('croll-scroll');
+  const cpitch = document.getElementById('cpitch-scroll');
+  const cyaw   = document.getElementById('cyaw-scroll');
+  const gaze     = document.getElementById('gaze-scroll');
+  const sacfix   = document.getElementById('sacfix-scroll');
+  const blink    = document.getElementById('blink-scroll');
+  const pupil    = document.getElementById('pupil-scroll');
+  function syncAll(src, top) {
+    if (syncing) return; syncing = true;
+    [ctr, alt, spd, hdg, agt, plt, croll, cpitch, cyaw, gaze, sacfix, blink, pupil].forEach(el => { if (el !== src) el.scrollTop = top; });
+    syncing = false;
+  }
+  ctr.addEventListener('scroll',    () => syncAll(ctr,    ctr.scrollTop));
+  alt.addEventListener('scroll',    () => syncAll(alt,    alt.scrollTop));
+  spd.addEventListener('scroll',    () => syncAll(spd,    spd.scrollTop));
+  hdg.addEventListener('scroll',    () => syncAll(hdg,    hdg.scrollTop));
+  agt.addEventListener('scroll',    () => syncAll(agt,    agt.scrollTop));
+  plt.addEventListener('scroll',    () => syncAll(plt,    plt.scrollTop));
+  croll.addEventListener('scroll',  () => syncAll(croll,  croll.scrollTop));
+  cpitch.addEventListener('scroll', () => syncAll(cpitch, cpitch.scrollTop));
+  cyaw.addEventListener('scroll',   () => syncAll(cyaw,   cyaw.scrollTop));
+  gaze.addEventListener('scroll',   () => syncAll(gaze,   gaze.scrollTop));
+  sacfix.addEventListener('scroll', () => syncAll(sacfix, sacfix.scrollTop));
+  blink.addEventListener('scroll',  () => syncAll(blink,  blink.scrollTop));
+  pupil.addEventListener('scroll',  () => syncAll(pupil,  pupil.scrollTop));
+})();
+</script>
+</body>
+</html>

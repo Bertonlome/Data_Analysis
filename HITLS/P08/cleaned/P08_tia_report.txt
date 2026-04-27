@@ -2,11 +2,11 @@
 {
   "participant": "P08",
   "familiarity_after_briefing": 1,
-  "pts_mean_pre_experiment": null,
+  "pts_mean_pre_experiment": 3.7143,
   "conditions": {
     "TARS": {
       "global_mean_excl_traits": 4.1667,
-      "global_mean_incl_traits": 3.375,
+      "global_mean_incl_traits": 3.4429,
       "subscales": {
         "reliability_competence": {
           "mean": 4.0,
@@ -75,7 +75,7 @@
     },
     "TARC": {
       "global_mean_excl_traits": 3.6667,
-      "global_mean_incl_traits": 3.0,
+      "global_mean_incl_traits": 3.1429,
       "subscales": {
         "reliability_competence": {
           "mean": 3.5,
@@ -144,7 +144,7 @@
     },
     "TARP-S": {
       "global_mean_excl_traits": 3.9444,
-      "global_mean_incl_traits": 3.2083,
+      "global_mean_incl_traits": 3.3095,
       "subscales": {
         "reliability_competence": {
           "mean": 3.8333,
@@ -213,7 +213,7 @@
     },
     "TARP-F": {
       "global_mean_excl_traits": 4.1111,
-      "global_mean_incl_traits": 3.3333,
+      "global_mean_incl_traits": 3.4095,
       "subscales": {
         "reliability_competence": {
           "mean": 3.8333,
@@ -295,7 +295,7 @@
   and included in the G.incl global mean alongside condition subscales.
 
   Familiarity (after_briefing, trait) : 1.0 / 5   [░░░░░░░░░░░░░░░░░░░░]
-  PTS         (pre-experiment, trait) : not available
+  PTS         (pre-experiment, trait) : 3.714 / 5   [█████████████░░░░░░░]
 
 
 ──────────────────────────────────────────────────────────────────────────────
@@ -337,7 +337,7 @@
 
   ────────────────────────────────────────────────────────────
   Global mean  (excl. traits)        : 4.167 / 5   [███████████████░░░░░]
-  Global mean  (incl. Fam + PTS)     : 3.375 / 5   [███████████░░░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 3.443 / 5   [████████████░░░░░░░░]
 
 ──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARC
@@ -378,7 +378,7 @@
 
   ────────────────────────────────────────────────────────────
   Global mean  (excl. traits)        : 3.667 / 5   [█████████████░░░░░░░]
-  Global mean  (incl. Fam + PTS)     : 3.000 / 5   [██████████░░░░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 3.143 / 5   [██████████░░░░░░░░░░]
 
 ──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARP-S
@@ -419,7 +419,7 @@
 
   ────────────────────────────────────────────────────────────
   Global mean  (excl. traits)        : 3.944 / 5   [██████████████░░░░░░]
-  Global mean  (incl. Fam + PTS)     : 3.208 / 5   [███████████░░░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 3.310 / 5   [███████████░░░░░░░░░]
 
 ──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARP-F
@@ -460,7 +460,7 @@
 
   ────────────────────────────────────────────────────────────
   Global mean  (excl. traits)        : 4.111 / 5   [███████████████░░░░░]
-  Global mean  (incl. Fam + PTS)     : 3.333 / 5   [███████████░░░░░░░░░]
+  Global mean  (incl. Fam + PTS)     : 3.410 / 5   [████████████░░░░░░░░]
 
 
 ──────────────────────────────────────────────────────────────────────────────
@@ -469,9 +469,9 @@
 
   Condition             Reliabilit  Understand  Trust in A      G.excl      G.incl
   ────────────────────────────────────────────────────────────────────────────────
-  TARS                       4.000       3.500       5.000       4.167       3.375
-  TARC                       3.500       3.000       4.500       3.667       3.000
-  TARP-S                     3.833       3.000       5.000       3.944       3.208
-  TARP-F                     3.833       3.500       5.000       4.111       3.333
+  TARS                       4.000       3.500       5.000       4.167       3.443
+  TARC                       3.500       3.000       4.500       3.667       3.143
+  TARP-S                     3.833       3.000       5.000       3.944       3.310
+  TARP-F                     3.833       3.500       5.000       4.111       3.410
 
 ==============================================================================

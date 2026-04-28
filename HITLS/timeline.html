@@ -878,7 +878,7 @@ function renderTimeline(text) {
 
   // ── Collect Pilot Action data ──────────────────────────────────────────
   const PLT_AGENTS = new Set(['Remote_Control_Agent','PanelListener','Pedestal','Shared Interface']);
-  const PLT_EXCLUDE_SRC = new Set(['emergency_inject','countdown_complete']);
+  const PLT_EXCLUDE_SRC = new Set(['emergency_inject','countdown_complete', 'MAPPING', 'EXITED', 'ENTERED', ]);
   const pltData = [];
   for (const row of data) {
     if (!PLT_AGENTS.has(row.agent)) continue;

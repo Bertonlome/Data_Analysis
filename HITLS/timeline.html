@@ -11,13 +11,18 @@
       background: #e8eaed;
       color: #1a1a2e;
       font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
     }
 
     /* ── page layout ──────────────────────────────────────────────────── */
     #page {
       display: flex;
       flex-direction: row;
-      height: 100vh;
+      flex: 1;
+      min-height: 0;
     }
 
     /* left panel: pilot actions */
@@ -56,22 +61,38 @@
       position: relative;
       overflow: visible;
     }
-    .plt-item {
+    .plt-cluster {
       position: absolute;
       left: 6px;
       right: 6px;
-      display: flex;
-      align-items: flex-start;
-      gap: 5px;
-      min-height: 18px;
-      padding: 2px 5px;
+      padding: 2px 5px 3px;
       border-left: 3px solid #9aa0ae;
       background: #f0f2f5;
       border-radius: 0 3px 3px 0;
     }
-    .plt-ts  { flex-shrink:0; font-size:9px; color:#7a8898; font-family:monospace; padding-top:1px; }
-    .plt-src { flex-shrink:0; font-size:9px; font-weight:700; white-space:nowrap; padding-top:1px; }
-    .plt-val { flex:1; font-size:9px; white-space:normal; overflow-wrap:anywhere; color:#2c3a50; }
+    .plt-cluster-ts {
+      display: block;
+      font-size: 9px;
+      color: #7a8898;
+      font-family: monospace;
+      margin-bottom: 2px;
+    }
+    .plt-cluster-chips { display:flex; flex-wrap:wrap; gap:2px; align-items:flex-start; }
+    .plt-chip {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 2px;
+      font-size: 9px;
+      padding: 0 3px;
+      border-left: 2px solid #9aa0ae;
+      border-radius: 0 2px 2px 0;
+      background: rgba(255,255,255,0.60);
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .plt-chip-src { font-weight:700; }
+    .plt-chip-val { color:#2c3a50; }
 
     /* ── Gaze AoI panel ─────────────────────────────────────────────── */
     #gaze-scroll {
@@ -211,22 +232,38 @@
       position: relative;
       overflow: visible;
     }
-    .agt-item {
+    .agt-cluster {
       position: absolute;
       left: 6px;
       right: 6px;
-      display: flex;
-      align-items: flex-start;
-      gap: 5px;
-      min-height: 18px;
-      padding: 2px 5px;
+      padding: 2px 5px 3px;
       border-left: 3px solid #9aa0ae;
       background: #f0f2f5;
       border-radius: 0 3px 3px 0;
     }
-    .agt-ts   { flex-shrink:0; font-size:9px; color:#7a8898; font-family:monospace; padding-top:1px; }
-    .agt-src  { flex-shrink:0; font-size:9px; font-weight:700; white-space:nowrap; padding-top:1px; }
-    .agt-val  { flex:1; font-size:9px; white-space:normal; overflow-wrap:anywhere; color:#2c3a50; }
+    .agt-cluster-ts {
+      display: block;
+      font-size: 9px;
+      color: #7a8898;
+      font-family: monospace;
+      margin-bottom: 2px;
+    }
+    .agt-cluster-chips { display:flex; flex-wrap:wrap; gap:2px; align-items:flex-start; }
+    .agt-chip {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 2px;
+      font-size: 9px;
+      padding: 0 3px;
+      border-left: 2px solid #9aa0ae;
+      border-radius: 0 2px 2px 0;
+      background: rgba(255,255,255,0.60);
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .agt-chip-src { font-weight:700; }
+    .agt-chip-val { color:#2c3a50; }
 
     /* ── ATC items (rendered inside #content, pinned to right edge) ──────────── */
     .atc-item {
@@ -250,20 +287,44 @@
     .atc-ts  { flex-shrink:0; font-size:9px; color:#7a8898; font-family:monospace; padding-top:1px; }
     .atc-val { flex:1; font-size:9px; white-space:normal; overflow-wrap:anywhere; color:#1a3060; }
 
+    /* ── Aircraft actions (rendered inside #content, pinned to left edge) ─────── */
+    .ac-item {
+      position: absolute;
+      left: 3px;
+      width: 200px;
+      min-height: 18px;
+      padding: 2px 5px 2px 7px;
+      border-left: 3px solid #1a6aaa;
+      background: rgba(232,244,255,0.92);
+      border-radius: 0 3px 3px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      z-index: 3;
+    }
+    .ac-ts  { flex-shrink:0; font-size:9px; color:#7a8898; font-family:monospace; padding-top:1px; }
+    .ac-src { font-size:9px; font-weight:700; color:#0a3d6e; white-space:nowrap; }
+    .ac-val { flex:1; font-size:9px; white-space:normal; overflow-wrap:anywhere; color:#1a3060; }
+
     /* ── top bar ──────────────────────────────────────────────────────── */
     #topbar {
       flex-shrink: 0;
       display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 14px;
+      flex-direction: column;
       background: #ffffff;
       border-bottom: 1px solid #c8cdd6;
-      height: 40px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
+    #topbar-row1, #topbar-row2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+    }
+    #topbar-row1 { height: 38px; border-bottom: 1px solid #eef0f4; }
+    #topbar-row2 { height: 30px; background: #f8f9fb; }
 
-    #topbar h1 { font-size: 13px; font-weight: 600; color: #2c3a50; white-space: nowrap; }
+    #topbar h1 { font-size: 13px; font-weight: 600; color: #2c3a50; white-space: nowrap; margin-right: 4px; }
 
     .btn {
       background: #2c5282;
@@ -285,10 +346,11 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 220px;
+      flex: 1;
+      min-width: 0;
     }
 
-    #stats { margin-left: auto; color: #6a7488; font-size: 11px; white-space: nowrap; }
+    #stats { color: #6a7488; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
 
     #phase-badge {
       background: #dbeafe;
@@ -450,9 +512,201 @@
       pointer-events: none;
       white-space: nowrap;
     }
+
+    /* ── video dock ──────────────────────────────────────────────────── */
+    #video-dock {
+      flex-shrink: 0;
+      display: none;          /* shown once a video is loaded */
+      flex-direction: column;
+      max-height: 50vh;
+      background: #000;
+      border-bottom: 2px solid #3a4a60;
+      position: relative;
+      z-index: 50;
+    }
+    #video-el {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      display: block;
+      object-fit: contain;
+      background: #000;
+    }
+    #video-controls {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      background: #1a1a2e;
+      height: 38px;
+    }
+    .vid-btn {
+      background: #2c5282;
+      color: #fff;
+      border: none;
+      padding: 3px 9px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .vid-btn:hover { background: #2a4a75; }
+    #vid-play-btn { font-size: 15px; padding: 2px 9px; min-width: 34px; text-align: center; }
+    #vid-slider {
+      flex: 1;
+      min-width: 0;
+      accent-color: #4a90d9;
+      cursor: pointer;
+      height: 4px;
+    }
+    #vid-time {
+      font-size: 11px;
+      color: #9aa0ae;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-width: 90px;
+      text-align: right;
+    }
+
+    /* ── playhead ────────────────────────────────────────────────────── */
+    #playhead {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(220, 50, 50, 0.85);
+      box-shadow: 0 0 5px rgba(220, 50, 50, 0.55);
+      pointer-events: none;
+      z-index: 200;
+      display: none;
+    }
+    #playhead::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -4px;
+      width: 10px;
+      height: 10px;
+      background: #dc3232;
+      border-radius: 50%;
+    }
+
+    /* ── video collapse ───────────────────────────────────────────────────── */
+    #video-dock.collapsed #video-el { display: none; }
+    #video-dock.collapsed #vid-sync-bar { display: none; }
+    #vid-collapse-btn {
+      background: #374151;
+      font-size: 13px;
+      padding: 1px 8px;
+      margin-left: auto;
+    }
+    #vid-collapse-btn:hover { background: #1f2937; }
+    #vid-auto-hint {
+      font-size: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+      flex-shrink: 1;
+    }
+
+    /* ── sync offset strip ───────────────────────────────────────────────── */
+    #vid-sync-bar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+      background: #111827;
+      height: 30px;
+      border-top: 1px solid #374151;
+    }
+    #vid-sync-bar label {
+      font-size: 10px;
+      color: #9aa0ae;
+      white-space: nowrap;
+    }
+    #vid-sync-input {
+      width: 72px;
+      font-family: inherit;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      padding: 1px 4px;
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 3px;
+      color: #f9fafb;
+      text-align: right;
+    }
+    #vid-sync-input:focus { outline: none; border-color: #4a90d9; }
+    .sync-btn {
+      background: #1f2937;
+      color: #d1d5db;
+      border: 1px solid #374151;
+      padding: 1px 7px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      white-space: nowrap;
+      line-height: 1.5;
+    }
+    .sync-btn:hover { background: #374151; color: #fff; }
+    #vid-save-btn {
+      background: #065f46;
+      color: #6ee7b7;
+      border: 1px solid #047857;
+      margin-left: 4px;
+    }
+    #vid-save-btn:hover { background: #047857; }
+    #vid-save-btn.saved { background: #1e3a5f; color: #93c5fd; border-color: #2563eb; }
+    #vid-sync-hint {
+      font-size: 10px;
+      color: #4ade80;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      text-align: right;
+    }
   </style>
 </head>
 <body>
+
+<!-- ── VIDEO DOCK ───────────────────────────────────────────────────────── -->
+<div id="video-dock">
+  <video id="video-el" preload="metadata"></video>
+  <div id="video-controls">
+    <button class="vid-btn" id="vid-play-btn" onclick="vidTogglePlay()">&#9654;</button>
+    <button class="vid-btn" onclick="vidSkip(-5)">&#8722;5s</button>
+    <button class="vid-btn" onclick="vidSkip(5)">+5s</button>
+    <input type="range" id="vid-slider" min="0" max="100" step="0.01" value="0"
+      oninput="vidSeek(this.value / 100)">
+    <span id="vid-time">0:00 / 0:00</span>
+    <button class="vid-btn" id="vid-collapse-btn" onclick="vidToggleCollapse()" title="Hide / show video">&#9650;</button>
+  </div>
+  <div id="vid-sync-bar">
+    <label>Sync offset (s)</label>
+    <button class="sync-btn" onclick="vidNudgeSec(-1)" title="-1 second">&#9664;1s</button>
+    <button class="sync-btn" onclick="vidNudge(-1)" title="One frame earlier">&#9664;&#9664;</button>
+    <button class="sync-btn" onclick="vidNudge(1)"  title="One frame later" >&#9654;&#9654;</button>
+    <button class="sync-btn" onclick="vidNudgeSec(1)" title="+1 second">1s&#9654;</button>
+    <input id="vid-sync-input" type="number" step="0.001" value="0"
+      oninput="vidApplyOffset(parseFloat(this.value) || 0)"
+      title="Video offset in seconds relative to CSV start (positive = video ahead of timeline)">
+    <button class="sync-btn" onclick="vidResetOffset()" title="Reset to 0">&#8635;</button>
+    <button class="sync-btn" id="vid-save-btn" onclick="vidSaveOffset()" title="Save offset as JSON file">&#128190; Save sync</button>
+    <span id="vid-sync-hint"></span>
+  </div>
+</div>
+
+<!-- ── PLAYHEAD ─────────────────────────────────────────────────────────── -->
+<div id="playhead"></div>
 
 <div id="page">
 
@@ -530,18 +784,27 @@
 <div id="center-panel">
 
   <div id="topbar">
-    <h1>Scenario Timeline</h1>
-    <button class="btn" onclick="document.getElementById('file-input').click()">&#9658; Load CSV</button>
-    <input type="file" id="file-input" accept=".csv" style="display:none" onchange="loadFile(this)">
-    <span id="file-label">No file loaded</span>
-    <span id="stats"></span>
-    <label style="font-size:11px;color:#5a6478;white-space:nowrap;margin-left:auto">
-      UTC offset&nbsp;
-      <input id="utc-offset" type="number" value="-8" min="-14" max="14" step="1"
-        style="width:44px;font-family:inherit;font-size:11px;padding:2px 4px;
-               border:1px solid #c8cdd6;border-radius:3px;background:#fff;"
-        onchange="rerender()">
-    </label>
+    <div id="topbar-row1">
+      <h1>Scenario Timeline</h1>
+      <button class="btn" onclick="document.getElementById('file-input').click()">&#9658; Load CSV</button>
+      <input type="file" id="file-input" accept=".csv" style="display:none" onchange="loadFile(this)">
+      <button class="btn" style="background:#1a5a3a;" onclick="document.getElementById('folder-input').click()" title="Load the scenarios/ folder — video is matched automatically from CSV filename">&#128193; Load folder</button>
+      <input type="file" id="folder-input" style="display:none" webkitdirectory onchange="loadFolder(this)">
+      <button class="btn" onclick="document.getElementById('vid-file-input').click()" style="background:#374151;font-size:10px;" title="Manually load a single video file">&#127909;</button>
+      <input type="file" id="vid-file-input" accept="video/*" style="display:none" onchange="loadVideo(this)">
+      <span id="vid-auto-hint" style="margin-left:4px;"></span>
+    </div>
+    <div id="topbar-row2">
+      <span id="file-label">No file loaded</span>
+      <span id="stats"></span>
+      <label style="font-size:11px;color:#5a6478;white-space:nowrap;margin-left:auto;flex-shrink:0;">
+        UTC offset&nbsp;
+        <input id="utc-offset" type="number" value="-8" min="-14" max="14" step="1"
+          style="width:44px;font-family:inherit;font-size:11px;padding:2px 4px;
+                 border:1px solid #c8cdd6;border-radius:3px;background:#fff;"
+          onchange="rerender()">
+      </label>
+    </div>
   </div>
 
   <div id="scroll-area">
@@ -689,6 +952,7 @@ function loadFile(input) {
   reader.onload = e => {
     window._lastCSV = e.target.result;
     renderTimeline(e.target.result);
+    if (window._tryAutoLoadVideo) window._tryAutoLoadVideo(file.name);
   };
   reader.readAsText(file, 'utf-8');
 }
@@ -708,10 +972,10 @@ function renderTimeline(text) {
   const data = [];
   for (let i = 1; i < allRows.length; i++) {
     const r = allRows[i];
-    if (r.length < 7) continue;
+    if (r.length < 6) continue;
     const ts = parseFloat(r[1]);
     if (!isFinite(ts) || ts <= 0) continue;
-    data.push({ ts, agent: r[2], source: r[3], value: r[6] });
+    data.push({ ts, agent: r[2].trim(), source: r[3].trim(), value: r[6] ?? '' });
   }
 
   if (!data.length) { alert('No valid data rows found.'); return; }
@@ -781,8 +1045,18 @@ function renderTimeline(text) {
   for (const row of data) {
     if (row.agent !== 'TARS Agent') continue;
     if (!row.source || AGT_EXCLUDE.has(row.source)) continue;
-    agtData.push({ relSec: row.ts - t0, epochTs: row.ts, source: row.source, value: row.value });
+    agtData.push({ relSec: row.ts - t0, epochTs: row.ts, source: row.source, value: row.value, agent: 'TARS Agent' });
   }
+
+  // ── Speech-to-Text Agent outputs ───────────────────────────────────────
+  const STT_SRCS = new Set(['speech_output', 'is_listening']);
+  for (const row of data) {
+    if (row.agent !== 'Speech_to_Text_Agent') continue;
+    if (!row.source || !STT_SRCS.has(row.source)) continue;
+    agtData.push({ relSec: row.ts - t0, epochTs: row.ts, source: row.source, value: row.value, agent: 'Speech_to_Text_Agent' });
+  }
+
+  agtData.sort((a, b) => a.relSec - b.relSec);
 
   // ── Collect Gaze AoI data (SmartEyeProBridge) ────────────────────────────
   // object_name rows only appear when count>0, so collect them directly.
@@ -877,13 +1151,54 @@ function renderTimeline(text) {
   }
 
   // ── Collect Pilot Action data ──────────────────────────────────────────
-  const PLT_AGENTS = new Set(['Remote_Control_Agent','PanelListener','Pedestal','Shared Interface']);
-  const PLT_EXCLUDE_SRC = new Set(['emergency_inject','countdown_complete', 'MAPPING', 'EXITED', 'ENTERED', ]);
+  const PLT_AGENTS = new Set(['Remote_Control_Agent','PanelListener','Pedestal','Aircraft','Shared Interface']);
+  const PLT_EXCLUDE_SRC = new Set(['emergency_inject','countdown_complete', 'MAPPING', 'EXITED', 'ENTERED', 'e1_n1_percent', 'e2_n1_percent', 'r_gen_load', "l_gen_load", "pitch", "controlPitch", "roll", "controlRoll", 'controlYaw', 'latitude', 'longitude', 'airspeed', 'heading', 'altitude', 'verticalSpeed', 'speedBrakes', 'controlThrottle', 'n1_match_bug', 'slip', 'engine_fire_l', 'engine_fire_l', 'master_warning', 'master_caution', 'flight_director', 'speed_mode', 'heading_mode', 'fuel_boost_l', 'fuel_boost_r', 'test_knob', 'autopilot_heading_set', 'yaw_damper', 'l_ign_switch', 'r_ign_switch', 'l_gen_switch', 'r_gen_switch', 'transfer_knob', 'baro_setting', 'cabin_altitude', 'pitot_heat', 'l_engine_anti_ice', 'r_engine_anti_ice', 'l_windshield_anti_ice', 'r_windshield_anti_ice', 'exterior_lights', 'anti_coll_lights', 'trim_rudder', 'elevator_trim', 'aileron_trim', 'fd_pitch_deg', 'l_bottle_arm', 'r_bottle_arm', 'yoke_hide', 'wind_direction', 'wind_speed', 'outsideEvent', 'parkBrake', 'engine_fire_r', 'pax_safety', 'yaw', 'controlFlaps', 'controlGear', 'paused', 'com_1_freq' ]);
   const pltData = [];
+  const pltAcLast = new Map(); // change-only dedup for Aircraft
   for (const row of data) {
     if (!PLT_AGENTS.has(row.agent)) continue;
     if (!row.source || PLT_EXCLUDE_SRC.has(row.source)) continue;
+    if (row.agent === 'Aircraft') {
+      const val = row.value;
+      if (val) {
+        const prev = pltAcLast.get(row.source);
+        if (prev === val) continue;  // skip repeated non-empty values only
+        pltAcLast.set(row.source, val);
+      }
+      // impulse rows (empty value) always pass through
+    }
     pltData.push({ relSec: row.ts - t0, epochTs: row.ts, agent: row.agent, source: row.source, value: row.value });
+  }
+
+  // ── Collect Aircraft action data (center panel, left column) ──────────
+  // Edit AC_EXCLUDE_SRC independently from PLT_EXCLUDE_SRC to control
+  // which Aircraft sources appear in the center-panel left column.
+  const AC_EXCLUDE_SRC = new Set([
+    'MAPPING', 'EXITED', 'ENTERED',
+    // continuous telemetry — too noisy for event view
+    'latitude', 'longitude', 'altitude', 'airspeed', 'heading',
+    'verticalSpeed', 'pitch', 'roll', 'yaw', 'slip',
+    'controlPitch', 'controlRoll', 'controlYaw', 'controlThrottle',
+    'controlFlaps', 'controlGear', 'speedBrakes',
+    'e1_n1_percent', 'e2_n1_percent', 'r_gen_load', 'l_gen_load',
+    'n1_match_bug', 'fd_pitch_deg', 'l_throttle', 'r_throttle', 'approve', 'autopilot_airspeed',
+    // background state that changes rarely but floods when replayed
+    'wind_direction', 'wind_speed', 'baro_setting',
+    'cabin_altitude', 'outside_event', 'outsideEvent',
+    'paused', 'check', 'alt_sel', 'autopilot_heading_set', 'heading_sel'
+  ]);
+  const acColData = [];
+  const acColLast = new Map(); // change-only dedup
+  for (const row of data) {
+    if (row.agent !== 'Aircraft') continue;
+    if (!row.source || AC_EXCLUDE_SRC.has(row.source)) continue;
+    const val = row.value;
+    if (val) {
+      const prev = acColLast.get(row.source);
+      if (prev === val) continue;  // skip repeated non-empty values
+      acColLast.set(row.source, val);
+    }
+    acColData.push({ relSec: row.ts - t0, epochTs: row.ts, source: row.source, value: row.value });
   }
 
   // ── Collect ATC Agent data ─────────────────────────────────────────────
@@ -1021,10 +1336,15 @@ function renderTimeline(text) {
   wrap.style.minHeight = totalPx + 'px';
   ruler.style.minHeight = totalPx + 'px';
 
+  // expose natToVis so the video playhead can track timeline position
+  _natToVis = naturalToVisual;
+  if (window._updatePlayhead) window._updatePlayhead();
+
   renderAltChart(altData, totalPx, naturalToVisual);
   renderSpeedChart(spdData, totalPx, naturalToVisual);
   renderHeadingChart(hdgData, hdg0, totalPx, naturalToVisual);
   renderAgentPanel(agtData, totalPx, naturalToVisual);
+  renderAcCol(acColData, totalPx, naturalToVisual);
   renderAtcCol(atcEvents, totalPx, naturalToVisual);
   renderPilotPanel(pltData, totalPx, naturalToVisual);
   renderControlChart('croll',  crollData,  totalPx, naturalToVisual);
@@ -1301,7 +1621,11 @@ const AGT_STYLE_DEF  = { bg: '#f0f2f5', brd: '#9aa0ae', col: '#4a5568' };
 const AGT_CTRL_SRCS  = new Set(['flaps','heading_mode','flight_director','alt_sel',
   'set_freq_1','runway_number','request_takeoff_clearance']);
 
-function agtStyle(src) {
+const AGT_STYLE_AC  = { bg: '#e8f4ff', brd: '#1a6aaa', col: '#0a3d6e' };
+const AGT_STYLE_STT = { bg: '#f0fff4', brd: '#2e8b57', col: '#145a32' };
+function agtStyle(src, agent) {
+  if (agent === 'Aircraft') return AGT_STYLE_AC;
+  if (agent === 'Speech_to_Text_Agent') return AGT_STYLE_STT;
   return AGT_STYLE[src] || (AGT_CTRL_SRCS.has(src) ? AGT_STYLE_CTRL : AGT_STYLE_DEF);
 }
 
@@ -1324,6 +1648,91 @@ function fmtAgentValue(source, raw) {
 
 // ─────────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────────
+// Aircraft actions renderer — items appended into #content (left edge)
+// ─────────────────────────────────────────────────────────────────────────────────
+function renderAcCol(acEvents, totalPx, natToVis) {
+  const content = document.getElementById('content');
+  if (!acEvents.length) return;
+
+  // ── Cluster events within 0.1 s of the cluster's first timestamp ──────
+  const CLUSTER_GAP = 0.1;
+  const clusters = [];
+  let cur = null;
+  for (const ev of acEvents) {
+    if (!cur || ev.relSec - cur.relSec > CLUSTER_GAP) {
+      cur = { relSec: ev.relSec, events: [ev] };
+      clusters.push(cur);
+    } else {
+      cur.events.push(ev);
+    }
+  }
+
+  function estimateH(n) { return Math.max(24, 14 + n * 14); }
+
+  const AC_BRD = '#1a6aaa';
+  const AC_BG  = 'rgba(232,244,255,0.92)';
+  const AC_COL = '#0a3d6e';
+
+  let cursor = 0;
+  for (const cl of clusters) {
+    const h = estimateH(cl.events.length);
+    const naturalCenter = natToVis(cl.relSec);
+    const naturalTop    = naturalCenter - h / 2;
+    const visualTop     = Math.max(naturalTop, cursor);
+    const expanded      = visualTop > naturalTop + 0.5;
+    cursor = visualTop + h + 2;
+
+    const box = document.createElement('div');
+    box.className = 'ac-item';
+    box.style.cssText =
+      `top:${visualTop}px;height:${h}px;` +
+      `display:block;padding:2px 5px 3px;` +
+      (expanded ? 'padding-right:14px;' : '');
+    box.title = cl.events.map(e => e.source + (e.value ? ': ' + e.value : '')).join('\n');
+
+    const tsEl = document.createElement('span');
+    tsEl.className   = 'ac-ts';
+    tsEl.textContent = fmtSec(cl.relSec);
+    tsEl.style.display = 'block';
+    box.appendChild(tsEl);
+
+    const chips = document.createElement('div');
+    chips.className = 'plt-cluster-chips'; // reuse chip row style
+    for (const ev of cl.events) {
+      const fv = fmtAgentValue(ev.source, ev.value);
+      const chip = document.createElement('span');
+      chip.className = 'plt-chip';
+      chip.style.borderLeftColor = AC_BRD;
+      const srcEl = document.createElement('span');
+      srcEl.className   = 'plt-chip-src';
+      srcEl.style.color = AC_COL;
+      srcEl.textContent = fv ? ev.source + ':' : ev.source;
+      chip.appendChild(srcEl);
+      if (fv) {
+        const valEl = document.createElement('span');
+        valEl.className   = 'plt-chip-val';
+        valEl.textContent = fv;
+        chip.appendChild(valEl);
+      }
+      chips.appendChild(chip);
+    }
+    box.appendChild(chips);
+
+    if (expanded) {
+      const brk = document.createElement('div');
+      brk.className = 'expand-bracket';
+      box.appendChild(brk);
+      const tick = document.createElement('div');
+      tick.style.cssText =
+        `position:absolute;left:3px;width:200px;top:${naturalCenter.toFixed(1)}px;` +
+        `height:1px;background:${AC_BRD};opacity:0.4;pointer-events:none;`;
+      content.appendChild(tick);
+    }
+
+    content.appendChild(box);
+  }
+}
+
 // ATC renderer — items appended into #content (right edge)
 // ─────────────────────────────────────────────────────────────────────────────────
 function renderAtcCol(atcEvents, totalPx, natToVis) {
@@ -1391,17 +1800,33 @@ function renderPilotPanel(pltData, totalPx, natToVis) {
     return;
   }
 
-  const PLT_ITEM_H = 40;
+  // ── Cluster consecutive events within 0.1 s of the cluster's first timestamp ──
+  const CLUSTER_GAP = 0.1;
+  const clusters = [];
+  let cur = null;
+  for (const ev of pltData) {
+    if (!cur || ev.relSec - cur.relSec > CLUSTER_GAP) {
+      cur = { relSec: ev.relSec, events: [ev] };
+      clusters.push(cur);
+    } else {
+      cur.events.push(ev);
+    }
+  }
 
+  // Estimate box height (worst-case: one chip per line)
+  function estimateH(n) { return Math.max(24, 14 + n * 14); }
+
+  // ── Layout pass: center each cluster box on its timestamp ──
   const layout = [];
   let cursor = 0;
-  for (const ev of pltData) {
-    const naturalCenter = natToVis(ev.relSec);
-    const naturalTop    = naturalCenter - PLT_ITEM_H / 2;
+  for (const cl of clusters) {
+    const h = estimateH(cl.events.length);
+    const naturalCenter = natToVis(cl.relSec);
+    const naturalTop    = naturalCenter - h / 2;
     const visualTop     = Math.max(naturalTop, cursor);
     const expanded      = visualTop > naturalTop + 0.5;
-    cursor = visualTop + PLT_ITEM_H;
-    layout.push({ ev, naturalCenter, visualTop, expanded });
+    cursor = visualTop + h + 2;
+    layout.push({ cl, h, naturalCenter, visualTop, expanded });
   }
 
   const wrapH = Math.max(totalPx, cursor + 8);
@@ -1409,45 +1834,57 @@ function renderPilotPanel(pltData, totalPx, natToVis) {
   wrap.className = 'plt-wrap';
   wrap.style.height = wrapH + 'px';
 
-  for (const { ev, naturalCenter, visualTop, expanded } of layout) {
-    const st = pltStyle(ev.agent);
+  for (const { cl, h, naturalCenter, visualTop, expanded } of layout) {
+    const st0 = pltStyle(cl.events[0].agent);
 
-    const item = document.createElement('div');
-    item.className = 'plt-item';
-    item.style.top             = visualTop + 'px';
-    item.style.background      = st.bg;
-    item.style.borderLeftColor = st.brd;
-    if (expanded) item.style.paddingRight = '14px';
-    item.title = ev.agent + ' / ' + ev.source + (ev.value ? ': ' + ev.value : '');
+    const box = document.createElement('div');
+    box.className          = 'plt-cluster';
+    box.style.top          = visualTop + 'px';
+    box.style.borderLeftColor = st0.brd;
+    box.style.background   = st0.bg;
+    if (expanded) box.style.paddingRight = '14px';
+    box.title = cl.events.map(e => e.agent + ' / ' + e.source + (e.value ? ': ' + e.value : '')).join('\n');
 
-    const ts = document.createElement('span');
-    ts.className   = 'plt-ts';
-    ts.textContent = fmtSec(ev.relSec);
+    const tsEl = document.createElement('span');
+    tsEl.className   = 'plt-cluster-ts';
+    tsEl.textContent = fmtSec(cl.relSec);
+    box.appendChild(tsEl);
 
-    const src = document.createElement('span');
-    src.className   = 'plt-src';
-    src.style.color = st.col;
-    src.textContent = ev.source;
-
-    const val = document.createElement('span');
-    val.className   = 'plt-val';
-    val.textContent = fmtAgentValue(ev.source, ev.value);
-
-    item.append(ts, src, val);
+    const chips = document.createElement('div');
+    chips.className = 'plt-cluster-chips';
+    for (const ev of cl.events) {
+      const st = pltStyle(ev.agent);
+      const chip = document.createElement('span');
+      chip.className = 'plt-chip';
+      chip.style.borderLeftColor = st.brd;
+      const srcEl = document.createElement('span');
+      srcEl.className   = 'plt-chip-src';
+      srcEl.style.color = st.col;
+      const fv = fmtAgentValue(ev.source, ev.value);
+      srcEl.textContent = fv ? ev.source + ':' : ev.source;
+      chip.appendChild(srcEl);
+      if (fv) {
+        const valEl = document.createElement('span');
+        valEl.className   = 'plt-chip-val';
+        valEl.textContent = fv;
+        chip.appendChild(valEl);
+      }
+      chips.appendChild(chip);
+    }
+    box.appendChild(chips);
 
     if (expanded) {
       const brk = document.createElement('div');
       brk.className = 'expand-bracket';
-      item.appendChild(brk);
-
+      box.appendChild(brk);
       const tick = document.createElement('div');
       tick.style.cssText =
         `position:absolute;left:3px;right:3px;top:${naturalCenter}px;` +
-        `height:1px;background:${st.brd};opacity:0.4;pointer-events:none;`;
+        `height:1px;background:${st0.brd};opacity:0.4;pointer-events:none;`;
       wrap.appendChild(tick);
     }
 
-    wrap.appendChild(item);
+    wrap.appendChild(box);
   }
 
   scroll.appendChild(wrap);
@@ -1462,18 +1899,33 @@ function renderAgentPanel(agtData, totalPx, natToVis) {
     return;
   }
 
-  const AGT_ITEM_H = 40;  // layout pass step — generous to accommodate wrapped text
+  // ── Cluster consecutive events within 0.1 s of the cluster's first timestamp ──
+  const CLUSTER_GAP = 0.1;
+  const clusters = [];
+  let cur = null;
+  for (const ev of agtData) {
+    if (!cur || ev.relSec - cur.relSec > CLUSTER_GAP) {
+      cur = { relSec: ev.relSec, events: [ev] };
+      clusters.push(cur);
+    } else {
+      cur.events.push(ev);
+    }
+  }
 
-  // ── Layout pass: push items down to avoid overlap, same logic as centre panel ──
+  // Estimate box height (worst-case: one chip per line)
+  function estimateH(n) { return Math.max(24, 14 + n * 14); }
+
+  // ── Layout pass: center each cluster box on its timestamp ──
   const layout = [];
   let cursor = 0;
-  for (const ev of agtData) {
-    const naturalCenter = natToVis(ev.relSec);
-    const naturalTop    = naturalCenter - AGT_ITEM_H / 2;
+  for (const cl of clusters) {
+    const h = estimateH(cl.events.length);
+    const naturalCenter = natToVis(cl.relSec);
+    const naturalTop    = naturalCenter - h / 2;
     const visualTop     = Math.max(naturalTop, cursor);
-    const expanded      = visualTop > naturalTop + 0.5;  // pushed from natural pos
-    cursor = visualTop + AGT_ITEM_H;
-    layout.push({ ev, naturalCenter, visualTop, expanded });
+    const expanded      = visualTop > naturalTop + 0.5;
+    cursor = visualTop + h + 2;
+    layout.push({ cl, h, naturalCenter, visualTop, expanded });
   }
 
   const wrapH = Math.max(totalPx, cursor + 8);
@@ -1481,47 +1933,58 @@ function renderAgentPanel(agtData, totalPx, natToVis) {
   wrap.className = 'agt-wrap';
   wrap.style.height = wrapH + 'px';
 
-  for (const { ev, naturalCenter, visualTop, expanded } of layout) {
-    const st = agtStyle(ev.source);
+  for (const { cl, h, naturalCenter, visualTop, expanded } of layout) {
+    const st0 = agtStyle(cl.events[0].source, cl.events[0].agent);
 
-    const item = document.createElement('div');
-    item.className = 'agt-item';
-    item.style.top             = visualTop + 'px';
-    item.style.background      = st.bg;
-    item.style.borderLeftColor = st.brd;
-    if (expanded) item.style.paddingRight = '14px';  // room for bracket
-    item.title = ev.value;
+    const box = document.createElement('div');
+    box.className          = 'agt-cluster';
+    box.style.top          = visualTop + 'px';
+    box.style.borderLeftColor = st0.brd;
+    box.style.background   = st0.bg;
+    if (expanded) box.style.paddingRight = '14px';
+    box.title = cl.events.map(e => e.source + (e.value ? ': ' + e.value : '')).join('\n');
 
-    const ts = document.createElement('span');
-    ts.className   = 'agt-ts';
-    ts.textContent = fmtSec(ev.relSec);
+    const tsEl = document.createElement('span');
+    tsEl.className   = 'agt-cluster-ts';
+    tsEl.textContent = fmtSec(cl.relSec);
+    box.appendChild(tsEl);
 
-    const src = document.createElement('span');
-    src.className   = 'agt-src';
-    src.style.color = st.col;
-    src.textContent = ev.source;
-
-    const val = document.createElement('span');
-    val.className   = 'agt-val';
-    val.textContent = fmtAgentValue(ev.source, ev.value);
-
-    item.append(ts, src, val);
+    const chips = document.createElement('div');
+    chips.className = 'agt-cluster-chips';
+    for (const ev of cl.events) {
+      const st = agtStyle(ev.source, ev.agent);
+      const chip = document.createElement('span');
+      chip.className = 'agt-chip';
+      chip.style.borderLeftColor = st.brd;
+      chip.style.background = st.bg;
+      const srcEl = document.createElement('span');
+      srcEl.className   = 'agt-chip-src';
+      srcEl.style.color = st.col;
+      const fv = fmtAgentValue(ev.source, ev.value);
+      srcEl.textContent = fv ? ev.source + ':' : ev.source;
+      chip.appendChild(srcEl);
+      if (fv) {
+        const valEl = document.createElement('span');
+        valEl.className   = 'agt-chip-val';
+        valEl.textContent = fv;
+        chip.appendChild(valEl);
+      }
+      chips.appendChild(chip);
+    }
+    box.appendChild(chips);
 
     if (expanded) {
-      // ] bracket shows item was pushed down from its natural timestamp position
       const brk = document.createElement('div');
       brk.className = 'expand-bracket';
-      item.appendChild(brk);
-
-      // small tick at the natural timestamp position in the wrap (not inside item)
+      box.appendChild(brk);
       const tick = document.createElement('div');
       tick.style.cssText =
         `position:absolute;left:3px;right:3px;top:${naturalCenter}px;` +
-        `height:1px;background:${st.brd};opacity:0.4;pointer-events:none;`;
+        `height:1px;background:${st0.brd};opacity:0.4;pointer-events:none;`;
       wrap.appendChild(tick);
     }
 
-    wrap.appendChild(item);
+    wrap.appendChild(box);
   }
 
   scroll.appendChild(wrap);
@@ -1756,6 +2219,226 @@ function switchTab(id) {
   sacfix.addEventListener('scroll', () => syncAll(sacfix, sacfix.scrollTop));
   blink.addEventListener('scroll',  () => syncAll(blink,  blink.scrollTop));
   pupil.addEventListener('scroll',  () => syncAll(pupil,  pupil.scrollTop));
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Video player — synchronized with timeline
+// _natToVis maps relative-seconds (from scenario t0) → visual pixel position
+// ─────────────────────────────────────────────────────────────────────────────
+let _natToVis = null;
+
+(function () {
+  const dock       = document.getElementById('video-dock');
+  const videoEl    = document.getElementById('video-el');
+  const playhead   = document.getElementById('playhead');
+  const slider     = document.getElementById('vid-slider');
+  const timeEl     = document.getElementById('vid-time');
+  const playBtn    = document.getElementById('vid-play-btn');
+  const scrollArea = document.getElementById('scroll-area');
+
+  let _rafId = null;
+
+  // ── Core video loader (shared by auto-match and manual picker) ───────────
+  function _loadVideoFile(file) {
+    if (videoEl._blobUrl) URL.revokeObjectURL(videoEl._blobUrl);
+    videoEl._blobUrl = URL.createObjectURL(file);
+    videoEl.src = videoEl._blobUrl;
+    dock.style.display = 'flex';
+    dock.classList.remove('collapsed');
+    document.getElementById('vid-collapse-btn').textContent = '\u25B2';
+    videoEl.load();
+  }
+
+  // ── Folder loader — builds filename → File map, then auto-matches ─────────
+  let _folderFiles = new Map();
+  window.loadFolder = function (input) {
+    _folderFiles.clear();
+    for (const f of input.files) _folderFiles.set(f.name, f);
+    // If a CSV is already showing, try to match now
+    const label = document.getElementById('file-label').textContent;
+    if (label && label !== 'No file loaded') window._tryAutoLoadVideo(label);
+  };
+
+  window._tryAutoLoadVideo = function (csvName) {
+    const hint      = document.getElementById('vid-auto-hint');
+    const videoName = csvName.replace(/_ingescape\.csv$/i, '_back.mp4');
+    const syncName  = csvName.replace(/_ingescape\.csv$/i, '_back.sync.json');
+    if (_folderFiles.has(videoName)) {
+      _loadVideoFile(_folderFiles.get(videoName));
+      hint.style.color = '#4ade80';
+      hint.textContent  = '\u25B6 ' + videoName;
+    } else {
+      hint.style.color = '#9aa0ae';
+      hint.textContent  = _folderFiles.size ? videoName + ' not in folder' : '';
+    }
+    // auto-load sync offset if present
+    if (_folderFiles.has(syncName)) {
+      _folderFiles.get(syncName).text().then(txt => {
+        try {
+          const obj = JSON.parse(txt);
+          const off = parseFloat(obj.offset_s);
+          if (isFinite(off)) _applyOffset(off, '\uD83D\uDCBE loaded: ' + off.toFixed(3) + ' s');
+        } catch {}
+      });
+    } else {
+      _applyOffset(0, '');
+    }
+  };
+
+  // ── Public API called from HTML ──────────────────────────────────────────
+  window.loadVideo = function (input) {
+    const file = input.files[0];
+    if (!file) return;
+    _loadVideoFile(file);
+  };
+
+  // ── Sync offset ───────────────────────────────────────────────────────────
+  // Positive offset: video is ahead of timeline → playhead moves DOWN
+  // i.e. playhead_relSec = video.currentTime + _syncOffset
+  let _syncOffset = 0;
+  let _currentCsvName = '';
+
+  function _applyOffset(off, hintMsg) {
+    _syncOffset = off;
+    document.getElementById('vid-sync-input').value = off.toFixed(3);
+    const h = document.getElementById('vid-sync-hint');
+    h.textContent = hintMsg;
+    const btn = document.getElementById('vid-save-btn');
+    btn.classList.remove('saved');
+    updatePlayhead();
+  }
+
+  window.vidApplyOffset = function (off) { _applyOffset(off, ''); };
+
+  window.vidNudge = function (dir) {
+    // detect fps from video; fall back to 30
+    const fps  = videoEl.getVideoPlaybackQuality
+      ? (videoEl.webkitDecodedFrameCount ? null : null)
+      : null;
+    const frame = 1 / (videoEl._fps || 30);
+    _applyOffset(parseFloat((_syncOffset + dir * frame).toFixed(6)), '');
+  };
+  window.vidNudgeSec = function (dir) {
+    _applyOffset(parseFloat((_syncOffset + dir).toFixed(3)), '');
+  };
+
+  window.vidResetOffset = function () { _applyOffset(0, ''); };
+
+  window.vidSaveOffset = async function () {
+    const csvLabel = document.getElementById('file-label').textContent;
+    const baseName = csvLabel.replace(/_ingescape\.csv$/i, '');
+    const filename = baseName + '_back.sync.json';
+    const payload  = JSON.stringify({ csv: csvLabel, offset_s: _syncOffset }, null, 2);
+
+    if (window.showSaveFilePicker) {
+      try {
+        const fh = await window.showSaveFilePicker({
+          suggestedName: filename,
+          types: [{ description: 'JSON sync file', accept: { 'application/json': ['.json'] } }],
+        });
+        const writable = await fh.createWritable();
+        await writable.write(payload);
+        await writable.close();
+        const btn = document.getElementById('vid-save-btn');
+        btn.classList.add('saved');
+        document.getElementById('vid-sync-hint').textContent = '\u2713 ' + fh.name;
+        return;
+      } catch (e) {
+        if (e.name === 'AbortError') return; // user cancelled — do nothing
+        // fall through to download fallback on other errors
+      }
+    }
+
+    // Fallback: prompt pre-fills the filename so user can confirm/edit, then download
+    const name = window.prompt('Save file as:', filename);
+    if (name === null) return; // user cancelled
+    const blob = new Blob([payload], { type: 'application/json' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    const btn = document.getElementById('vid-save-btn');
+    btn.classList.add('saved');
+    document.getElementById('vid-sync-hint').textContent = '\u2713 ' + name;
+  };
+
+  // Try to detect video fps via first few frames (best-effort)
+  videoEl.addEventListener('loadedmetadata', () => {
+    videoEl._fps = 30; // default until we know better
+  });
+
+  // ── Collapse / expand ─────────────────────────────────────────────────────
+  window.vidToggleCollapse = function () {
+    const collapsed = dock.classList.toggle('collapsed');
+    document.getElementById('vid-collapse-btn').textContent = collapsed ? '\u25BC' : '\u25B2';
+  };
+
+  window.vidTogglePlay = function () {
+    if (videoEl.paused) videoEl.play();
+    else                videoEl.pause();
+  };
+
+  window.vidSkip = function (secs) {
+    if (!isFinite(videoEl.duration)) return;
+    videoEl.currentTime = Math.max(0, Math.min(videoEl.duration, videoEl.currentTime + secs));
+  };
+
+  window.vidSeek = function (frac) {
+    if (!isFinite(videoEl.duration)) return;
+    videoEl.currentTime = parseFloat(frac) * videoEl.duration;
+  };
+
+  // ── Playhead + slider update ─────────────────────────────────────────────
+  function fmtVidTime(s) {
+    if (!isFinite(s)) return '--:--';
+    const m = Math.floor(s / 60), ss = Math.floor(s % 60);
+    return m + ':' + String(ss).padStart(2, '0');
+  }
+
+  function updatePlayhead() {
+    const vt  = videoEl.currentTime;
+    const dur = videoEl.duration;
+
+    // Sync slider position
+    if (isFinite(dur) && dur > 0) slider.value = (vt / dur) * 100;
+
+    // Sync time label
+    timeEl.textContent = fmtVidTime(vt) + ' / ' + fmtVidTime(dur);
+
+    if (!_natToVis) return;
+
+    // Map video currentTime + syncOffset → timeline relative seconds → viewport Y
+    const dockH     = dock.offsetHeight;
+    const contentY  = _natToVis(videoEl.currentTime + _syncOffset);
+    const vy        = dockH + contentY - scrollArea.scrollTop;
+
+    if (vy >= dockH - 2 && vy <= window.innerHeight + 2) {
+      playhead.style.top     = vy + 'px';
+      playhead.style.display = 'block';
+    } else {
+      playhead.style.display = 'none';
+    }
+  }
+  window._updatePlayhead = updatePlayhead;
+
+  // rAF loop — only active while playing
+  function startRaf() {
+    if (_rafId) cancelAnimationFrame(_rafId);
+    (function tick() {
+      updatePlayhead();
+      _rafId = videoEl.paused ? null : requestAnimationFrame(tick);
+    })();
+  }
+
+  // ── Video events ─────────────────────────────────────────────────────────
+  videoEl.addEventListener('play',       () => { playBtn.textContent = '\u23F8'; startRaf(); });
+  videoEl.addEventListener('pause',      () => { playBtn.textContent = '\u25B6'; });
+  videoEl.addEventListener('ended',      () => { playBtn.textContent = '\u25B6'; });
+  videoEl.addEventListener('timeupdate', updatePlayhead); // covers seeks while paused
+
+  // ── Scroll sync — keep playhead in viewport position ────────────────────
+  scrollArea.addEventListener('scroll', updatePlayhead, { passive: true });
 })();
 </script>
 </body>

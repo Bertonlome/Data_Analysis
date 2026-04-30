@@ -1,0 +1,695 @@
+#!/usr/bin/env python3
+"""
+camera_merge.py
+
+Scans HITLS/P* participant folders for back_camera / back_cam and
+front_camera / front_cam subdirectories.  For each camera folder it:
+  1. Parses every clip's absolute start time from the hour-folder name
+     and the video filename.
+  2. Sorts clips chronologically and groups them into contiguous segments
+     (gap ≤ GAP_TOLERANCE_S is still considered continuous;
+      overlaps ≤ OVERLAP_TOLERANCE_S are also tolerated).
+  3. Concatenates each multi-clip segment into one MP4 via
+     ffmpeg's concat demuxer (stream-copy, no re-encoding).
+  4. Places the merged file at the root of the camera folder.
+  5. Prints a precise report of everything that happened.
+
+Usage
+-----
+  First pass (raw clips → merged segments):
+      python camera_merge.py
+
+  Second pass (re-merge adjacent merged segments, default gap ≤ 10 s):
+      python camera_merge.py --second-pass
+      python camera_merge.py --second-pass 30   # custom gap tolerance (s)
+
+Filename conventions supported
+  Subfolder  : YYYYYMMMDDDHH   e.g.  2026Y04M13D16H
+  Back-cam   : W4{mm}M{ss}S{dur}.mp4   (W4 = camera prefix, ignored)
+  Front-cam  :   {mm}M{ss}S{dur}.mp4
+  where  mm = minute-in-hour (00-59),  ss = start-second,  dur = duration (s)
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+import tempfile
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import List, Optional, Tuple
+
+# ─── Configuration ─────────────────────────────────────────────────────────────
+HITLS_DIR         = Path(__file__).parent
+PARTICIPANT_RE    = re.compile(r'^P\d{2}$')
+HOUR_FOLDER_RE    = re.compile(r'^(\d{4})Y(\d{2})M(\d{2})D(\d{2})H$')
+# Optional W-digit prefix (back camera), then mm M ss S dur
+CLIP_RE           = re.compile(r'^(?:W\d)?(\d{2})M(\d{2})S(\d+)\.mp4$', re.IGNORECASE)
+CAMERA_NAMES      = ['back_camera', 'back_cam', 'front_camera', 'front_cam']
+GAP_TOLERANCE_S   = 0.5    # max forward gap (s) to still be contiguous
+OVERLAP_TOL_S     = 1.0    # max backward overlap (s) to still be contiguous
+SECOND_PASS_GAP_S       = 10.0   # default gap tolerance for second pass
+SECOND_PASS_BLACK_GAP_S = 60.0   # gaps shorter than this are filled with black frames
+
+# Regex for first-pass output filenames
+MERGED1_RE = re.compile(
+    r'^merged_(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})_(\d+)clips\.mp4$'
+)
+# Regex for second-pass output filenames (excluded from second-pass input)
+MERGED2_RE = re.compile(r'^merged2_')
+
+
+# ─── Data model ────────────────────────────────────────────────────────────────
+@dataclass
+class Clip:
+    path:       Path
+    abs_start:  float   # UTC epoch seconds
+    duration_s: float   # from filename encoding
+
+
+@dataclass
+class SegmentResult:
+    clips:       List[Clip]
+    status:      str           # 'merged' | 'skipped' | 'single' | 'failed'
+    output_path: str
+    message:     str
+    gap_before:  Optional[float] = None   # gap from previous segment (info only)
+    overlaps:    List[float] = field(default_factory=list)  # intra-segment overlaps
+
+
+# ─── Parsing helpers ───────────────────────────────────────────────────────────
+def hour_folder_epoch(name: str) -> Optional[float]:
+    """Return UTC epoch of the first second of an hour folder, or None."""
+    m = HOUR_FOLDER_RE.match(name)
+    if not m:
+        return None
+    yyyy, mo, dd, hh = int(m.group(1)), int(m.group(2)), int(m.group(3)), int(m.group(4))
+    try:
+        dt = datetime(yyyy, mo, dd, hh, 0, 0, tzinfo=timezone.utc)
+        return dt.timestamp()
+    except ValueError:
+        return None
+
+
+def parse_clip(filepath: Path, hour_epoch: float) -> Optional[Clip]:
+    """Parse clip from filename.  Returns Clip or None if filename doesn't match."""
+    m = CLIP_RE.match(filepath.name)
+    if not m:
+        return None
+    minute     = int(m.group(1))
+    start_sec  = int(m.group(2))
+    duration_s = float(m.group(3))
+    abs_start  = hour_epoch + minute * 60.0 + start_sec
+    return Clip(path=filepath, abs_start=abs_start, duration_s=duration_s)
+
+
+def collect_clips(cam_dir: Path) -> List[Clip]:
+    """Return all parseable clips in a camera directory, sorted by start time."""
+    clips: List[Clip] = []
+    for entry in sorted(cam_dir.iterdir()):
+        if not entry.is_dir():
+            continue
+        epoch = hour_folder_epoch(entry.name)
+        if epoch is None:
+            continue
+        for f in sorted(entry.iterdir()):
+            if not f.is_file():
+                continue
+            clip = parse_clip(f, epoch)
+            if clip is not None:
+                clips.append(clip)
+    clips.sort(key=lambda c: c.abs_start)
+    return clips
+
+
+# ─── Second-pass helpers ──────────────────────────────────────────────────────
+def ffprobe_duration(path: Path) -> Optional[float]:
+    """Return duration in seconds via ffprobe, or None on failure."""
+    result = subprocess.run(
+        ['ffprobe', '-v', 'quiet', '-print_format', 'json',
+         '-show_format', str(path)],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        return None
+    try:
+        return float(json.loads(result.stdout)['format']['duration'])
+    except (KeyError, ValueError, json.JSONDecodeError):
+        return None
+
+
+def get_video_props(path: Path) -> Optional[dict]:
+    """Return video/audio stream properties needed to generate black filler clips."""
+    result = subprocess.run(
+        ['ffprobe', '-v', 'quiet', '-print_format', 'json',
+         '-show_streams', str(path)],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        return None
+    try:
+        streams = json.loads(result.stdout).get('streams', [])
+    except (ValueError, json.JSONDecodeError):
+        return None
+    props: dict = {}
+    for s in streams:
+        if s.get('codec_type') == 'video' and 'width' not in props:
+            props['width']   = s.get('width', 1920)
+            props['height']  = s.get('height', 1080)
+            props['fps']     = s.get('r_frame_rate', '30/1')
+            props['pix_fmt'] = s.get('pix_fmt', 'yuv420p')
+        elif s.get('codec_type') == 'audio' and 'sample_rate' not in props:
+            props['sample_rate'] = str(s.get('sample_rate', '48000'))
+            props['channels']    = int(s.get('channels', 2))
+    return props if 'width' in props else None
+
+
+def generate_black_clip(duration_s: float, props: dict, output_path: Path) -> bool:
+    """Generate a silent black video clip matching the given stream properties."""
+    w, h = props['width'], props['height']
+    fps  = props['fps']   # fraction string, e.g. '30000/1001'
+    pix  = props.get('pix_fmt', 'yuv420p')
+
+    cmd = [
+        'ffmpeg', '-y',
+        '-f', 'lavfi', '-i', f'color=c=black:size={w}x{h}:rate={fps}',
+    ]
+    if 'sample_rate' in props:
+        layout = 'stereo' if props.get('channels', 2) >= 2 else 'mono'
+        cmd += ['-f', 'lavfi', '-i',
+                f'anullsrc=channel_layout={layout}:sample_rate={props["sample_rate"]}']
+
+    cmd += ['-t', f'{duration_s:.6f}',
+            '-c:v', 'libx264', '-preset', 'ultrafast', '-pix_fmt', pix]
+    if 'sample_rate' in props:
+        cmd += ['-c:a', 'aac', '-shortest']
+    cmd.append(str(output_path))
+
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+    return result.returncode == 0
+
+
+def parse_merged1_clip(path: Path) -> Optional[Clip]:
+    """Parse a first-pass merged file into a Clip using ffprobe for duration."""
+    m = MERGED1_RE.match(path.name)
+    if not m:
+        return None
+    yyyy, mo, dd, hh, mm, ss = (int(m.group(i)) for i in range(1, 7))
+    try:
+        dt = datetime(yyyy, mo, dd, hh, mm, ss, tzinfo=timezone.utc)
+    except ValueError:
+        return None
+    abs_start = dt.timestamp()
+    dur = ffprobe_duration(path)
+    if dur is None:
+        print(f'          ⚠ ffprobe failed for {path.name} – skipping', flush=True)
+        return None
+    return Clip(path=path, abs_start=abs_start, duration_s=dur)
+
+
+def collect_merged1(cam_dir: Path) -> List[Clip]:
+    """Collect first-pass merged files from the camera root, sorted by start."""
+    clips: List[Clip] = []
+    for f in sorted(cam_dir.iterdir()):
+        if not f.is_file():
+            continue
+        # Exclude second-pass outputs so re-runs stay idempotent
+        if MERGED2_RE.match(f.name):
+            continue
+        clip = parse_merged1_clip(f)
+        if clip is not None:
+            clips.append(clip)
+    clips.sort(key=lambda c: c.abs_start)
+    return clips
+
+
+def merge_segment2(clips: List[Clip], cam_dir: Path) -> SegmentResult:
+    """
+    Second-pass merge: concatenate first-pass segments, inserting black frames
+    for any inter-segment gap shorter than SECOND_PASS_BLACK_GAP_S seconds so
+    that the output video accurately reflects the real recording timeline.
+    """
+    n        = len(clips)
+    dur_s    = clips[-1].abs_start + clips[-1].duration_s - clips[0].abs_start
+    start_dt = datetime.fromtimestamp(clips[0].abs_start, tz=timezone.utc)
+    ts_str   = start_dt.strftime('%Y%m%d_%H%M%S')
+
+    if n == 1:
+        return SegmentResult(
+            clips=clips, status='single',
+            output_path=str(clips[0].path),
+            message='single merged file – no re-merge needed',
+        )
+
+    out_name = f"merged2_{ts_str}_{n}segs.mp4"
+    out_path = cam_dir / out_name
+
+    if out_path.exists():
+        size_mb = out_path.stat().st_size / 1_048_576
+        return SegmentResult(
+            clips=clips, status='skipped',
+            output_path=str(out_path),
+            message=f"output already exists – skipped  ({size_mb:.1f} MB)",
+        )
+
+    # Compute per-gap values (positive = gap, negative = overlap)
+    gaps = [
+        clips[i].abs_start - (clips[i-1].abs_start + clips[i-1].duration_s)
+        for i in range(1, n)
+    ]
+    gaps_to_fill = [g for g in gaps if 0 < g < SECOND_PASS_BLACK_GAP_S]
+
+    # Get video properties once if we need to generate filler clips
+    props: Optional[dict] = None
+    if gaps_to_fill:
+        props = get_video_props(clips[0].path)
+        if props is None:
+            print('          ⚠ could not read video props – gaps will not be filled',
+                  flush=True)
+
+    tmp_black_clips: List[Path] = []
+    black_fills: List[Tuple[int, float]] = []   # (gap_index, fill_duration_s)
+    try:
+        # Build the ordered list of paths, inserting black fillers where needed
+        ordered: List[Path] = [clips[0].path]
+        for i, gap in enumerate(gaps):
+            if props is not None and 0 < gap < SECOND_PASS_BLACK_GAP_S:
+                black_path = cam_dir / f'_black_tmp_{ts_str}_{i}.mp4'
+                print(f'        generating {gap:.2f}s black filler …', flush=True)
+                if generate_black_clip(gap, props, black_path):
+                    ordered.append(black_path)
+                    tmp_black_clips.append(black_path)
+                    black_fills.append((i, gap))
+                else:
+                    print('          ⚠ black clip generation failed – gap left unfilled',
+                          flush=True)
+            ordered.append(clips[i + 1].path)
+
+        tmp_fd, tmp_path = tempfile.mkstemp(suffix='.txt', prefix='cam_concat2_')
+        try:
+            with os.fdopen(tmp_fd, 'w') as f:
+                for p in ordered:
+                    escaped = str(p.resolve()).replace('\\', '\\\\').replace("'", r"'\''")
+                    f.write(f"file '{escaped}'\n")
+
+            filler_count = len(tmp_black_clips)
+            filler_note  = f', {filler_count} gap(s) filled' if filler_count else ''
+            print(f'        ffmpeg → {out_name}  '
+                  f'({n} segs, {dur_s:.0f} s{filler_note}) …', flush=True)
+
+            result = subprocess.run(
+                ['ffmpeg', '-y', '-f', 'concat', '-safe', '0',
+                 '-i', tmp_path, '-c', 'copy', str(out_path)],
+                capture_output=True, text=True, timeout=7200,
+            )
+        except subprocess.TimeoutExpired:
+            if out_path.exists():
+                out_path.unlink()
+            return SegmentResult(
+                clips=clips, status='failed',
+                output_path=str(out_path),
+                message='ffmpeg timed out (> 2 h)',
+            )
+        finally:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+
+        if result.returncode != 0:
+            if out_path.exists():
+                out_path.unlink()
+            stderr_tail = result.stderr.strip().splitlines()
+            err_lines   = '\n'.join(stderr_tail[-8:]) if stderr_tail else '(no stderr)'
+            return SegmentResult(
+                clips=clips, status='failed',
+                output_path=str(out_path),
+                message=f"ffmpeg exited {result.returncode}:\n{err_lines}",
+            )
+
+        size_mb     = out_path.stat().st_size / 1_048_576
+        filler_note = f', {len(tmp_black_clips)} gap(s) filled with black' \
+                      if tmp_black_clips else ''
+        # --- second-pass log
+        write_merge_log(
+            out_path, clips,
+            gaps=gaps,
+            black_fills=black_fills,
+            pass_label=f'second pass (gap tol: {SECOND_PASS_BLACK_GAP_S:.0f}s black fill)',
+            props=props,
+        )
+        return SegmentResult(
+            clips=clips, status='merged',
+            output_path=str(out_path),
+            message=f"→ {out_name}  ({size_mb:.1f} MB{filler_note})",
+        )
+
+    finally:
+        for p in tmp_black_clips:
+            try:
+                p.unlink()
+            except OSError:
+                pass
+
+
+def process_camera_second_pass(participant: str, cam_dir: Path,
+                               gap_tol: float) -> dict:
+    clips    = collect_merged1(cam_dir)
+    seg_data = find_segments_with_gap(clips, gap_tol)
+    results: List[SegmentResult] = []
+
+    for i, (seg_clips, overlaps) in enumerate(seg_data):
+        gap_before: Optional[float] = None
+        if i > 0:
+            prev_clips = seg_data[i - 1][0]
+            prev_end   = prev_clips[-1].abs_start + prev_clips[-1].duration_s
+            gap_before = seg_clips[0].abs_start - prev_end
+
+        res = merge_segment2(seg_clips, cam_dir)
+        res.gap_before = gap_before
+        res.overlaps   = overlaps
+        results.append(res)
+
+    return {
+        'participant': participant,
+        'camera':      cam_dir.name,
+        'clips_total': len(clips),
+        'results':     results,
+    }
+
+
+# ─── Segment detection (gap-configurable) ─────────────────────────────────────
+def find_segments_with_gap(
+    clips: List[Clip],
+    gap_tol: float,
+    overlap_tol: float = OVERLAP_TOL_S,
+) -> List[Tuple[List[Clip], List[float]]]:
+    """Group sorted clips into contiguous segments with the given tolerances."""
+    if not clips:
+        return []
+
+    segments: List[Tuple[List[Clip], List[float]]] = []
+    current:  List[Clip]  = [clips[0]]
+    overlaps: List[float] = []
+
+    for clip in clips[1:]:
+        prev     = current[-1]
+        expected = prev.abs_start + prev.duration_s
+        gap      = clip.abs_start - expected
+
+        if gap <= gap_tol and gap >= -overlap_tol:
+            current.append(clip)
+            if gap < -0.05:
+                overlaps.append(-gap)
+        else:
+            segments.append((current, overlaps))
+            current  = [clip]
+            overlaps = []
+
+    segments.append((current, overlaps))
+    return segments
+
+
+# ─── Segment detection ─────────────────────────────────────────────────────────
+def find_segments(clips: List[Clip]) -> List[Tuple[List[Clip], List[float]]]:
+    """Group chronologically sorted clips into contiguous segments (first-pass tolerances)."""
+    return find_segments_with_gap(clips, GAP_TOLERANCE_S, OVERLAP_TOL_S)
+
+
+# ─── ffmpeg concat ─────────────────────────────────────────────────────────────
+# ─── Log writer ─────────────────────────────────────────────────────────────
+def write_merge_log(
+    out_path: Path,
+    clips: List[Clip],
+    gaps: Optional[List[float]] = None,
+    black_fills: Optional[List[Tuple[int, float]]] = None,   # (gap_index, duration_s)
+    pass_label: str = 'first pass',
+    props: Optional[dict] = None,
+) -> None:
+    """
+    Write a human-readable .log file alongside the merged output video.
+    `gaps`       – gap in seconds between consecutive clips (len = len(clips)-1)
+    `black_fills`– list of (gap_index, fill_duration_s) for gaps that were filled
+    """
+    log_path = out_path.with_suffix('.log')
+    from datetime import datetime as _dt, timezone as _tz
+
+    filled_idx: dict = {idx: dur for idx, dur in (black_fills or [])}
+    total_content_s = sum(c.duration_s for c in clips)
+    total_black_s   = sum(d for _, d in (black_fills or []))
+    span_s          = clips[-1].abs_start + clips[-1].duration_s - clips[0].abs_start
+
+    with open(log_path, 'w', encoding='utf-8') as f:
+        f.write(f'Camera Merge Log\n')
+        f.write(f'  Generated : {_dt.now(_tz.utc).strftime("%Y-%m-%d %H:%M:%S UTC")}\n')
+        f.write(f'  Pass      : {pass_label}\n')
+        f.write(f'  Output    : {out_path.name}\n')
+        f.write(f'  File size : {out_path.stat().st_size / 1_048_576:.1f} MB\n')
+        f.write('\n')
+        f.write(f'Timeline\n')
+        t0_str = _dt.fromtimestamp(clips[0].abs_start, tz=_tz.utc).strftime('%H:%M:%S')
+        t1_str = _dt.fromtimestamp(
+            clips[-1].abs_start + clips[-1].duration_s, tz=_tz.utc).strftime('%H:%M:%S')
+        f.write(f'  Wall-clock span : {t0_str} → {t1_str}  ({span_s:.1f} s)\n')
+        f.write(f'  Content footage : {total_content_s:.1f} s\n')
+        if total_black_s:
+            f.write(f'  Black filler    : {total_black_s:.2f} s '
+                    f'({len(filled_idx)} gap(s))\n')
+        if props:
+            f.write(f'  Video props     : {props["width"]}x{props["height"]} '
+                    f'{props.get("fps","?")} fps  {props.get("pix_fmt","?")}\n')
+            if 'sample_rate' in props:
+                f.write(f'  Audio props     : {props["sample_rate"]} Hz  '
+                        f'{props.get("channels","?")}ch\n')
+        f.write('\n')
+        f.write(f'Input clips ({len(clips)})\n')
+        for idx, clip in enumerate(clips):
+            t0 = _dt.fromtimestamp(clip.abs_start, tz=_tz.utc).strftime('%H:%M:%S')
+            t1 = _dt.fromtimestamp(
+                clip.abs_start + clip.duration_s, tz=_tz.utc).strftime('%H:%M:%S')
+            f.write(f'  [{idx+1:>3}] {clip.path.name:<55} '
+                    f'{t0} → {t1}  ({clip.duration_s:.1f} s)\n')
+            if gaps and idx < len(gaps):
+                g = gaps[idx]
+                if g > 0.05:
+                    if idx in filled_idx:
+                        f.write(f'         ↕ gap: {g:.2f} s  '
+                                f'→ filled with {filled_idx[idx]:.2f} s black frames\n')
+                    else:
+                        f.write(f'         ↕ gap: {g:.2f} s\n')
+                elif g < -0.05:
+                    f.write(f'         ↕ overlap: {-g:.2f} s\n')
+
+
+
+    n        = len(clips)
+    dur_s    = clips[-1].abs_start + clips[-1].duration_s - clips[0].abs_start
+    start_dt = datetime.fromtimestamp(clips[0].abs_start, tz=timezone.utc)
+    ts_str   = start_dt.strftime('%Y%m%d_%H%M%S')
+
+    if n == 1:
+        return SegmentResult(
+            clips=clips, status='single',
+            output_path=str(clips[0].path),
+            message='single clip – no merge needed',
+        )
+
+    out_name = f"merged_{ts_str}_{n}clips.mp4"
+    out_path = cam_dir / out_name
+
+    if out_path.exists():
+        size_mb = out_path.stat().st_size / 1_048_576
+        return SegmentResult(
+            clips=clips, status='skipped',
+            output_path=str(out_path),
+            message=f"output already exists – skipped  ({size_mb:.1f} MB)",
+        )
+
+    # Build concat list in a temp file
+    tmp_fd, tmp_path = tempfile.mkstemp(suffix='.txt', prefix='cam_concat_')
+    try:
+        with os.fdopen(tmp_fd, 'w') as f:
+            for clip in clips:
+                # ffmpeg concat demuxer: escape backslashes then single quotes
+                p = str(clip.path.resolve()).replace('\\', '\\\\').replace("'", r"'\''")
+                f.write(f"file '{p}'\n")
+
+        print(f"        ffmpeg → {out_name}  ({n} clips, {dur_s:.0f} s) …", flush=True)
+
+        result = subprocess.run(
+            ['ffmpeg', '-y', '-f', 'concat', '-safe', '0',
+             '-i', tmp_path, '-c', 'copy', str(out_path)],
+            capture_output=True, text=True, timeout=7200,
+        )
+    except subprocess.TimeoutExpired:
+        if out_path.exists():
+            out_path.unlink()
+        return SegmentResult(
+            clips=clips, status='failed',
+            output_path=str(out_path),
+            message='ffmpeg timed out (> 2 h)',
+        )
+    finally:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+
+    if result.returncode != 0:
+        if out_path.exists():
+            out_path.unlink()
+        stderr_tail = result.stderr.strip().splitlines()
+        err_lines   = '\n'.join(stderr_tail[-8:]) if stderr_tail else '(no stderr)'
+        return SegmentResult(
+            clips=clips, status='failed',
+            output_path=str(out_path),
+            message=f"ffmpeg exited {result.returncode}:\n{err_lines}",
+        )
+
+    size_mb = out_path.stat().st_size / 1_048_576
+    # --- first-pass gaps (raw clip boundaries)
+    raw_gaps = [
+        clips[i].abs_start - (clips[i-1].abs_start + clips[i-1].duration_s)
+        for i in range(1, n)
+    ]
+    write_merge_log(out_path, clips, gaps=raw_gaps, pass_label='first pass')
+    return SegmentResult(
+        clips=clips, status='merged',
+        output_path=str(out_path),
+        message=f"→ {out_name}  ({size_mb:.1f} MB)",
+    )
+
+
+# ─── Camera-folder processor ───────────────────────────────────────────────────
+def process_camera(participant: str, cam_dir: Path) -> dict:
+    clips    = collect_clips(cam_dir)
+    seg_data = find_segments(clips)
+    results: List[SegmentResult] = []
+
+    for i, (seg_clips, overlaps) in enumerate(seg_data):
+        # compute gap from the previous segment
+        gap_before: Optional[float] = None
+        if i > 0:
+            prev_clips = seg_data[i - 1][0]
+            prev_end   = prev_clips[-1].abs_start + prev_clips[-1].duration_s
+            gap_before = seg_clips[0].abs_start - prev_end
+
+        res = merge_segment(seg_clips, cam_dir)
+        res.gap_before = gap_before
+        res.overlaps   = overlaps
+        results.append(res)
+
+    return {
+        'participant': participant,
+        'camera':      cam_dir.name,
+        'clips_total': len(clips),
+        'results':     results,
+    }
+
+
+# ─── Entry point ───────────────────────────────────────────────────────────────
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description='Merge camera clips or re-merge first-pass segments.')
+    parser.add_argument(
+        '--second-pass', metavar='GAP_S', nargs='?', const=SECOND_PASS_GAP_S,
+        type=float,
+        help=f'Second pass: re-merge adjacent merged_*.mp4 files '
+             f'with gap ≤ GAP_S seconds (default: {SECOND_PASS_GAP_S})')
+    args = parser.parse_args()
+    second_pass      = args.second_pass is not None
+    second_pass_gap  = args.second_pass if second_pass else SECOND_PASS_GAP_S
+
+    # Verify ffmpeg / ffprobe are accessible
+    probe = subprocess.run(['ffmpeg', '-version'], capture_output=True)
+    if probe.returncode != 0:
+        sys.exit("ERROR: ffmpeg not found in PATH – aborting.")
+    if second_pass:
+        probe2 = subprocess.run(['ffprobe', '-version'], capture_output=True)
+        if probe2.returncode != 0:
+            sys.exit("ERROR: ffprobe not found in PATH – required for second pass.")
+
+    participants = sorted(
+        [d for d in HITLS_DIR.iterdir()
+         if d.is_dir() and PARTICIPANT_RE.match(d.name)],
+        key=lambda p: p.name,
+    )
+    if not participants:
+        print("No participant directories (P02, P03 …) found.")
+        return
+
+    mode_label = (
+        f'SECOND PASS  (gap tolerance: {second_pass_gap:.0f} s)'
+        if second_pass else 'FIRST PASS'
+    )
+    print(f"Mode: {mode_label}")
+    print(f"Found {len(participants)} participant(s): "
+          f"{', '.join(p.name for p in participants)}\n")
+
+    all_reports: List[dict] = []
+    for pdir in participants:
+        for cam_name in CAMERA_NAMES:
+            cam_dir = pdir / cam_name
+            if not cam_dir.is_dir():
+                continue
+            print(f"  Processing {pdir.name}/{cam_name} …", flush=True)
+            if second_pass:
+                report = process_camera_second_pass(pdir.name, cam_dir, second_pass_gap)
+                label  = 'merged segment(s)'
+            else:
+                report = process_camera(pdir.name, cam_dir)
+                label  = 'clip(s)'
+            all_reports.append(report)
+            print(f"    {report['clips_total']} {label}  →  "
+                  f"{len(report['results'])} segment(s)", flush=True)
+
+    # ── Final report ──────────────────────────────────────────────────────────
+    SEP  = '═' * 76
+    SEP2 = '─' * 76
+    ICONS = {'merged': '✓', 'skipped': '↷', 'single': '·', 'failed': '✗'}
+
+    print(f"\n{SEP}")
+    print(f"  CAMERA MERGE REPORT  —  {mode_label}")
+    print(SEP)
+
+    totals = {k: 0 for k in ICONS}
+
+    for r in all_reports:
+        results: List[SegmentResult] = r['results']
+        print(f"\n  ▶  {r['participant']}/{r['camera']}"
+              f"   ({r['clips_total']} clips, {len(results)} segment(s))")
+
+        for res in results:
+            n      = len(res.clips)
+            t0     = datetime.fromtimestamp(res.clips[0].abs_start, tz=timezone.utc).strftime('%H:%M:%S')
+            t1_ep  = res.clips[-1].abs_start + res.clips[-1].duration_s
+            t1     = datetime.fromtimestamp(t1_ep, tz=timezone.utc).strftime('%H:%M:%S')
+            dur_s  = t1_ep - res.clips[0].abs_start
+            ic     = ICONS.get(res.status, '?')
+
+            print(f"     [{ic}] {t0} → {t1}  ({n} clip(s), {dur_s:.0f} s)")
+            for line in res.message.splitlines():
+                print(f"          {line}")
+            if res.overlaps:
+                ov_str = ', '.join(f"{o:.2f} s" for o in res.overlaps)
+                print(f"          ⚠ intra-segment overlap(s): {ov_str}")
+            if res.gap_before is not None:
+                print(f"          ↕ gap from previous segment: {res.gap_before:.1f} s")
+
+            totals[res.status] = totals.get(res.status, 0) + 1
+
+    print(f"\n{SEP2}")
+    print(f"  Segments merged (new):   {totals['merged']}")
+    print(f"  Segments skipped:        {totals['skipped']}  (output already existed)")
+    print(f"  Single-clip segments:    {totals['single']}  (no merge needed)")
+    print(f"  Failed:                  {totals['failed']}")
+    print(SEP)
+
+
+if __name__ == '__main__':
+    main()

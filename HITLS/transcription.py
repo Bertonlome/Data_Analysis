@@ -1,4 +1,4 @@
-"""
+r"""
 Transcribe interview audio files (*itw*.m4a) using WhisperX + pyannote diarization.
 
 ════════════════════════════════════════════════════════════════════════════════
@@ -213,9 +213,8 @@ TODO — implement the sections below
 """
 
 # ── IMPORTS ───────────────────────────────────────────────────────────────────
-# TODO: uncomment once whisperx is installed on Windows
-# import whisperx
-# import torch
+import whisperx
+import torch
 import argparse
 import json
 import os
@@ -326,44 +325,41 @@ def transcribe_file(
 
     print(f"  [TRANSCRIBE] {audio_path.name}")
 
-    # TODO: uncomment on Windows once whisperx is installed
     # ── 1. Load model & transcribe ───────────────────────────────────────────
-    # model = whisperx.load_model(model_name, device, compute_type=compute_type)
-    # audio = whisperx.load_audio(str(audio_path))
-    # transcribe_kwargs = {"batch_size": BATCH_SIZE}
-    # if language:
-    #     transcribe_kwargs["language"] = language
-    # result = model.transcribe(audio, **transcribe_kwargs)
-    # detected_language = result["language"]
-    # print(f"    Detected language: {detected_language}")
-    # del model; torch.cuda.empty_cache()
+    model = whisperx.load_model(model_name, device, compute_type=compute_type)
+    audio = whisperx.load_audio(str(audio_path))
+    transcribe_kwargs = {"batch_size": BATCH_SIZE}
+    if language:
+        transcribe_kwargs["language"] = language
+    result = model.transcribe(audio, **transcribe_kwargs)
+    detected_language = result["language"]
+    print(f"    Detected language: {detected_language}")
+    del model; torch.cuda.empty_cache()
 
     # ── 2. Word-level alignment ───────────────────────────────────────────────
-    # align_model, metadata = whisperx.load_align_model(
-    #     language_code=detected_language, device=device)
-    # result = whisperx.align(
-    #     result["segments"], align_model, metadata, audio, device,
-    #     return_char_alignments=False)
-    # del align_model; torch.cuda.empty_cache()
+    align_model, metadata = whisperx.load_align_model(
+        language_code=detected_language, device=device)
+    result = whisperx.align(
+        result["segments"], align_model, metadata, audio, device,
+        return_char_alignments=False)
+    del align_model; torch.cuda.empty_cache()
 
     # ── 3. Diarization ───────────────────────────────────────────────────────
-    # if diarize:
-    #     diarize_model = whisperx.DiarizationPipeline(
-    #         use_auth_token=hf_token, device=device)
-    #     diarize_segments = diarize_model(audio, min_speakers=2, max_speakers=2)
-    #     result = whisperx.assign_word_speakers(diarize_segments, result)
-    #     del diarize_model; torch.cuda.empty_cache()
+    if diarize:
+        diarize_model = whisperx.diarize.DiarizationPipeline(
+            token=hf_token, device=device)
+        diarize_segments = diarize_model(audio, min_speakers=2, max_speakers=2)
+        result = whisperx.assign_word_speakers(diarize_segments, result)
+        del diarize_model; torch.cuda.empty_cache()
 
     # ── 4. Speaker renaming ───────────────────────────────────────────────────
-    # segments = rename_speakers(result["segments"], interviewer_id)
+    segments = rename_speakers(result["segments"], interviewer_id)
 
     # ── 5. Write outputs ─────────────────────────────────────────────────────
-    # write_json(segments, audio_path, detected_language, model_name, json_out)
-    # write_txt(segments, txt_out)
-    # print(f"    → {json_out.name}")
-    # print(f"    → {txt_out.name}")
-
-    pass  # remove once the above is uncommented
+    write_json(segments, audio_path, detected_language, model_name, json_out)
+    write_txt(segments, txt_out)
+    print(f"    → {json_out.name}")
+    print(f"    → {txt_out.name}")
 
 
 # ── PARTICIPANT-LEVEL ENTRY POINT ─────────────────────────────────────────────

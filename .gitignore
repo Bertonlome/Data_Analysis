@@ -22,6 +22,26 @@ __pycache__/
 *.so
 .Python
 
+# Participant Data folders
+HITLS/P02/
+HITLS/P03/
+HITLS/P04/
+HITLS/P05/
+HITLS/P06/
+HITLS/P07/
+HITLS/P08/
+HITLS/P09/
+HITLS/P10/
+HITLS/P11/
+HITLS/P12/
+HITLS/P13/
+HITLS/P14/
+HITLS/P15/
+HITLS/P16/
+HITLS/P17/
+HITLS/P18/
+HITLS/P19/
+HITLS/P20/
 # Virtual environments
 .venv/
 venv/

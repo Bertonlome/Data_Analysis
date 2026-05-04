@@ -10,47 +10,6 @@
     "frustration": 4
   },
   "conditions": {
-    "baseline_no_system": {
-      "nasa_tlx_weighted_score": 50.6667,
-      "subscales": {
-        "mental_demand": {
-          "rating_0_20": 12.0,
-          "rating_0_100": 60.0,
-          "weight": 3,
-          "weighted": 180.0
-        },
-        "physical_demand": {
-          "rating_0_20": 11.0,
-          "rating_0_100": 55.0,
-          "weight": 2,
-          "weighted": 110.0
-        },
-        "temporal_demand": {
-          "rating_0_20": 13.0,
-          "rating_0_100": 65.0,
-          "weight": 2,
-          "weighted": 130.0
-        },
-        "performance": {
-          "rating_0_20": 7.0,
-          "rating_0_100": 35.0,
-          "weight": 2,
-          "weighted": 70.0
-        },
-        "effort": {
-          "rating_0_20": 13.0,
-          "rating_0_100": 65.0,
-          "weight": 2,
-          "weighted": 130.0
-        },
-        "frustration": {
-          "rating_0_20": 7.0,
-          "rating_0_100": 35.0,
-          "weight": 4,
-          "weighted": 140.0
-        }
-      }
-    },
     "TARS": {
       "nasa_tlx_weighted_score": 57.3333,
       "subscales": {
@@ -195,21 +154,6 @@
 
   Total tallied: 15 / 15
 
-── CONDITION: baseline_no_system ─────────────────────────────────────
-
-  Subscale                     Rating    Weight    Weighted   Bar (rating/20)
-  ────────────────────   ──────────────   ───────   ─────────   ─────────────────────────
-  Mental Demand            12/20 ( 60/100)       3/5     180.0    [████████████░░░░░░░░]   12/20
-  Physical Demand          11/20 ( 55/100)       2/5     110.0    [███████████░░░░░░░░░]   11/20
-  Temporal Demand          13/20 ( 65/100)       2/5     130.0    [█████████████░░░░░░░]   13/20
-  Performance               7/20 ( 35/100)       2/5      70.0    [███████░░░░░░░░░░░░░]    7/20
-  Effort                   13/20 ( 65/100)       2/5     130.0    [█████████████░░░░░░░]   13/20
-  Frustration               7/20 ( 35/100)       4/5     140.0    [███████░░░░░░░░░░░░░]    7/20
-
-  ────────────────────────────────────────────────────────────
-  NASA-TLX Weighted Score : 50.67 / 100
-  Interpretation          : Moderate workload
-
 ── CONDITION: TARS ───────────────────────────────────────────────────
 
   Subscale                     Rating    Weight    Weighted   Bar (rating/20)
@@ -259,7 +203,6 @@
 
   Condition                   NASA-TLX Score
   ─────────────────────────   ────────────────
-  baseline_no_system               50.67 / 100
   TARS                             57.33 / 100
   TARP-S                           37.33 / 100
   TARP-F                           67.67 / 100

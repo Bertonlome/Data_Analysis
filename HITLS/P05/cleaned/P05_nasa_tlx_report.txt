@@ -52,7 +52,7 @@
       }
     },
     "TARC": {
-      "nasa_tlx_weighted_score": 44.3333,
+      "nasa_tlx_weighted_score": 27.6667,
       "subscales": {
         "mental_demand": {
           "rating_0_20": 7.0,
@@ -73,10 +73,10 @@
           "weighted": 100.0
         },
         "performance": {
-          "rating_0_20": 15.0,
-          "rating_0_100": 75.0,
+          "rating_0_20": 5.0,
+          "rating_0_100": 25.0,
           "weight": 5,
-          "weighted": 375.0
+          "weighted": 125.0
         },
         "effort": {
           "rating_0_20": 7.0,
@@ -217,13 +217,13 @@
   Mental Demand             7/20 ( 35/100)       3/5     105.0    [███████░░░░░░░░░░░░░]    7/20
   Physical Demand           3/20 ( 15/100)       1/5      15.0    [███░░░░░░░░░░░░░░░░░]    3/20
   Temporal Demand           5/20 ( 25/100)       4/5     100.0    [█████░░░░░░░░░░░░░░░]    5/20
-  Performance              15/20 ( 75/100)       5/5     375.0    [███████████████░░░░░]   15/20
+  Performance               5/20 ( 25/100)       5/5     125.0    [█████░░░░░░░░░░░░░░░]    5/20
   Effort                    7/20 ( 35/100)       2/5      70.0    [███████░░░░░░░░░░░░░]    7/20
   Frustration               3/20 ( 15/100)       0/5       0.0    [███░░░░░░░░░░░░░░░░░]    3/20
 
   ────────────────────────────────────────────────────────────
-  NASA-TLX Weighted Score : 44.33 / 100
-  Interpretation          : Moderate workload
+  NASA-TLX Weighted Score : 27.67 / 100
+  Interpretation          : Low workload
 
 ── CONDITION: TARP-S ─────────────────────────────────────────────────
 
@@ -260,7 +260,7 @@
   Condition                   NASA-TLX Score
   ─────────────────────────   ────────────────
   TARS                             47.67 / 100
-  TARC                             44.33 / 100
+  TARC                             27.67 / 100
   TARP-S                           48.33 / 100
   TARP-F                           20.00 / 100
 

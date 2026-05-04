@@ -93,13 +93,13 @@
       }
     },
     "TARP-S": {
-      "nasa_tlx_weighted_score": 73.0,
+      "nasa_tlx_weighted_score": 57.6667,
       "subscales": {
         "mental_demand": {
-          "rating_0_20": 20.0,
-          "rating_0_100": 100.0,
+          "rating_0_20": 14.0,
+          "rating_0_100": 70.0,
           "weight": 3,
-          "weighted": 300.0
+          "weighted": 210.0
         },
         "physical_demand": {
           "rating_0_20": 14.0,
@@ -108,10 +108,10 @@
           "weighted": 210.0
         },
         "temporal_demand": {
-          "rating_0_20": 17.0,
-          "rating_0_100": 85.0,
+          "rating_0_20": 10.0,
+          "rating_0_100": 50.0,
           "weight": 4,
-          "weighted": 340.0
+          "weighted": 200.0
         },
         "performance": {
           "rating_0_20": 7.0,
@@ -229,16 +229,16 @@
 
   Subscale                     Rating    Weight    Weighted   Bar (rating/20)
   ────────────────────   ──────────────   ───────   ─────────   ─────────────────────────
-  Mental Demand            20/20 (100/100)       3/5     300.0    [████████████████████]   20/20
+  Mental Demand            14/20 ( 70/100)       3/5     210.0    [██████████████░░░░░░]   14/20
   Physical Demand          14/20 ( 70/100)       3/5     210.0    [██████████████░░░░░░]   14/20
-  Temporal Demand          17/20 ( 85/100)       4/5     340.0    [█████████████████░░░]   17/20
+  Temporal Demand          10/20 ( 50/100)       4/5     200.0    [██████████░░░░░░░░░░]   10/20
   Performance               7/20 ( 35/100)       1/5      35.0    [███████░░░░░░░░░░░░░]    7/20
   Effort                   14/20 ( 70/100)       2/5     140.0    [██████████████░░░░░░]   14/20
   Frustration               7/20 ( 35/100)       2/5      70.0    [███████░░░░░░░░░░░░░]    7/20
 
   ────────────────────────────────────────────────────────────
-  NASA-TLX Weighted Score : 73.00 / 100
-  Interpretation          : High workload
+  NASA-TLX Weighted Score : 57.67 / 100
+  Interpretation          : Moderate workload
 
 ── CONDITION: TARP-F ─────────────────────────────────────────────────
 
@@ -261,7 +261,7 @@
   ─────────────────────────   ────────────────
   TARS                             49.33 / 100
   TARC                             30.00 / 100
-  TARP-S                           73.00 / 100
+  TARP-S                           57.67 / 100
   TARP-F                           31.33 / 100
 
 ========================================================================

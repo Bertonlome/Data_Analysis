@@ -2,6 +2,13 @@ import os
 import csv
 import json
 from collections import defaultdict
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+from matplotlib.lines import Line2D
+from matplotlib.gridspec import GridSpec
 
 HITLS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -224,6 +231,175 @@ def build_report(participant_id, weights, all_ratings):
     return "\n".join(lines)
 
 
+def generate_visual_report(participant_id, weights, all_ratings, conditions,
+                           save_dir=None):
+    """
+    Visual per-participant NASA-TLX report — three sections:
+
+      Top-left  : dimension ranking (pairwise weights, sorted best → worst)
+      Top-right : per-dimension horizontal 0-20 strip with one marker per condition
+      Bottom    : computed-score formula + breakdown table
+
+    Saved as <participant_id>_nasa_tlx_visual.png in *save_dir* if provided.
+    Returns the matplotlib Figure.
+    """
+    COND_COLORS = {
+        "baseline_no_system": "#888888",
+        "TARS":               "#4472C4",
+        "TARC":               "#ED7D31",
+        "TARP-S":             "#70AD47",
+        "TARP-F":             "#C00000",
+    }
+    MARKERS      = ["o", "s", "D", "^", "v"]
+    DEFAULT_COL  = "#999999"
+
+    dims    = list(SUBSCALE_LABELS.keys())
+    n_dims  = len(dims)
+    n_conds = len(conditions)
+
+    # Sorted order for the ranking panel (most selected = top)
+    sorted_dims    = sorted(dims, key=lambda k: weights.get(k, 0), reverse=True)
+    sorted_labels  = [SUBSCALE_LABELS[k] for k in sorted_dims]
+    sorted_weights = [weights.get(k, 0) for k in sorted_dims]
+
+    cond_style = {
+        c: {"color": COND_COLORS.get(c, DEFAULT_COL),
+            "marker": MARKERS[i % len(MARKERS)]}
+        for i, c in enumerate(conditions)
+    }
+
+    # ── Figure layout ─────────────────────────────────────────────────────────
+    formula_h = n_conds * 0.60 + 2.0
+    strip_h   = max(5.0, n_dims * 0.90)
+    fig = plt.figure(figsize=(14, strip_h + formula_h + 0.8))
+    fig.suptitle(f"NASA-TLX Visual Report — {participant_id}",
+                 fontsize=13, fontweight="bold")
+
+    gs_outer = GridSpec(2, 1, figure=fig,
+                        height_ratios=[strip_h, formula_h],
+                        hspace=0.40)
+
+    # Top half: ranking (left) + rating strips (right)
+    gs_top = gs_outer[0].subgridspec(n_dims, 2,
+                                     width_ratios=[1, 2.5],
+                                     hspace=0.05, wspace=0.42)
+
+    # Bottom half: formula text
+    ax_formula = fig.add_subplot(gs_outer[1])
+    ax_formula.axis("off")
+
+    # ── Ranking panel ─────────────────────────────────────────────────────────
+    ax_rank = fig.add_subplot(gs_top[:, 0])
+    rank_colors = plt.cm.RdYlGn(np.linspace(0.15, 0.85, n_dims))[::-1]
+    y_pos = list(range(n_dims))
+
+    bars = ax_rank.barh(y_pos, sorted_weights,
+                        color=rank_colors, edgecolor="white", height=0.62)
+    for bar, val in zip(bars, sorted_weights):
+        ax_rank.text(val + 0.06, bar.get_y() + bar.get_height() / 2,
+                     str(val), va="center", ha="left", fontsize=9,
+                     fontweight="bold")
+
+    ax_rank.set_yticks(y_pos)
+    ax_rank.set_yticklabels(sorted_labels, fontsize=9)
+    ax_rank.set_xlim(0, 6.2)
+    ax_rank.set_xticks(range(6))
+    ax_rank.set_xlabel("Weight (0–5 pairwise selections)", fontsize=8)
+    ax_rank.set_title("Dimension Ranking\n(pairwise weights)", fontsize=9,
+                      fontweight="bold")
+    ax_rank.invert_yaxis()
+    ax_rank.grid(axis="x", linestyle=":", alpha=0.4)
+
+    # ── Rating strips (one per dimension, right column) ───────────────────────
+    ax_strips = []
+    for ki, key in enumerate(dims):
+        share = ax_strips[0] if ki > 0 else None
+        ax = fig.add_subplot(gs_top[ki, 1], sharex=share)
+        ax_strips.append(ax)
+
+        # Faint bin lines at every integer 0-20
+        for x in range(0, 21):
+            ax.axvline(x, color="#e6e6e6", linewidth=0.4, zorder=0)
+
+        for i, cond in enumerate(conditions):
+            rating = all_ratings.get(cond, {}).get(key)
+            if rating is None:
+                continue
+            style = cond_style[cond]
+            y_off = (i - (n_conds - 1) / 2.0) * 0.16
+            ax.scatter(rating, y_off,
+                       color=style["color"], marker=style["marker"],
+                       s=110, zorder=5, edgecolors="white", linewidths=0.8)
+            ax.text(rating, y_off + 0.30, f"{int(rating)}",
+                    ha="center", va="bottom", fontsize=6.5,
+                    color=style["color"], fontweight="bold")
+
+        ax.set_xlim(-0.5, 20.5)
+        ax.set_ylim(-0.70, 0.70)
+        ax.set_yticks([])
+        ax.set_ylabel(SUBSCALE_LABELS[key], fontsize=8.5,
+                      rotation=0, ha="right", va="center", labelpad=6)
+        ax.grid(axis="x", linestyle=":", alpha=0.3)
+
+        if ki < n_dims - 1:
+            ax.tick_params(labelbottom=False)
+        else:
+            ax.set_xticks(range(0, 21))
+            ax.tick_params(axis="x", labelsize=7)
+            ax.set_xlabel("Rating (0–20)", fontsize=8)
+
+    ax_strips[0].set_title("Ratings per Condition  (0–20 · 20 bins)",
+                            fontsize=9, fontweight="bold")
+
+    # ── Formula + breakdown table ─────────────────────────────────────────────
+    abbr = {"mental_demand": "MD", "physical_demand": "PD",
+            "temporal_demand": "TD", "performance": "Perf",
+            "effort": "Eff", "frustration": "Frust"}
+
+    lines = ["Formula:  Score = Σ(weight_i × rating_i × 5) / 15\n"]
+    for cond in conditions:
+        score, details = compute_nasa_tlx(weights, all_ratings.get(cond, {}))
+        if score is None:
+            lines.append(f"  {cond:<14}: no data")
+            continue
+        parts = "  ".join(
+            f"{abbr[k]}: {details[k]['weight']}×{details[k]['rating']:.0f}"
+            for k in dims if k in details
+        )
+        lines.append(f"  {cond:<14}: {parts}  →  {score:.1f} / 100")
+
+    ax_formula.text(0.02, 0.96, "\n".join(lines),
+                    transform=ax_formula.transAxes,
+                    fontsize=8.5, va="top", ha="left", family="monospace",
+                    bbox=dict(boxstyle="round,pad=0.5", facecolor="#f5f5f5",
+                              edgecolor="#cccccc", alpha=0.9))
+    ax_formula.set_title("Computed Score", fontsize=9, fontweight="bold",
+                         loc="left", pad=4)
+
+    # ── Legend ────────────────────────────────────────────────────────────────
+    legend_handles = [
+        Line2D([0], [0], color=cond_style[c]["color"],
+               marker=cond_style[c]["marker"], linestyle="None",
+               markersize=9, markeredgecolor="white", markeredgewidth=0.8,
+               label=c)
+        for c in conditions
+    ]
+    fig.legend(handles=legend_handles, loc="lower left",
+               bbox_to_anchor=(0.01, 0.01), fontsize=8.5,
+               ncol=min(len(conditions), 5),
+               title="Condition", title_fontsize=8, framealpha=0.95)
+
+    fig.tight_layout()
+
+    if save_dir:
+        os.makedirs(save_dir, exist_ok=True)
+        path = os.path.join(save_dir, f"{participant_id}_nasa_tlx_visual.png")
+        fig.savefig(path, dpi=150, bbox_inches="tight")
+        print(f"  Visual report saved → {os.path.relpath(path)}")
+
+    return fig
+
+
 def main():
     participants = find_participants()
     if not participants:
@@ -281,6 +457,11 @@ def main():
         f.write(json_block)
         f.write(report)
     print(f"  Report saved to: {os.path.relpath(out_path)}")
+
+    cleaned_dir = os.path.dirname(out_path)
+    generate_visual_report(participant_id, weights, all_ratings,
+                           conditions, save_dir=cleaned_dir)
+    plt.show()
 
 
 if __name__ == "__main__":

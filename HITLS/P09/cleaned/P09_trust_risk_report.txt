@@ -3,12 +3,8 @@
   "participant": "P09",
   "conditions": {
     "TARS": {
-      "trust_vas": 81,
-      "risk_vas": 25
-    },
-    "TARC": {
-      "trust_vas": 80,
-      "risk_vas": 15
+      "trust_vas": 72,
+      "risk_vas": 21
     },
     "TARP-S": {
       "trust_vas": 68,
@@ -35,20 +31,10 @@
 ──────────────────────────────────────────────────────────────────────────────
 
   How would you rate your level of trust in the system?
-    Score :  81 / 100   [████████████████████████░░░░░░]
+    Score :  72 / 100   [█████████████████████░░░░░░░░░]
 
   How would you rate the level of perceived risk associated with using the system?
-    Score :  25 / 100   [███████░░░░░░░░░░░░░░░░░░░░░░░]
-
-──────────────────────────────────────────────────────────────────────────────
-  CONDITION: TARC
-──────────────────────────────────────────────────────────────────────────────
-
-  How would you rate your level of trust in the system?
-    Score :  80 / 100   [████████████████████████░░░░░░]
-
-  How would you rate the level of perceived risk associated with using the system?
-    Score :  15 / 100   [████░░░░░░░░░░░░░░░░░░░░░░░░░░]
+    Score :  21 / 100   [██████░░░░░░░░░░░░░░░░░░░░░░░░]
 
 ──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARP-S
@@ -76,8 +62,7 @@
 
   Condition                  trust_vas      risk_vas
   ──────────────────────────────────────────────────
-  TARS                          81/100        25/100
-  TARC                          80/100        15/100
+  TARS                          72/100        21/100
   TARP-S                        68/100        29/100
   TARP-F                        60/100        59/100
 

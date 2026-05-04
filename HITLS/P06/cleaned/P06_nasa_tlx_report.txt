@@ -51,47 +51,6 @@
         }
       }
     },
-    "TARC": {
-      "nasa_tlx_weighted_score": 71.3333,
-      "subscales": {
-        "mental_demand": {
-          "rating_0_20": 16.0,
-          "rating_0_100": 80.0,
-          "weight": 3,
-          "weighted": 240.0
-        },
-        "physical_demand": {
-          "rating_0_20": 13.0,
-          "rating_0_100": 65.0,
-          "weight": 0,
-          "weighted": 0.0
-        },
-        "temporal_demand": {
-          "rating_0_20": 12.0,
-          "rating_0_100": 60.0,
-          "weight": 4,
-          "weighted": 240.0
-        },
-        "performance": {
-          "rating_0_20": 14.0,
-          "rating_0_100": 70.0,
-          "weight": 2,
-          "weighted": 140.0
-        },
-        "effort": {
-          "rating_0_20": 15.0,
-          "rating_0_100": 75.0,
-          "weight": 5,
-          "weighted": 375.0
-        },
-        "frustration": {
-          "rating_0_20": 15.0,
-          "rating_0_100": 75.0,
-          "weight": 1,
-          "weighted": 75.0
-        }
-      }
-    },
     "TARP-S": {
       "nasa_tlx_weighted_score": 67.6667,
       "subscales": {
@@ -210,21 +169,6 @@
   NASA-TLX Weighted Score : 62.67 / 100
   Interpretation          : High workload
 
-── CONDITION: TARC ───────────────────────────────────────────────────
-
-  Subscale                     Rating    Weight    Weighted   Bar (rating/20)
-  ────────────────────   ──────────────   ───────   ─────────   ─────────────────────────
-  Mental Demand            16/20 ( 80/100)       3/5     240.0    [████████████████░░░░]   16/20
-  Physical Demand          13/20 ( 65/100)       0/5       0.0    [█████████████░░░░░░░]   13/20
-  Temporal Demand          12/20 ( 60/100)       4/5     240.0    [████████████░░░░░░░░]   12/20
-  Performance              14/20 ( 70/100)       2/5     140.0    [██████████████░░░░░░]   14/20
-  Effort                   15/20 ( 75/100)       5/5     375.0    [███████████████░░░░░]   15/20
-  Frustration              15/20 ( 75/100)       1/5      75.0    [███████████████░░░░░]   15/20
-
-  ────────────────────────────────────────────────────────────
-  NASA-TLX Weighted Score : 71.33 / 100
-  Interpretation          : High workload
-
 ── CONDITION: TARP-S ─────────────────────────────────────────────────
 
   Subscale                     Rating    Weight    Weighted   Bar (rating/20)
@@ -260,7 +204,6 @@
   Condition                   NASA-TLX Score
   ─────────────────────────   ────────────────
   TARS                             62.67 / 100
-  TARC                             71.33 / 100
   TARP-S                           67.67 / 100
   TARP-F                           61.00 / 100
 

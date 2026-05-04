@@ -25,10 +25,11 @@ Box plots
   The choice between t-test, Wilcoxon, ANOVA, Friedman, etc. is a separate step.
 """
 
-import os, sys, json, subprocess, glob
+import os, sys, json, subprocess, glob, textwrap
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+from scipy.stats import gaussian_kde
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 HITLS_DIR    = os.path.dirname(os.path.abspath(__file__))
@@ -52,25 +53,33 @@ COND_COLOR = {
     "TARP-F": "#C00000",
 }
 
+# Per-pair visual styles (color, marker) — index aligned with _ALL_PAIRS order
+# TARP-S − TARS | TARP-F − TARS | TARP-F − TARP-S
+_PAIR_STYLES = [
+    ("#70AD47", "o"),   # TARP-S − TARS   (green / circle)
+    ("#C00000", "s"),   # TARP-F − TARS   (red   / square)
+    ("#7030A0", "^"),   # TARP-F − TARP-S (purple / triangle)
+]
+
 # ── Likert colour palettes ───────────────────────────────────────────────────
-#   Index 0  →  lowest score  →  deep red
-#   Index -1 →  highest score →  deep green
+#   Index 0  →  lowest score  →  dark orange (strongly disagree)
+#   Index -1 →  highest score →  dark blue   (strongly agree)
 COLORS_5 = [
-    "#CC0000",   # 1  deep red
-    "#FF8000",   # 2  orange
-    "#FFD700",   # 3  yellow
-    "#66CC00",   # 4  light green
-    "#006600",   # 5  deep green
+    "#C44E00",   # 0  strongly disagree  (dark orange)
+    "#E6730D",   # 1  disagree           (orange)
+    "#D0D0D0",   # 2  neutral            (light grey)
+    "#93C4DE",   # 3  agree              (light blue)
+    "#2E75B6",   # 4  strongly agree     (dark blue)
 ]
 
 COLORS_7 = [
-    "#CC0000",   # 1  deep red
-    "#FF4000",   # 2  light red
-    "#FF8000",   # 3  orange
-    "#FFD700",   # 4  yellow
-    "#66CC00",   # 5  light green
-    "#00AA00",   # 6  medium green
-    "#006600",   # 7  deep green
+    "#8B3300",   # 0  strongly disagree  (very dark orange)
+    "#C44E00",   # 1                      (dark orange)
+    "#E6730D",   # 2                      (orange)
+    "#D0D0D0",   # 3  neutral            (light grey)
+    "#93C4DE",   # 4                      (light blue)
+    "#5A9EC5",   # 5                      (medium blue)
+    "#2E75B6",   # 6  strongly agree     (dark blue)
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -78,7 +87,7 @@ COLORS_7 = [
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def find_participants():
-    dirs = sorted(glob.glob(os.path.join(HITLS_DIR, "P0*")))
+    dirs = sorted(glob.glob(os.path.join(HITLS_DIR, "P*")))
     return [os.path.basename(d) for d in dirs if os.path.isdir(d)]
 
 
@@ -124,7 +133,7 @@ def load_json(path):
 def load_all(participants):
     data = {}
     tags = ("sus", "tia", "trust_risk", "nasa_tlx",
-            "oversight_bespoke", "pre_experiment_form")
+            "oversight_bespoke", "perceived_control", "pre_experiment_form")
     for pid in participants:
         cdir = cleaned_dir(pid)
         reps = {}
@@ -145,16 +154,20 @@ def save_fig(fig, filename):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-#  Diverging stacked bar scaffold
+#  Stacked bar scaffold
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def _draw_diverging_row(ax, y, counts, palette, inverted=False, height=0.72):
-    """Draw one diverging bar at vertical position *y*.
+# Light colours where white text would be invisible → use black text instead
+_LIGHT_COLORS = {"#D0D0D0", "#FFD700", "#FFFFFF"}
 
-    *counts* : list of ints, one per score level (index 0 = lowest score).
-    Bars split at the centre: low scores extend left (red), high scores right (green).
-    The middle level (odd-length scales) is split half-left / half-right.
-    Segment count labels are printed in white inside each segment.
+
+def _draw_stacked_row(ax, y, counts, palette, inverted=False, height=0.72):
+    """Draw one left-to-right stacked bar at vertical position *y*.
+
+    *counts* : list of ints, index 0 = strongly disagree (orange end),
+               index -1 = strongly agree (blue end).
+    Stacks from x=0 rightward; segment width = count.
+    Count labels are printed inside each segment (white or black by luminance).
     """
     cnt = list(counts)
     pal = list(palette)
@@ -162,46 +175,15 @@ def _draw_diverging_row(ax, y, counts, palette, inverted=False, height=0.72):
         cnt = cnt[::-1]
         pal = pal[::-1]
 
-    n = len(cnt)
-    mid = n // 2 if n % 2 == 1 else None
-    half_mid = cnt[mid] / 2.0 if mid is not None else 0.0
-
-    # Left side — scores below the midpoint, drawn outward from centre
-    cursor = -half_mid
-    left_range = range(mid - 1, -1, -1) if mid is not None else range(n // 2 - 1, -1, -1)
-    for i in left_range:
-        w = cnt[i]
-        if w > 0:
-            ax.barh(y, -w, left=cursor, height=height, color=pal[i],
-                    edgecolor="white", linewidth=0.5)
-            ax.text(cursor - w / 2, y, str(int(w)),
-                    ha="center", va="center", fontsize=7.5,
-                    color="white", fontweight="bold")
-        cursor -= w
-
-    # Middle (neutral) — split half-left / half-right
-    if mid is not None and cnt[mid] > 0:
-        color = pal[mid]
-        if half_mid > 0:
-            ax.barh(y, -half_mid, left=0,        height=height, color=color,
-                    edgecolor="white", linewidth=0.5)
-            ax.barh(y,  half_mid, left=0,        height=height, color=color,
-                    edgecolor="white", linewidth=0.5)
-        ax.text(0, y, str(int(cnt[mid])),
-                ha="center", va="center", fontsize=7.5,
-                color="black", fontweight="bold")
-
-    # Right side — scores above the midpoint, drawn outward from centre
-    cursor = half_mid
-    right_start = mid + 1 if mid is not None else n // 2
-    for i in range(right_start, n):
-        w = cnt[i]
+    cursor = 0.0
+    for i, w in enumerate(cnt):
         if w > 0:
             ax.barh(y, w, left=cursor, height=height, color=pal[i],
                     edgecolor="white", linewidth=0.5)
+            txt_color = "black" if pal[i] in _LIGHT_COLORS else "white"
             ax.text(cursor + w / 2, y, str(int(w)),
                     ha="center", va="center", fontsize=7.5,
-                    color="white", fontweight="bold")
+                    color=txt_color, fontweight="bold")
         cursor += w
 
 
@@ -334,6 +316,63 @@ def _draw_diff_panel(ax, raw_by_cond, baseline, compare, n_items, rng,
     ax.grid(axis="both", linestyle=":", alpha=0.3)
 
 
+def _draw_multi_diff_panel(ax, raw_by_cond, diff_pairs, n_items, rng,
+                           inverted=False):
+    """Single consolidated forest-plot panel: all comparison pairs in one column.
+
+    For each item row, pairs are offset vertically (±0.28 spacing).
+    Filled marker = CI entirely on one side (reliable effect).
+    Open  marker  = CI crosses 0 (inconclusive).
+    """
+    n_pairs = len(diff_pairs)
+    offsets = np.linspace(-0.28, 0.28, n_pairs) if n_pairs > 1 else [0.0]
+    cap     = 0.09
+    all_ext = []
+
+    for pi, (bl, comp) in enumerate(diff_pairs):
+        color, marker = _PAIR_STYLES[pi % len(_PAIR_STYLES)]
+        offset = offsets[pi]
+
+        for ki in range(n_items):
+            base_s = raw_by_cond[bl][ki]
+            comp_s = raw_by_cond[comp][ki]
+            diffs  = [float(c) - float(b)
+                      for b, c in zip(base_s, comp_s)
+                      if b is not None and c is not None]
+            m, lo, hi = _studentized_bootstrap_ci(diffs, rng=rng)
+            y_pos   = ki + offset
+            crosses = lo <= 0.0 <= hi
+            alpha   = 0.35 if crosses else 0.90
+
+            # CI bar + caps
+            ax.plot([lo, hi], [y_pos, y_pos],
+                    color=color, linewidth=1.5, alpha=alpha, zorder=3)
+            for xc in (lo, hi):
+                ax.plot([xc, xc], [y_pos - cap, y_pos + cap],
+                        color=color, linewidth=1.2, alpha=alpha, zorder=3)
+
+            # dot: filled = significant, open = inconclusive
+            if crosses:
+                ax.scatter(m, y_pos, color="white", edgecolors=color,
+                           marker=marker, s=28, linewidths=1.2, zorder=5)
+            else:
+                ax.scatter(m, y_pos, color=color, edgecolors="black",
+                           marker=marker, s=28, linewidths=0.5, zorder=5)
+
+            all_ext.extend([abs(lo), abs(hi), abs(m)])
+
+    x_max = max(all_ext) * 1.3 if all_ext else 1.0
+    x_max = max(x_max, 0.5)
+    ax.set_xlim(-x_max, x_max)
+    ax.axvline(0, color="black", linewidth=1.0, linestyle="--", zorder=6)
+    ax.tick_params(labelleft=False)
+    ax.set_title("Δ mean  (95 % boot. CI)", fontsize=9, fontweight="bold")
+    ax.set_xlabel("compare − reference", fontsize=7)
+    ax.grid(axis="x", linestyle=":", alpha=0.30)
+    for ki in range(n_items):
+        ax.axhline(ki - 0.5, color="#dddddd", linewidth=0.4, zorder=1)
+
+
 def _make_combined_figure(suptitle, item_labels, counts_by_cond, raw_by_cond,
                            palette, scale_labels, conditions, diff_pairs,
                            inverted=False, label_width=42):
@@ -347,17 +386,21 @@ def _make_combined_figure(suptitle, item_labels, counts_by_cond, raw_by_cond,
     """
     n_items = len(item_labels)
     n_div   = len(conditions)
-    n_diff  = len(diff_pairs)
-    n_cols  = n_div + n_diff
+    n_cols  = n_div + 1    # one consolidated diff panel for all pairs
 
     n_total = max(
         (sum(c) for cond_list in counts_by_cond.values() for c in cond_list),
         default=7,
     )
 
-    width_ratios = [3] * n_div + [2] * n_diff
-    fig_w = 3.2 * n_div + 2.2 * n_diff
-    fig_h = max(5, n_items * 0.52 + 3.4)
+    # Wrap labels — compute ahead of fig_h so we can scale height by line count
+    wrapped_labels = ["\n".join(textwrap.wrap(l, width=label_width))
+                      for l in item_labels]
+    max_lines = max((l.count("\n") + 1 for l in wrapped_labels), default=1)
+
+    width_ratios = [3] * n_div + [2.5]
+    fig_w = 3.2 * n_div + 2.8
+    fig_h = max(5, n_items * (0.52 + 0.22 * (max_lines - 1)) + 3.4)
 
     fig, axes = plt.subplots(
         1, n_cols, figsize=(fig_w, fig_h), sharey=True,
@@ -366,46 +409,53 @@ def _make_combined_figure(suptitle, item_labels, counts_by_cond, raw_by_cond,
     axes = list(axes) if n_cols > 1 else [axes]
     fig.suptitle(suptitle, fontsize=11, fontweight="bold")
 
-    # ── Diverging bar panels ──────────────────────────────────────────────────
+    # ── Stacked bar panels ────────────────────────────────────────────────────
     for k, cond in enumerate(conditions):
         ax = axes[k]
         for row, counts in enumerate(counts_by_cond.get(cond, [])):
-            _draw_diverging_row(ax, row, counts, palette, inverted=inverted)
+            _draw_stacked_row(ax, row, counts, palette, inverted=inverted)
 
-        ax.set_xlim(-n_total - 0.4, n_total + 0.4)
-        ax.axvline(0, color="black", linewidth=1.0, zorder=5)
-        ticks = list(range(-n_total, n_total + 1))
+        ax.set_xlim(0, n_total + 0.4)
+        ticks = list(range(0, n_total + 1))
         ax.set_xticks(ticks)
-        ax.set_xticklabels([str(abs(t)) for t in ticks], fontsize=7)
+        ax.set_xticklabels([str(t) for t in ticks], fontsize=7)
         ax.set_yticks(range(n_items))
         ax.set_title(cond, fontsize=10, fontweight="bold")
-        ax.set_xlabel("← low     n     high →", fontsize=7)
+        ax.set_xlabel("n respondents", fontsize=7)
         ax.grid(axis="x", linestyle=":", alpha=0.3)
         if k == 0:
-            ax.set_yticklabels([l[:label_width] for l in item_labels], fontsize=8)
+            ax.set_yticklabels(wrapped_labels, fontsize=8)
             ax.set_ylim(-0.5, n_items - 0.5)
             ax.invert_yaxis()   # shared y — inverts all panels
         else:
             ax.tick_params(labelleft=False)
 
-    # ── Diff panels ───────────────────────────────────────────────────────────
+    # ── Consolidated diff panel (all pairs overlaid in one column) ──────────
     rng = np.random.default_rng(42)
-    for j, (bl, comp) in enumerate(diff_pairs):
-        _draw_diff_panel(axes[n_div + j], raw_by_cond, bl, comp,
-                         n_items, rng, inverted=inverted)
+    _draw_multi_diff_panel(axes[n_div], raw_by_cond, diff_pairs,
+                           n_items, rng, inverted=inverted)
 
     # ── Combined legend ───────────────────────────────────────────────────────
+    from matplotlib.lines import Line2D
     pal_leg = list(reversed(palette)) if inverted else list(palette)
     lab_leg = list(reversed(scale_labels)) if inverted else list(scale_labels)
     scale_patches = [mpatches.Patch(color=c, label=l)
                      for c, l in zip(pal_leg, lab_leg)]
-    diff_patches = [
-        mpatches.Patch(color="#006600", label="CI > 0: favours right (compare)"),
-        mpatches.Patch(color="#CC0000", label="CI < 0: favours left (reference)"),
-        mpatches.Patch(color="#888888", label="CI crosses 0  (inconclusive)"),
+    pair_handles = [
+        Line2D([0], [0],
+               color=_PAIR_STYLES[pi][0], marker=_PAIR_STYLES[pi][1],
+               linestyle="-", linewidth=1.5, markersize=5,
+               markerfacecolor=_PAIR_STYLES[pi][0], markeredgecolor="black",
+               label=f"{comp} − {bl}")
+        for pi, (bl, comp) in enumerate(diff_pairs)
     ]
-    fig.legend(handles=scale_patches + diff_patches,
-               loc="lower center", ncol=len(scale_patches) + len(diff_patches),
+    open_handle = Line2D([0], [0], color="#555555", marker="o", linestyle="None",
+                         markersize=5, markerfacecolor="white",
+                         markeredgecolor="#555555",
+                         label="open = CI crosses 0")
+    all_handles = scale_patches + pair_handles + [open_handle]
+    fig.legend(handles=all_handles,
+               loc="lower center", ncol=len(all_handles),
                fontsize=7.5, bbox_to_anchor=(0.5, 0))
     fig.tight_layout(rect=[0, 0.10, 1, 1])
     return fig
@@ -441,7 +491,7 @@ def plot_sus(all_data, participants):
     fig = _make_combined_figure(
         "SUS — Item Response Distribution  (converted 0–4 · TARS is reference)",
         _SUS_LABELS, counts, raw, COLORS_5,
-        ["0 — strongly disagree", "1", "2 — neutral", "3", "4 — strongly agree"],
+        ["strongly disagree", "disagree", "neutral", "agree", "strongly agree"],
         conditions=CONDITIONS_MAIN, diff_pairs=_ALL_PAIRS,
     )
     save_fig(fig, "sus_items.png")
@@ -486,7 +536,7 @@ def plot_tia(all_data, participants):
     fig = _make_combined_figure(
         "TiA — Item Response Distribution  (recoded 1–5 · * items already inverted · TARS is reference)",
         _TIA_LABELS, counts, raw, COLORS_5,
-        ["1 — strongly disagree", "2", "3 — neutral", "4", "5 — strongly agree"],
+        ["strongly disagree", "disagree", "neutral", "agree", "strongly agree"],
         conditions=CONDITIONS_MAIN, diff_pairs=_ALL_PAIRS,
     )
     save_fig(fig, "tia_items.png")
@@ -523,10 +573,41 @@ def plot_ob(all_data, participants):
     fig = _make_combined_figure(
         "Oversight Bespoke — Item Response Distribution  (scored 1–5 · * reversed · TARS is reference)",
         _OB_LABELS, counts, raw, COLORS_5,
-        ["1 — strongly disagree", "2", "3 — neutral", "4", "5 — strongly agree"],
+        ["strongly disagree", "disagree", "neutral", "agree", "strongly agree"],
         conditions=CONDITIONS_MAIN, diff_pairs=_ALL_PAIRS,
     )
     save_fig(fig, "ob_items.png")
+    return fig
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Perceived Control  (scored 1–5, all positive valence)
+# ═══════════════════════════════════════════════════════════════════════════════
+_PC_KEYS   = ["pc_01", "pc_02", "pc_03", "pc_04"]
+_PC_LABELS = [
+    "PC1(+) I feel in control while using this autonomous system",
+    "PC2(+) I feel I can control how the autonomous system behaves",
+    "PC3(+) I have the resources and ability to make use of this system",
+    "PC4(+) Team was effective in accomplishing the mission",
+]
+
+
+def plot_perceived_control(all_data, participants):
+    def extract(pdata, cond, key):
+        try:
+            return pdata["perceived_control"]["conditions"][cond]["items"][key]["scored"]
+        except (KeyError, TypeError):
+            return None
+
+    counts = _build_counts(all_data, participants, _PC_KEYS, extract, 1, 5)
+    raw    = _build_raw(all_data, participants, _PC_KEYS, extract, CONDITIONS_MAIN)
+    fig = _make_combined_figure(
+        "Perceived Control — Item Response Distribution  (scored 1–5 · TARS is reference)",
+        _PC_LABELS, counts, raw, COLORS_5,
+        ["strongly disagree", "disagree", "neutral", "agree", "strongly agree"],
+        conditions=CONDITIONS_MAIN, diff_pairs=_ALL_PAIRS,
+    )
+    save_fig(fig, "perceived_control_items.png")
     return fig
 
 
@@ -548,26 +629,146 @@ def _nasa_bin(val):
 
 
 def plot_nasa(all_data, participants):
-    def extract(pdata, cond, key):
+    """
+    NASA-TLX cross-participant visualization — two figures:
+
+      Figure 1  (nasa_tlx_ratings.png):
+        Strip plot — one subplot per dimension, one horizontal row per condition.
+        Each participant's 0-20 rating is shown as a jittered dot.
+        ◆ = mean (coloured, per-condition),  │ = median (black tick).
+
+      Figure 2  (nasa_tlx_scores.png):
+        Box plot of NASA-TLX weighted scores (0-100) per condition.
+
+    Returns [fig1, fig2].
+    """
+    from matplotlib.lines import Line2D
+
+    dims       = ["mental_demand", "physical_demand", "temporal_demand",
+                  "performance", "effort", "frustration"]
+    dim_labels = ["Mental Demand", "Physical Demand", "Temporal Demand",
+                  "Performance", "Effort", "Frustration"]
+    n_dims  = len(dims)
+    n_conds = len(CONDITIONS)
+
+    def get_rating(pdata, cond, key):
         try:
-            raw = pdata["nasa_tlx"]["conditions"][cond]["subscales"][key]["rating_0_20"]
-            return _nasa_bin(raw)
+            return float(pdata["nasa_tlx"]["conditions"][cond]["subscales"][key]["rating_0_20"])
         except (KeyError, TypeError):
             return None
 
-    # NASA-TLX keeps all 4 conditions (including TARC) per user request
-    counts = _build_counts(all_data, participants, _NASA_KEYS, extract, 1, 5,
-                           conditions=CONDITIONS)
-    raw    = _build_raw(all_data, participants, _NASA_KEYS, extract, CONDITIONS)
-    bin_labels = [f"{lo}–{hi}" for lo, hi in _NASA_BINS]
-    fig = _make_combined_figure(
-        "NASA-TLX — Rating Distribution  (0–20 binned · high workload = left/red · TARS is reference)",
-        _NASA_LABELS, counts, raw, COLORS_5, bin_labels,
-        conditions=CONDITIONS, diff_pairs=_NASA_PAIRS,
-        inverted=True,
+    def get_score(pdata, cond):
+        try:
+            return float(pdata["nasa_tlx"]["conditions"][cond]["nasa_tlx_weighted_score"])
+        except (KeyError, TypeError):
+            return None
+
+    rng = np.random.default_rng(42)
+
+    # ── Figure 1: strip plots ─────────────────────────────────────────────────
+    fig1, axes = plt.subplots(n_dims, 1,
+                              figsize=(12, n_dims * 1.6 + 1.8),
+                              sharex=True)
+    fig1.suptitle(
+        "NASA-TLX — Ratings per Dimension & Condition\n"
+        "(0–20 scale  ·  ◆ = mean  ·  │ = median  ·  ▲ = KDE curve)",
+        fontsize=11, fontweight="bold",
     )
-    save_fig(fig, "nasa_tlx_items.png")
-    return fig
+
+    for di, (key, label) in enumerate(zip(dims, dim_labels)):
+        ax = axes[di]
+
+        # Faint bin lines at every integer 0-20
+        for x in range(0, 21):
+            ax.axvline(x, color="#eeeeee", linewidth=0.4, zorder=0)
+
+        for ci, cond in enumerate(CONDITIONS):
+            vals = [get_rating(all_data.get(pid, {}), cond, key)
+                    for pid in participants]
+            vals = [v for v in vals if v is not None]
+            if not vals:
+                continue
+
+            # KDE overlay — mini violin centred at y=ci
+            if len(vals) >= 2:
+                x_kde = np.linspace(0, 20, 300)
+                try:
+                    kde     = gaussian_kde(vals, bw_method="scott")
+                    y_kde   = kde(x_kde)
+                    y_scale = y_kde / y_kde.max() * 0.34
+                    ax.plot(x_kde, ci + y_scale,
+                            color=COND_COLOR[cond], linewidth=1.4,
+                            alpha=0.85, zorder=2)
+                except Exception:
+                    pass
+
+            jitter = rng.uniform(-0.22, 0.22, len(vals))
+            ax.scatter(vals, np.full(len(vals), ci) + jitter,
+                       color=COND_COLOR[cond], alpha=0.80, s=40,
+                       edgecolors="white", linewidths=0.5, zorder=4)
+
+            mean_v = float(np.mean(vals))
+            med_v  = float(np.median(vals))
+
+            # Mean — filled diamond
+            ax.scatter(mean_v, ci,
+                       color=COND_COLOR[cond], marker="D", s=130,
+                       edgecolors="black", linewidths=1.2, zorder=7)
+            ax.text(mean_v, ci + 0.44, f"μ={mean_v:.1f}",
+                    ha="center", va="bottom", fontsize=6,
+                    color=COND_COLOR[cond], fontweight="bold")
+
+            # Median — thick black vertical tick
+            ax.vlines(med_v, ci - 0.36, ci + 0.36,
+                      colors="black", linewidth=2.0, zorder=6)
+            ax.text(med_v, ci - 0.44, f"M={med_v:.1f}",
+                    ha="center", va="top", fontsize=6, color="black")
+
+        ax.set_xlim(-0.5, 20.5)
+        ax.set_ylim(-0.68, n_conds - 0.32)
+        ax.set_yticks(range(n_conds))
+        ax.set_yticklabels(CONDITIONS, fontsize=8)
+        ax.set_ylabel(label, fontsize=9, rotation=0,
+                      ha="right", va="center", labelpad=8)
+        ax.grid(axis="x", linestyle=":", alpha=0.30)
+
+    axes[-1].set_xlabel("Rating (0–20)", fontsize=9)
+    axes[-1].set_xticks(range(0, 21))
+    axes[-1].tick_params(axis="x", labelsize=7.5)
+
+    cond_patches  = [mpatches.Patch(color=COND_COLOR[c], label=c)
+                     for c in CONDITIONS]
+    legend_extras = [
+        Line2D([0], [0], color="gray", marker="D", linestyle="None",
+               markersize=8, markeredgecolor="black", label="Mean (◆)"),
+        Line2D([0], [0], color="black", linewidth=2, label="Median (│)"),
+        Line2D([0], [0], color="gray", linewidth=1.4, label="KDE curve"),
+    ]
+    fig1.legend(handles=cond_patches + legend_extras,
+                loc="lower center", ncol=n_conds + 2,
+                fontsize=8, bbox_to_anchor=(0.5, 0))
+    fig1.tight_layout(rect=[0, 0.04, 1, 1])
+    save_fig(fig1, "nasa_tlx_ratings.png")
+
+    # ── Figure 2: box plot of weighted scores ─────────────────────────────────
+    fig2, ax2 = plt.subplots(figsize=(7, 5))
+    fig2.suptitle("NASA-TLX — Weighted Score per Condition",
+                  fontsize=11, fontweight="bold")
+
+    scores = {c: [] for c in CONDITIONS}
+    for pid in participants:
+        pdata = all_data.get(pid, {})
+        for cond in CONDITIONS:
+            v = get_score(pdata, cond)
+            if v is not None:
+                scores[cond].append(v)
+
+    _box_panel(ax2, scores, "NASA-TLX Weighted Score", "Score (0–100)",
+               ylim=(0, 100), conditions=CONDITIONS)
+    fig2.tight_layout()
+    save_fig(fig2, "nasa_tlx_scores.png")
+
+    return [fig1, fig2]
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -615,17 +816,149 @@ def plot_trust_risk(all_data, participants):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+#  Trust & Risk VAS — histogram + KDE distribution  (0–100 continuous)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def plot_trust_risk_distribution(all_data, participants):
+    """
+    One figure with two subplots (trust_vas | risk_vas).
+    Each subplot overlays, per condition:
+      • a semi-transparent histogram (density-normalised)
+      • a KDE curve (line only — no fill)
+      • a mean dashed vertical line
+      • a 95% CI strip at the bottom (SEM-based: mean ± 1.96 × SEM)
+    Conditions drawn: CONDITIONS_MAIN.
+    """
+    from matplotlib.lines import Line2D
+
+    items = [
+        ("trust_vas", "Trust VAS  (0–100)", False),
+        ("risk_vas",  "Perceived Risk VAS  (0–100)", True),
+    ]
+
+    fig, axes = plt.subplots(1, len(items), figsize=(12, 5), sharey=False)
+    fig.suptitle(
+        "Trust & Risk VAS — Distribution per Condition\n"
+        "(histogram · KDE curve · ◆ = mean · ─── = 95% CI)",
+        fontsize=11, fontweight="bold",
+    )
+
+    x_kde = np.linspace(0, 100, 400)
+
+    for ax, (key, subtitle, inverted) in zip(axes, items):
+        ax.set_title(subtitle, fontsize=9, fontweight="bold")
+
+        cond_vals = {}  # store for CI strip
+
+        for cond in CONDITIONS_MAIN:
+            vals = []
+            for pid in participants:
+                v = _get(all_data.get(pid, {}), "trust_risk", "conditions", cond, key)
+                if v is not None:
+                    vals.append(float(v))
+            cond_vals[cond] = vals
+            if not vals:
+                continue
+
+            color = COND_COLOR[cond]
+
+            # Histogram (density-normalised, semi-transparent)
+            ax.hist(vals, bins=10, range=(0, 100),
+                    density=True, color=color, alpha=0.20,
+                    edgecolor=color, linewidth=0.5)
+
+            # KDE curve — line only, no fill
+            if len(vals) >= 2:
+                try:
+                    kde   = gaussian_kde(vals, bw_method="scott")
+                    y_kde = kde(x_kde)
+                    ax.plot(x_kde, y_kde,
+                            color=color, linewidth=2.0, alpha=0.90)
+                except Exception:
+                    pass
+            else:
+                ax.axvline(vals[0], color=color, linewidth=1.5,
+                           linestyle="--", alpha=0.75)
+
+        # ── Mean + 95% CI strip at the bottom ─────────────────────────────
+        y_top     = ax.get_ylim()[1]
+        n_main    = len(CONDITIONS_MAIN)
+        strip_h   = 0.28 * y_top        # 28% of plot height reserved below y=0
+        row_h     = strip_h / n_main
+        ax.set_ylim(bottom=-strip_h, top=y_top)
+
+        # faint separator between KDE area and CI strip
+        ax.axhline(0, color="black", linewidth=0.5, linestyle=":", alpha=0.35)
+
+        for ci_idx, cond in enumerate(CONDITIONS_MAIN):
+            vals  = cond_vals.get(cond, [])
+            if not vals:
+                continue
+            n      = len(vals)
+            mean_v = float(np.mean(vals))
+            sem    = float(np.std(vals, ddof=1) / np.sqrt(n)) if n > 1 else 0.0
+            ci_lo  = mean_v - 1.96 * sem
+            ci_hi  = mean_v + 1.96 * sem
+            color  = COND_COLOR[cond]
+            y_pos  = -(ci_idx + 0.5) * row_h
+            cap    = row_h * 0.20
+
+            # dashed vertical mean line (full height)
+            ax.axvline(mean_v, color=color, linewidth=1.0,
+                       linestyle="--", alpha=0.50, zorder=3)
+
+            # CI horizontal bar + caps
+            ax.plot([ci_lo, ci_hi], [y_pos, y_pos],
+                    color=color, linewidth=1.8, alpha=0.90, zorder=5)
+            ax.plot([ci_lo, ci_lo], [y_pos - cap, y_pos + cap],
+                    color=color, linewidth=1.5, alpha=0.90, zorder=5)
+            ax.plot([ci_hi, ci_hi], [y_pos - cap, y_pos + cap],
+                    color=color, linewidth=1.5, alpha=0.90, zorder=5)
+
+            # mean diamond
+            ax.scatter(mean_v, y_pos, color=color, marker="D", s=45,
+                       edgecolors="black", linewidths=0.7, zorder=6)
+
+            # condition label on the left
+            ax.text(-2, y_pos, cond, ha="right", va="center",
+                    fontsize=7, color=color, fontweight="bold")
+
+        ax.set_xlim(-1, 101)
+        ax.set_xlabel("Score (0–100)", fontsize=8)
+        ax.set_ylabel("Density", fontsize=8)
+        # suppress y-tick labels in the negative strip
+        ax.set_yticks([t for t in ax.get_yticks() if t >= 0])
+        ax.grid(axis="x", linestyle=":", alpha=0.20)
+        ax.grid(axis="y", linestyle=":", alpha=0.35)
+
+    # Shared legend
+    cond_handles  = [Line2D([0], [0], color=COND_COLOR[c], linewidth=2, label=c)
+                     for c in CONDITIONS_MAIN]
+    extra_handles = [
+        Line2D([0], [0], color="gray", marker="D", linestyle="None",
+               markersize=6, markeredgecolor="black", label="Mean (◆)"),
+        Line2D([0], [0], color="gray", linewidth=1.8, label="95% CI"),
+    ]
+    fig.legend(handles=cond_handles + extra_handles,
+               loc="lower center", ncol=len(CONDITIONS_MAIN) + 2,
+               fontsize=9, bbox_to_anchor=(0.5, 0))
+    fig.tight_layout(rect=[0, 0.07, 1, 1])
+    save_fig(fig, "trust_risk_distribution.png")
+    return fig
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 #  PTS  (trait — no condition, one diverging chart for all participants)
 # ═══════════════════════════════════════════════════════════════════════════════
 _PTS_KEYS   = ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"]
 _PTS_LABELS = [
-    "Q1(+) Automation is generally reliable",
-    "Q2(–) Humans outperform automation  [inv]",
-    "Q3(+) I trust new technologies quickly",
-    "Q4(+) I prefer automated solutions",
-    "Q5(+) Automation is generally trustworthy",
-    "Q6(+) I rely on automation for decisions",
-    "Q7(+) Automation handles complex tasks well",
+    "Q1(+) I usually trust machines until there is a reason not to",
+    "Q2(–) For the most part, I distrust machines",
+    "Q3(+) In general, I would rely on a machine to assist me",
+    "Q4(+) My tendency to trust machines is high",
+    "Q5(+) It is easy for me to trust machines to do their job.",
+    "Q6(+) I am likely to trust a machine even when I have little knowledge about it",
+    "Q7(+) I have a generally positive attitude toward advanced automation in aviation",
 ]
 
 
@@ -646,29 +979,30 @@ def plot_pts(all_data, participants):
             except (KeyError, TypeError):
                 pass
 
-    fig_h = max(4, n * 0.55 + 2.5)
-    fig, ax = plt.subplots(figsize=(8, fig_h))
-    fig.suptitle("PTS — Propensity to Trust Automation  (scored 1–5 · Q2 already inverted)",
+    wrapped_pts = ["\n".join(textwrap.wrap(l, width=40)) for l in _PTS_LABELS]
+    max_lines   = max(l.count("\n") + 1 for l in wrapped_pts)
+    fig_h = max(4, n * (0.55 + 0.22 * (max_lines - 1)) + 2.5)
+    fig, ax = plt.subplots(figsize=(9, fig_h))
+    fig.suptitle("Propensity to Trust Automation",
                  fontsize=12, fontweight="bold")
 
     for row, counts in enumerate(counts_list):
-        _draw_diverging_row(ax, row, counts, COLORS_5)
+        _draw_stacked_row(ax, row, counts, COLORS_5)
 
-    ax.set_xlim(-n_participants - 0.4, n_participants + 0.4)
-    ax.axvline(0, color="black", linewidth=1.0, zorder=5)
-    ticks = list(range(-n_participants, n_participants + 1))
+    ax.set_xlim(0, n_participants + 0.4)
+    ticks = list(range(0, n_participants + 1))
     ax.set_xticks(ticks)
-    ax.set_xticklabels([str(abs(t)) for t in ticks], fontsize=8)
+    ax.set_xticklabels([str(t) for t in ticks], fontsize=8)
     ax.set_yticks(range(n))
-    ax.set_yticklabels(_PTS_LABELS, fontsize=9)
+    ax.set_yticklabels(wrapped_pts, fontsize=9)
     ax.set_ylim(-0.5, n - 0.5)
     ax.invert_yaxis()
-    ax.set_xlabel("← low / disagree     n     agree / high →", fontsize=8)
+    ax.set_xlabel("n respondents", fontsize=8)
     ax.grid(axis="x", linestyle=":", alpha=0.3)
-    ax.set_title("All participants (trait constant — no condition)", fontsize=9)
+    ax.set_title("All participants (pre-experiment)", fontsize=9)
 
     patches = [mpatches.Patch(color=c, label=l) for c, l in
-               zip(COLORS_5, ["1 — strongly disagree", "2", "3 — neutral", "4", "5 — strongly agree"])]
+               zip(COLORS_5, ["strongly disagree", "disagree", "neutral", "agree", "strongly agree"])]
     fig.legend(handles=patches, loc="lower center", ncol=5,
                fontsize=8, bbox_to_anchor=(0.5, 0))
     fig.tight_layout(rect=[0, 0.08, 1, 1])
@@ -811,46 +1145,482 @@ def plot_boxplots(all_data, participants):
     return fig
 
 
+
 # ═══════════════════════════════════════════════════════════════════════════════
-#  MAIN
+#  PREFERENCE CLUSTER ANALYSIS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def main():
-    print("=" * 70)
-    print("  HITLS — Cross-participant Questionnaire Comparison")
-    print("=" * 70)
+# NASA-TLX polarity: +1 = high score is GOOD, -1 = high score is BAD
+# All workload dims: high = bad.  Performance: high = good (inverted valence).
+_NASA_POLARITY = {
+    "mental_demand":   -1,
+    "physical_demand": -1,
+    "temporal_demand": -1,
+    "performance":     +1,   # ← reversed: high score = performed well
+    "effort":          -1,
+    "frustration":     -1,
+}
 
-    participants = find_participants()
-    print(f"\nParticipants found: {', '.join(participants)}")
 
-    print("\n[1/3] Checking / generating participant reports …")
-    for i, pid in enumerate(participants, start=1):
-        if has_all_reports(pid):
-            print(f"  {pid}: ✓ reports already exist")
-        else:
-            run_forms(pid, i)
+def _build_cluster_data(all_data, participants, include_ob=True, include_nasa=False,
+                        include_vas=False, exclude=None):
+    """Return (valid_pids, scatter_xs, scatter_ys, feature_matrix).
 
-    print("\n[2/3] Loading data …")
-    all_data = load_all(participants)
-    loaded   = list(all_data.keys())
-    print(f"  Loaded: {', '.join(loaded)}")
+    Feature vector per participant: polarity-corrected per-item differences
+    [TARP-S − TARS, TARP-F − TARS] so that **positive always = better**.
 
-    os.makedirs(PLOTS_DIR, exist_ok=True)
-    print(f"\n[3/3] Generating charts → {PLOTS_DIR}/\n")
+    SUS/TiA/OB items are already polarity-corrected in the JSON (recoded/converted).
+    NASA-TLX items are corrected here using _NASA_POLARITY.
+    Trust VAS (0–100): high = good → polarity +1.
+    Risk  VAS (0–100): high = bad  → polarity −1.
+    """
+    def _sus_items(pdata, cond):
+        out = []
+        for key in _SUS_KEYS:
+            try:
+                out.append(float(pdata["sus"]["conditions"][cond]["items"][key]["converted"]))
+            except (KeyError, TypeError):
+                out.append(np.nan)
+        return out   # polarity already +1 (high = good)
 
-    figs = []
-    figs.append(plot_sus(all_data, loaded))
-    figs.append(plot_tia(all_data, loaded))
-    figs.append(plot_ob(all_data, loaded))
-    figs.append(plot_nasa(all_data, loaded))
-    figs.ext= [mpatches.Patch(color=COND_COLOR[c], label=c) for c in CONDITIONS]
-    fig.legend(handles=patches, loc="lower right", fontsize=9, title="Condition")
-    plt.tight_layout()
-    save_fig(fig, "boxplots_scores.png")
+    def _tia_items(pdata, cond):
+        out = []
+        for key, sub in _TIA_SUB_MAP.items():
+            try:
+                out.append(float(pdata["tia"]["conditions"][cond]["subscales"][sub]["items"][key]["recoded"]))
+            except (KeyError, TypeError):
+                out.append(np.nan)
+        return out   # polarity already +1
+
+    def _ob_items(pdata, cond):
+        out = []
+        for key in _OB_KEYS:
+            try:
+                out.append(float(pdata["oversight_bespoke"]["conditions"][cond]["extended_score"]["items"][key]["scored"]))
+            except (KeyError, TypeError):
+                out.append(np.nan)
+        return out   # polarity already +1
+
+    def _nasa_items(pdata, cond):
+        """Return polarity-corrected NASA-TLX ratings (positive = better)."""
+        out = []
+        for key, pol in _NASA_POLARITY.items():
+            try:
+                v = float(pdata["nasa_tlx"]["conditions"][cond]["subscales"][key]["rating_0_20"])
+                out.append(pol * v)   # flip so positive = better
+            except (KeyError, TypeError):
+                out.append(np.nan)
+        return out
+
+    def _vas_items(pdata, cond):
+        """Return [trust, -risk] so that positive = better for both."""
+        out = []
+        try:
+            out.append(+1.0 * float(pdata["trust_risk"]["conditions"][cond]["trust_vas"]))
+        except (KeyError, TypeError):
+            out.append(np.nan)
+        try:
+            out.append(-1.0 * float(pdata["trust_risk"]["conditions"][cond]["risk_vas"]))
+        except (KeyError, TypeError):
+            out.append(np.nan)
+        return out
+
+    def _pc_items(pdata, cond):
+        """Return perceived control items (all positive valence, 1–5)."""
+        out = []
+        for key in _PC_KEYS:
+            try:
+                out.append(float(pdata["perceived_control"]["conditions"][cond]["items"][key]["scored"]))
+            except (KeyError, TypeError):
+                out.append(np.nan)
+        return out
+
+    def _all_items(pdata, cond):
+        items = _sus_items(pdata, cond) + _tia_items(pdata, cond)
+        if include_ob:
+            items += _ob_items(pdata, cond)
+        if include_nasa:
+            items += _nasa_items(pdata, cond)
+        if include_vas:
+            items += _vas_items(pdata, cond)
+        items += _pc_items(pdata, cond)
+        return np.array(items, dtype=float)
+
+    valid_pids, scatter_xs, scatter_ys, feature_matrix = [], [], [], []
+    _exclude = set(exclude) if exclude else set()
+
+    for pid in participants:
+        if pid in _exclude:
+            continue
+        pdata = all_data.get(pid, {})
+        tars_vec  = _all_items(pdata, "TARS")
+        tarps_vec = _all_items(pdata, "TARP-S")
+        tarpf_vec = _all_items(pdata, "TARP-F")
+
+        diff_s = tarps_vec - tars_vec
+        diff_f = tarpf_vec - tars_vec
+
+        x = float(np.nanmean(diff_s))
+        y = float(np.nanmean(diff_f))
+
+        if np.isnan(x) or np.isnan(y):
+            continue
+
+        # Use item-level TARP-S − TARP-F as the clustering feature.
+        # This cancels the TARS baseline and captures *relative* preference
+        # between the two autopilot modes directly, so the clustering finds
+        # "S-lovers" vs "F-lovers" rather than "overall approve/disapprove".
+        feat = tarps_vec - tarpf_vec
+        feat = np.where(np.isnan(feat), 0.0, feat)   # impute missing items with 0
+
+        scatter_xs.append(x)
+        scatter_ys.append(y)
+        feature_matrix.append(feat)
+        valid_pids.append(pid)
+
+    return valid_pids, scatter_xs, scatter_ys, feature_matrix
+
+
+def _draw_cluster_figure(valid_pids, scatter_xs, scatter_ys, feature_matrix,
+                         suptitle, filename):
+    """Draw and save the two-panel cluster figure (scatter + dendrogram)."""
+    from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
+    from matplotlib.lines import Line2D
+
+    if len(valid_pids) < 3:
+        print(f"  ⚠  Not enough data for {filename}")
+        return None
+
+    X    = np.array(feature_matrix)
+    Z    = linkage(X, method="ward")
+    labs = fcluster(Z, t=2, criterion="maxclust")
+
+    cluster_colors = {1: "#E6730D", 2: "#2E75B6"}
+    pid_to_color   = {pid: cluster_colors[labs[i]] for i, pid in enumerate(valid_pids)}
+
+    fig, (ax_scatter, ax_dend) = plt.subplots(
+        1, 2, figsize=(13, 5.5),
+        gridspec_kw={"width_ratios": [1, 1.3], "wspace": 0.30}
+    )
+    fig.suptitle(suptitle, fontsize=11, fontweight="bold")
+
+    # ── Scatter ───────────────────────────────────────────────────────────────
+    lim = max(abs(v) for v in scatter_xs + scatter_ys) * 1.35
+    lim = max(lim, 0.3)
+    ax_scatter.axhline(0, color="#aaaaaa", linewidth=0.8, zorder=1)
+    ax_scatter.axvline(0, color="#aaaaaa", linewidth=0.8, zorder=1)
+    ax_scatter.plot([-lim, lim], [-lim, lim], color="#cccccc",
+                    linewidth=1.0, linestyle="--", zorder=1)
+
+    for i, pid in enumerate(valid_pids):
+        c = cluster_colors[labs[i]]
+        ax_scatter.scatter(scatter_xs[i], scatter_ys[i],
+                           color=c, s=80, edgecolors="black",
+                           linewidths=0.8, zorder=4)
+        ax_scatter.annotate(pid, (scatter_xs[i], scatter_ys[i]),
+                            textcoords="offset points", xytext=(6, 4),
+                            fontsize=8, color=c, fontweight="bold")
+
+    ax_scatter.set_xlim(-lim, lim)
+    ax_scatter.set_ylim(-lim, lim)
+    ax_scatter.set_xlabel("Mean Δ  (TARP-S − TARS)  ↑ better", fontsize=9)
+    ax_scatter.set_ylabel("Mean Δ  (TARP-F − TARS)  ↑ better", fontsize=9)
+    ax_scatter.set_title("(A)  Per-participant preference", fontsize=10, fontweight="bold")
+    ax_scatter.grid(linestyle=":", alpha=0.35)
+
+    qpad = lim * 0.06
+    for (tx, ty, ha, va, txt) in [
+        ( lim - qpad,  lim - qpad, "right", "top",    "Q1\nBoth modes better\nthan baseline"),
+        (-lim + qpad,  lim - qpad, "left",  "top",    "Q2\nOnly TARP-F\nbetter than baseline"),
+        ( lim - qpad, -lim + qpad, "right", "bottom", "Q3\nOnly TARP-S\nbetter than baseline"),
+        (-lim + qpad, -lim + qpad, "left",  "bottom", "Q4\nBoth modes worse\nthan baseline"),
+    ]:
+        ax_scatter.text(tx, ty, txt, ha=ha, va=va, fontsize=7, color="#444444",
+                        bbox=dict(boxstyle="round,pad=0.2", fc="#f0f0f0", ec="none", alpha=0.7))
+    ax_scatter.text(lim * 0.50, lim * 0.70, "above: TARP-F > TARP-S",
+                    ha="left", va="bottom", fontsize=7, color="#888888", rotation=45)
+    ax_scatter.text(lim * 0.05, -lim * 0.28, "below: TARP-S > TARP-F",
+                    ha="left", va="top", fontsize=7, color="#888888", rotation=45)
+
+    # ── Dendrogram ────────────────────────────────────────────────────────────
+    dendrogram(Z, labels=valid_pids, ax=ax_dend, orientation="top",
+               above_threshold_color="#888888", color_threshold=0)
+    for lbl in ax_dend.get_xticklabels():
+        lbl.set_color(pid_to_color.get(lbl.get_text(), "black"))
+        lbl.set_fontsize(9)
+        lbl.set_fontweight("bold")
+    ax_dend.set_title("(B)  Ward hierarchical clustering\n(feature: polarity-corrected per-item TARP-S − TARP-F)",
+                      fontsize=10, fontweight="bold")
+    ax_dend.set_ylabel("Ward distance", fontsize=9)
+    ax_dend.spines["top"].set_visible(False)
+    ax_dend.spines["right"].set_visible(False)
+
+    legend_handles = [
+        Line2D([0], [0], marker="o", color="w", markerfacecolor=cluster_colors[1],
+               markeredgecolor="black", markersize=9, label="Cluster 1  (orange)"),
+        Line2D([0], [0], marker="o", color="w", markerfacecolor=cluster_colors[2],
+               markeredgecolor="black", markersize=9, label="Cluster 2  (blue)"),
+        Line2D([0], [0], color="#cccccc", linestyle="--", linewidth=1.2,
+               label="y = x  (TARP-S = TARP-F)"),
+    ]
+    fig.legend(handles=legend_handles, loc="lower center", ncol=3,
+               fontsize=8.5, bbox_to_anchor=(0.5, 0))
+    fig.tight_layout(rect=[0, 0.07, 1, 1])
+    save_fig(fig, filename)
     return fig
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+#  PREFERENCE PROFILE COHERENCE  ("bumpchart" across questionnaires)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Ordered questionnaire groups for the coherence chart.
+# Each entry: (label, extract_fn) where extract_fn(pdata, cond) → float or nan
+# All values are polarity-corrected so positive = participant preferred that condition.
+_COHERENCE_GROUPS = [
+    ("NASA-TLX",          None),   # filled dynamically below
+    ("Perceived\nControl", None),
+    ("Oversight\nBespoke", None),
+    ("Trust/Risk\nVAS",    None),
+    ("TiA",               None),
+    ("SUS",               None),
+]
+
+
+def _pc_mean(pdata, cond):
+    vals = []
+    for key in _PC_KEYS:
+        try:
+            vals.append(float(pdata["perceived_control"]["conditions"][cond]["items"][key]["scored"]))
+        except (KeyError, TypeError):
+            pass
+    return float(np.nanmean(vals)) if vals else np.nan
+
+
+def _ob_mean(pdata, cond):
+    vals = []
+    for key in _OB_KEYS:
+        try:
+            vals.append(float(pdata["oversight_bespoke"]["conditions"][cond]["extended_score"]["items"][key]["scored"]))
+        except (KeyError, TypeError):
+            pass
+    return float(np.nanmean(vals)) if vals else np.nan
+
+
+def _vas_mean(pdata, cond):
+    """Trust (positive) and -Risk (negative polarity) averaged."""
+    vals = []
+    try:
+        vals.append(+1.0 * float(pdata["trust_risk"]["conditions"][cond]["trust_vas"]))
+    except (KeyError, TypeError):
+        pass
+    try:
+        vals.append(-1.0 * float(pdata["trust_risk"]["conditions"][cond]["risk_vas"]))
+    except (KeyError, TypeError):
+        pass
+    return float(np.nanmean(vals)) if vals else np.nan
+
+
+def _tia_mean(pdata, cond):
+    vals = []
+    for key, sub in _TIA_SUB_MAP.items():
+        try:
+            vals.append(float(pdata["tia"]["conditions"][cond]["subscales"][sub]["items"][key]["recoded"]))
+        except (KeyError, TypeError):
+            pass
+    return float(np.nanmean(vals)) if vals else np.nan
+
+
+def _sus_mean(pdata, cond):
+    vals = []
+    for key in _SUS_KEYS:
+        try:
+            vals.append(float(pdata["sus"]["conditions"][cond]["items"][key]["converted"]))
+        except (KeyError, TypeError):
+            pass
+    return float(np.nanmean(vals)) if vals else np.nan
+
+
+def _nasa_mean_polarity(pdata, cond):
+    vals = []
+    for key, pol in _NASA_POLARITY.items():
+        try:
+            v = float(pdata["nasa_tlx"]["conditions"][cond]["subscales"][key]["rating_0_20"])
+            vals.append(pol * v)
+        except (KeyError, TypeError):
+            pass
+    return float(np.nanmean(vals)) if vals else np.nan
+
+
+_COHERENCE_EXTRACTORS = [
+    ("NASA-TLX",          _nasa_mean_polarity),
+    ("Perceived\nControl", _pc_mean),
+    ("Oversight\nBespoke", _ob_mean),
+    ("Trust/Risk\nVAS",   _vas_mean),
+    ("TiA",               _tia_mean),
+    ("SUS",               _sus_mean),
+]
+
+
+def plot_preference_profile(all_data, participants):
+    """Preference Profile Coherence chart.
+
+    For each questionnaire group (x-axis) and each participant (one line),
+    show  mean(TARP-S) − mean(TARP-F)  on the y-axis, **z-score normalised
+    per instrument column** so that Trust/Risk VAS (0-100) and Likert scales
+    (1-5) are on the same resolution.
+
+    Coloring:
+      • Participants whose line never crosses zero → same grey (#999999)
+        (coherent preference throughout)
+      • Participants whose line crosses zero at least once → a distinct
+        vivid color per switcher (up to 8, then cycling)
+    """
+    from matplotlib.lines import Line2D
+
+    labels = [lbl for lbl, _ in _COHERENCE_EXTRACTORS]
+    n_groups = len(labels)
+    x_pos = list(range(n_groups))
+
+    # ── Build raw diffs (TARP-S − TARP-F, polarity-corrected) ────────────────
+    raw_lines = {}
+    for pid in participants:
+        pdata = all_data.get(pid, {})
+        row = []
+        for _, fn in _COHERENCE_EXTRACTORS:
+            s = fn(pdata, "TARP-S")
+            f = fn(pdata, "TARP-F")
+            row.append(np.nan if (np.isnan(s) or np.isnan(f)) else s - f)
+        raw_lines[pid] = row
+
+    # ── Z-score normalise per column (instrument) ─────────────────────────────
+    # Compute mean & std across all participants for each instrument column,
+    # ignoring NaNs.  Divide each diff by the column std so all instruments
+    # have the same unit on the y-axis.
+    arr = np.array([raw_lines[pid] for pid in participants], dtype=float)  # (n_pid, n_groups)
+    col_std = np.nanstd(arr, axis=0, ddof=1)
+    col_std[col_std == 0] = 1.0   # avoid division by zero for constant columns
+
+    norm_lines = {}
+    for pid in participants:
+        raw = np.array(raw_lines[pid], dtype=float)
+        norm_lines[pid] = raw / col_std   # sign preserved, only scale removed
+
+    # ── Classify: switcher = line crosses zero between any two adjacent valid pts
+    def _crosses_zero(ys):
+        valid = [v for v in ys if not np.isnan(v)]
+        if len(valid) < 2:
+            return False
+        signs = [1 if v > 0 else (-1 if v < 0 else 0) for v in valid]
+        signs = [s for s in signs if s != 0]  # ignore exact zeros
+        return any(signs[i] != signs[i + 1] for i in range(len(signs) - 1))
+
+    SWITCHER_COLORS = [
+        "#E63946", "#2A9D8F", "#E9C46A", "#9B5DE5",
+        "#F4A261", "#06D6A0", "#EF476F", "#118AB2",
+    ]
+    switcher_idx = 0
+    pid_colors   = {}
+    COHERENT_COLOR = "#999999"
+
+    for pid in participants:
+        if _crosses_zero(norm_lines[pid]):
+            pid_colors[pid] = SWITCHER_COLORS[switcher_idx % len(SWITCHER_COLORS)]
+            switcher_idx += 1
+        else:
+            pid_colors[pid] = COHERENT_COLOR
+
+    # ── Plot ──────────────────────────────────────────────────────────────────
+    fig, ax = plt.subplots(figsize=(11, 5.5))
+    fig.suptitle(
+        "Preference Profile Coherence  (TARP-S − TARP-F · z-score normalised per instrument)",
+        fontsize=11, fontweight="bold",
+    )
+
+    y_all = [v for row in norm_lines.values() for v in row if not np.isnan(v)]
+    y_lim = max(abs(v) for v in y_all) * 1.15 if y_all else 2.0
+
+    ax.axhline(0, color="#888888", linewidth=1.0, linestyle="--", zorder=1)
+    ax.fill_between([-0.5, n_groups - 0.5], 0,  y_lim,
+                    color="#E6730D", alpha=0.04, zorder=0)
+    ax.fill_between([-0.5, n_groups - 0.5], -y_lim, 0,
+                    color="#2E75B6", alpha=0.04, zorder=0)
+    ax.text(n_groups - 0.52,  y_lim * 0.06, "TARP-S preferred",
+            ha="right", va="bottom", fontsize=8, color="#E6730D", fontstyle="italic")
+    ax.text(n_groups - 0.52, -y_lim * 0.06, "TARP-F preferred",
+            ha="right", va="top",    fontsize=8, color="#2E75B6", fontstyle="italic")
+
+    # Draw coherent lines first (grey, behind), then switchers on top
+    for draw_switcher in (False, True):
+        for pid in participants:
+            row = norm_lines[pid]
+            xs = [x_pos[i] for i, v in enumerate(row) if not np.isnan(v)]
+            ys = [v         for v in row if not np.isnan(v)]
+            if len(xs) < 2:
+                continue
+            is_sw = _crosses_zero(row)
+            if is_sw != draw_switcher:
+                continue
+            c     = pid_colors[pid]
+            lw    = 2.2 if is_sw else 1.2
+            alpha = 0.90 if is_sw else 0.45
+            zord  = 5    if is_sw else 3
+            ax.plot(xs, ys, color=c, linewidth=lw, alpha=alpha, zorder=zord,
+                    marker="o", markersize=4 if not is_sw else 5,
+                    markeredgecolor="white", markeredgewidth=0.5)
+            ax.annotate(pid, (xs[-1], ys[-1]), textcoords="offset points",
+                        xytext=(5, 0), fontsize=7, color=c,
+                        fontweight="bold" if is_sw else "normal", va="center")
+
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(labels, fontsize=9)
+    ax.set_xlim(-0.5, n_groups - 0.3)
+    ax.set_ylim(-y_lim, y_lim)
+    ax.set_ylabel("Δ  (z-score)  ↑ prefers TARP-S  /  ↓ prefers TARP-F", fontsize=8)
+    ax.grid(axis="y", linestyle=":", alpha=0.35)
+    ax.grid(axis="x", linestyle=":", alpha=0.20)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    # Legend: one entry per switcher + one grey entry for coherent group
+    switcher_pids  = [p for p in participants if _crosses_zero(norm_lines[p])]
+    coherent_pids  = [p for p in participants if not _crosses_zero(norm_lines[p])]
+    legend_handles = [
+        Line2D([0], [0], color=pid_colors[p], linewidth=2.2, marker="o",
+               markersize=5, label=p)
+        for p in switcher_pids
+    ]
+    if coherent_pids:
+        legend_handles.append(
+            Line2D([0], [0], color=COHERENT_COLOR, linewidth=1.2, marker="o",
+                   markersize=4, alpha=0.6,
+                   label=f"Coherent: {', '.join(coherent_pids)}")
+        )
+    fig.legend(handles=legend_handles, loc="lower center",
+               ncol=min(len(legend_handles), 5), fontsize=8,
+               bbox_to_anchor=(0.5, 0))
+    fig.tight_layout(rect=[0, 0.10, 1, 1])
+    save_fig(fig, "preference_profile_coherence.png")
+    return fig
+
+
+def plot_preference_clusters(all_data, participants):
+    """Quadrant scatter (TARP-S vs TARP-F relative to TARS baseline)."""
+    figs = []
+
+    # All instruments, P07 included
+    pids, xs, ys, feat = _build_cluster_data(
+        all_data, participants, include_ob=True, include_nasa=True, include_vas=True)
+    figs.append(_draw_cluster_figure(
+        pids, xs, ys, feat,
+        "TARP-S vs TARP-F Preference — SUS + TiA + OB + PC + NASA-TLX + Trust/Risk VAS\n"
+        "(TARS baseline · NASA polarity-corrected · Trust +1 · Risk −1)",
+        "preference_clusters_all_vas.png"))
+
+    return [f for f in figs if f is not None]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 #  MAIN
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -881,10 +1651,12 @@ def main():
     figs.append(plot_sus(all_data, loaded))
     figs.append(plot_tia(all_data, loaded))
     figs.append(plot_ob(all_data, loaded))
-    figs.append(plot_nasa(all_data, loaded))
-    figs.extend(plot_trust_risk(all_data, loaded))
+    figs.extend(plot_nasa(all_data, loaded))
+    figs.append(plot_perceived_control(all_data, loaded))
+    figs.append(plot_trust_risk_distribution(all_data, loaded))
     figs.append(plot_pts(all_data, loaded))
-    figs.append(plot_boxplots(all_data, loaded))
+    figs.append(plot_preference_profile(all_data, loaded))
+    figs.extend(plot_preference_clusters(all_data, loaded))
 
     print(f"\nDone — {len(figs)} figures saved to {PLOTS_DIR}/")
     plt.show()

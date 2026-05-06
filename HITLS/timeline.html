@@ -7,7 +7,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-family: Arial, sans-serif;
       background: #e8eaed;
       color: #1a1a2e;
       font-size: 12px;
@@ -74,7 +74,7 @@
       display: block;
       font-size: 9px;
       color: #7a8898;
-      font-family: monospace;
+      font-family: Arial, sans-serif;
       margin-bottom: 2px;
     }
     .plt-cluster-chips { display:flex; flex-wrap:wrap; gap:2px; align-items:flex-start; }
@@ -245,7 +245,7 @@
       display: block;
       font-size: 9px;
       color: #7a8898;
-      font-family: monospace;
+      font-family: Arial, sans-serif;
       margin-bottom: 2px;
     }
     .agt-cluster-chips { display:flex; flex-wrap:wrap; gap:2px; align-items:flex-start; }
@@ -284,7 +284,7 @@
       border-left-color: #9aa0ae;
       background: rgba(240,242,245,0.88);
     }
-    .atc-ts  { flex-shrink:0; font-size:9px; color:#7a8898; font-family:monospace; padding-top:1px; }
+    .atc-ts  { flex-shrink:0; font-size:9px; color:#7a8898; font-family:Arial, sans-serif; padding-top:1px; }
     .atc-val { flex:1; font-size:9px; white-space:normal; overflow-wrap:anywhere; color:#1a3060; }
 
     /* ── Aircraft actions (rendered inside #content, pinned to left edge) ─────── */
@@ -302,7 +302,7 @@
       gap: 5px;
       z-index: 3;
     }
-    .ac-ts  { flex-shrink:0; font-size:9px; color:#7a8898; font-family:monospace; padding-top:1px; }
+    .ac-ts  { flex-shrink:0; font-size:9px; color:#7a8898; font-family:Arial, sans-serif; padding-top:1px; }
     .ac-src { font-size:9px; font-weight:700; color:#0a3d6e; white-space:nowrap; }
     .ac-val { flex:1; font-size:9px; white-space:normal; overflow-wrap:anywhere; color:#1a3060; }
 
@@ -651,7 +651,7 @@
       padding: 1px 7px;
       cursor: pointer;
       border-radius: 3px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: Arial, sans-serif;
       font-size: 12px;
       white-space: nowrap;
       line-height: 1.5;
@@ -694,7 +694,7 @@
       padding: 1px 7px;
       cursor: pointer;
       border-radius: 3px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: Arial, sans-serif;
       font-size: 12px;
       white-space: nowrap;
       line-height: 1.5;
@@ -759,7 +759,7 @@
       color: #1a1a00;
       font-size: 9px;
       font-weight: 700;
-      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-family: Arial, sans-serif;
       padding: 1px 5px;
       border-radius: 3px;
       white-space: nowrap;
@@ -1668,7 +1668,7 @@ function _renderAxisSvg(svg, ticks, xOf, VW, isRef, fmtLabel) {
     txt.setAttribute('font-size', '9');
     txt.setAttribute('fill', ref ? '#c03030' : '#6a7488');
     txt.setAttribute('font-weight', ref ? 'bold' : 'normal');
-    txt.setAttribute('font-family', 'monospace');
+    txt.setAttribute('font-family', 'Arial, sans-serif');
     txt.textContent = fmtLabel(v);
     svg.appendChild(txt);
   }

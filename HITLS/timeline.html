@@ -674,6 +674,104 @@
       flex: 1;
       text-align: right;
     }
+
+    /* ── Annotation bar ─────────────────────────────────────────────────── */
+    #annot-bar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+      background: #1c1f2b;
+      height: 30px;
+      border-top: 1px solid #374151;
+    }
+    #annot-bar label { font-size: 10px; color: #9aa0ae; white-space: nowrap; }
+    .annot-btn {
+      background: #1f2937;
+      color: #d1d5db;
+      border: 1px solid #374151;
+      padding: 1px 7px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      white-space: nowrap;
+      line-height: 1.5;
+    }
+    .annot-btn:hover { background: #374151; color: #fff; }
+    #annot-mark-btn {
+      background: #78350f;
+      color: #fde68a;
+      border: 1px solid #d97706;
+      font-weight: 700;
+      padding: 1px 10px;
+    }
+    #annot-mark-btn:hover { background: #92400e; }
+    #annot-save-btn {
+      background: #065f46;
+      color: #6ee7b7;
+      border: 1px solid #047857;
+      margin-left: 4px;
+    }
+    #annot-save-btn:hover { background: #047857; }
+    #annot-save-btn.saved { background: #1e3a5f; color: #93c5fd; border-color: #2563eb; }
+    #annot-hint {
+      font-size: 10px;
+      color: #4ade80;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      text-align: right;
+    }
+    #annot-offset-input {
+      width: 72px;
+      font-family: inherit;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      padding: 1px 4px;
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 3px;
+      color: #f9fafb;
+      text-align: right;
+    }
+    #annot-offset-input:focus { outline: none; border-color: #d97706; }
+
+    /* ── Annotation overlay lines ────────────────────────────────────────── */
+    .annot-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #f59e0b;
+      pointer-events: none;
+      z-index: 20;
+      overflow: visible;
+    }
+    .annot-line.selected { background: #ef4444; }
+    .annot-pill {
+      position: absolute;
+      right: 4px;
+      top: -14px;
+      background: rgba(245, 158, 11, 0.92);
+      color: #1a1a00;
+      font-size: 9px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      padding: 1px 5px;
+      border-radius: 3px;
+      white-space: nowrap;
+      max-width: 340px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      pointer-events: all;
+      z-index: 21;
+    }
+    .annot-pill:hover { background: #fbbf24; }
+    .annot-pill.selected { background: #ef4444; color: #fff; }
   </style>
 </head>
 <body>
@@ -702,6 +800,21 @@
     <button class="sync-btn" onclick="vidResetOffset()" title="Reset to 0">&#8635;</button>
     <button class="sync-btn" id="vid-save-btn" onclick="vidSaveOffset()" title="Save offset as JSON file">&#128190; Save sync</button>
     <span id="vid-sync-hint"></span>
+  </div>
+  <div id="annot-bar">
+    <label>Annotations</label>
+    <button class="annot-btn" id="annot-mark-btn" onclick="annotMarkNow()" title="Mark current playhead position (shortcut: M)">&#128204; Mark [M]</button>
+    <button class="annot-btn" onclick="annotNudgeSec(-1)" title="Shift selected -1 s">&#9664;1s</button>
+    <button class="annot-btn" onclick="annotNudgeFrame(-1)" title="Shift selected one frame earlier">&#9664;&#9664;</button>
+    <button class="annot-btn" onclick="annotNudgeFrame(1)"  title="Shift selected one frame later">&#9654;&#9654;</button>
+    <button class="annot-btn" onclick="annotNudgeSec(1)"   title="Shift selected +1 s">1s&#9654;</button>
+    <input id="annot-offset-input" type="number" step="0.001" value=""
+      placeholder="t (s)"
+      oninput="annotSetSelectedTime(parseFloat(this.value))"
+      title="Exact time (s) of selected annotation">
+    <button class="annot-btn" onclick="annotDeleteSelected()" title="Delete selected annotation" style="color:#fca5a5;">&#128465;</button>
+    <button class="annot-btn" id="annot-save-btn" onclick="annotSave()" title="Save annotations as JSON">&#128190; Save annots</button>
+    <span id="annot-hint"></span>
   </div>
 </div>
 
@@ -947,6 +1060,7 @@ function parseCSV(text, delim = ';') {
 function loadFile(input) {
   const file = input.files[0];
   if (!file) return;
+  if (window._resetAnnots) window._resetAnnots();
   document.getElementById('file-label').textContent = file.name;
   const reader = new FileReader();
   reader.onload = e => {
@@ -960,6 +1074,8 @@ function loadFile(input) {
 function rerender() {
   if (window._lastCSV) renderTimeline(window._lastCSV);
 }
+
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Timeline renderer
@@ -1339,6 +1455,12 @@ function renderTimeline(text) {
   // expose natToVis so the video playhead can track timeline position
   _natToVis = naturalToVisual;
   if (window._updatePlayhead) window._updatePlayhead();
+
+  // expose layout reference for annotation coordinate inversion
+  window._layoutRef = layout;
+
+  // pass layout refs to annotation system and re-render any loaded annotations
+  if (window._annotSetLayout) window._annotSetLayout(naturalToVisual, totalPx);
 
   renderAltChart(altData, totalPx, naturalToVisual);
   renderSpeedChart(spdData, totalPx, naturalToVisual);
@@ -2153,6 +2275,242 @@ function renderHeadingChart(hdgData, hdg0, totalPx, natToVis) {
     '#7030a0', 'No heading data in this CSV');
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Annotations system
+// Saved as {basename}_annotations.json  [{id, relSec, label}]
+// ─────────────────────────────────────────────────────────────────────────────
+(function () {
+  let _annots       = [];      // [{id, relSec, label}]
+  let _selectedId   = null;
+  let _annotNatToVis = null;   // set after renderTimeline
+  let _annotTotalPx  = 0;
+  let _nextId        = 1;
+
+  // ── expose for renderTimeline to update layout refs ──────────────────────
+  window._annotSetLayout = function (natToVis, totalPx) {
+    _annotNatToVis = natToVis;
+    _annotTotalPx  = totalPx;
+    _renderAnnots();
+  };
+
+  // ── invert visual-px → relSec (binary search over layout array) ──────────
+  function _visToRel(visualPx) {
+    if (!window._layoutRef || !window._layoutRef.length) return visualPx / PX_PER_SEC;
+    const layout = window._layoutRef;
+    // find band where visualTop <= visualPx < visualTop+visualH
+    for (let i = 0; i < layout.length; i++) {
+      const b = layout[i];
+      if (visualPx >= b.visualTop && visualPx < b.visualTop + b.visualH) {
+        const frac = (visualPx - b.visualTop) / Math.max(b.visualH, 0.001);
+        return b.ev.relSec + frac * (b.naturalH / PX_PER_SEC);
+      }
+    }
+    // after last band
+    const last = layout[layout.length - 1];
+    if (!last) return visualPx / PX_PER_SEC;
+    return last.ev.relSec + (last.naturalH / PX_PER_SEC) +
+           (visualPx - last.visualTop - last.visualH) / PX_PER_SEC;
+  }
+
+  // ── render all annotation lines into #content ────────────────────────────
+  function _renderAnnots() {
+    // remove old lines
+    document.querySelectorAll('.annot-line').forEach(el => el.remove());
+    if (!_annotNatToVis || !_annots.length) return;
+    const content = document.getElementById('content');
+    for (const a of _annots) {
+      const y = _annotNatToVis(a.relSec);
+      const line = document.createElement('div');
+      line.className = 'annot-line' + (a.id === _selectedId ? ' selected' : '');
+      line.style.top = y + 'px';
+      line.dataset.annotId = a.id;
+
+      const pill = document.createElement('div');
+      pill.className = 'annot-pill' + (a.id === _selectedId ? ' selected' : '');
+      pill.textContent = fmtSec(a.relSec) + '  ' + a.label;
+      pill.title = a.label;
+      pill.onclick = (e) => { e.stopPropagation(); _selectAnnot(a.id); };
+      pill.ondblclick = (e) => { e.stopPropagation(); _editLabel(a.id); };
+      line.appendChild(pill);
+      content.appendChild(line);
+    }
+  }
+
+  function _selectAnnot(id) {
+    _selectedId = id;
+    const a = _annots.find(x => x.id === id);
+    if (a) document.getElementById('annot-offset-input').value = a.relSec.toFixed(3);
+    else    document.getElementById('annot-offset-input').value = '';
+    _renderAnnots();
+  }
+
+  function _editLabel(id) {
+    const a = _annots.find(x => x.id === id);
+    if (!a) return;
+    const label = window.prompt('Edit annotation label:', a.label);
+    if (label === null) return;
+    a.label = label.trim() || a.label;
+    _renderAnnots();
+    _markUnsaved();
+  }
+
+  function _addAnnot(relSec, label) {
+    const a = { id: _nextId++, relSec, label };
+    _annots.push(a);
+    _annots.sort((x, y) => x.relSec - y.relSec);
+    _selectAnnot(a.id);
+    _renderAnnots();
+    _markUnsaved();
+  }
+
+  function _markUnsaved() {
+    const btn = document.getElementById('annot-save-btn');
+    if (btn) btn.classList.remove('saved');
+  }
+
+  // ── public API ────────────────────────────────────────────────────────────
+  window.annotMarkNow = function () {
+    // get current playhead relSec (from video if loaded, else fall back to scroll)
+    const videoEl = document.getElementById('video-el');
+    let relSec = 0;
+    if (videoEl && isFinite(videoEl.duration) && videoEl.duration > 0) {
+      // reuse same formula as the playhead
+      const syncInput = document.getElementById('vid-sync-input');
+      const offset = parseFloat(syncInput ? syncInput.value : 0) || 0;
+      relSec = Math.max(0, videoEl.currentTime + offset);
+    } else if (_annotNatToVis && _annotTotalPx) {
+      // fall back: center of viewport
+      const sa = document.getElementById('scroll-area');
+      relSec = _visToRel(sa.scrollTop + sa.clientHeight / 2);
+    }
+    const label = window.prompt('Annotation label:', '');
+    if (label === null) return;
+    _addAnnot(relSec, label.trim() || '(no label)');
+  };
+
+  window.annotNudgeSec = function (dir) {
+    const a = _annots.find(x => x.id === _selectedId);
+    if (!a) return;
+    a.relSec = Math.max(0, parseFloat((a.relSec + dir).toFixed(3)));
+    document.getElementById('annot-offset-input').value = a.relSec.toFixed(3);
+    _renderAnnots();
+    _markUnsaved();
+  };
+
+  window.annotNudgeFrame = function (dir) {
+    const a = _annots.find(x => x.id === _selectedId);
+    if (!a) return;
+    const fps = 30;
+    a.relSec = Math.max(0, parseFloat((a.relSec + dir / fps).toFixed(6)));
+    document.getElementById('annot-offset-input').value = a.relSec.toFixed(3);
+    _renderAnnots();
+    _markUnsaved();
+  };
+
+  window.annotSetSelectedTime = function (t) {
+    const a = _annots.find(x => x.id === _selectedId);
+    if (!a || !isFinite(t)) return;
+    a.relSec = Math.max(0, t);
+    _renderAnnots();
+    _markUnsaved();
+  };
+
+  window.annotDeleteSelected = function () {
+    if (_selectedId === null) return;
+    if (!window.confirm('Delete this annotation?')) return;
+    _annots = _annots.filter(x => x.id !== _selectedId);
+    _selectedId = null;
+    document.getElementById('annot-offset-input').value = '';
+    _renderAnnots();
+    _markUnsaved();
+  };
+
+  window.annotSave = async function () {
+    if (!_annots.length) { alert('No annotations to save.'); return; }
+    const csvLabel = document.getElementById('file-label').textContent;
+    const baseName = csvLabel.replace(/_ingescape\.csv$/i, '');
+    const filename = baseName + '_annotations.json';
+    const payload  = JSON.stringify({ csv: csvLabel, annotations: _annots }, null, 2);
+
+    if (window.showSaveFilePicker) {
+      try {
+        const fh = await window.showSaveFilePicker({
+          suggestedName: filename,
+          types: [{ description: 'Annotations JSON', accept: { 'application/json': ['.json'] } }],
+        });
+        const w = await fh.createWritable();
+        await w.write(payload); await w.close();
+        const btn = document.getElementById('annot-save-btn');
+        btn.classList.add('saved');
+        document.getElementById('annot-hint').textContent = '\u2713 ' + fh.name;
+        return;
+      } catch (e) { if (e.name === 'AbortError') return; }
+    }
+    const name = window.prompt('Save annotations as:', filename);
+    if (name === null) return;
+    const blob = new Blob([payload], { type: 'application/json' });
+    const a2   = document.createElement('a');
+    a2.href    = URL.createObjectURL(blob);
+    a2.download = name;
+    a2.click();
+    URL.revokeObjectURL(a2.href);
+    const btn = document.getElementById('annot-save-btn');
+    btn.classList.add('saved');
+    document.getElementById('annot-hint').textContent = '\u2713 ' + name;
+  };
+
+  // called by loadFolder / _tryAutoLoadVideo
+  window._loadAnnotsFromFile = function (file) {
+    file.text().then(txt => {
+      try {
+        const obj = JSON.parse(txt);
+        if (!Array.isArray(obj.annotations)) return;
+        _annots = obj.annotations.map(a => ({ id: _nextId++, relSec: +a.relSec, label: String(a.label) }));
+        _selectedId = null;
+        document.getElementById('annot-offset-input').value = '';
+        const btn = document.getElementById('annot-save-btn');
+        if (btn) btn.classList.add('saved');
+        document.getElementById('annot-hint').textContent = '\uD83D\uDCBE loaded: ' + _annots.length + ' annotations';
+        _renderAnnots();
+      } catch {}
+    });
+  };
+
+  // reset when a new CSV is loaded
+  window._resetAnnots = function () {
+    _annots = []; _selectedId = null; _nextId = 1;
+    _annotNatToVis = null; _annotTotalPx = 0;
+    document.getElementById('annot-offset-input').value = '';
+    document.getElementById('annot-hint').textContent = '';
+    document.querySelectorAll('.annot-line').forEach(el => el.remove());
+  };
+
+  // ── Click-to-mark on #content ────────────────────────────────────────────
+  // Ctrl+click drops a new annotation at the clicked timeline position.
+  document.addEventListener('DOMContentLoaded', () => {
+    const content = document.getElementById('content');
+    content.addEventListener('click', (e) => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      if (!_annotNatToVis) return;
+      const rect    = content.getBoundingClientRect();
+      const sa      = document.getElementById('scroll-area');
+      const clickY  = e.clientY - rect.top + sa.scrollTop;
+      const relSec  = Math.max(0, _visToRel(clickY));
+      const label   = window.prompt('Annotation label:', '');
+      if (label === null) return;
+      _addAnnot(relSec, label.trim() || '(no label)');
+    });
+  });
+
+  // ── Keyboard shortcut: M ─────────────────────────────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.metaKey) {
+      annotMarkNow();
+    }
+  });
+})();
+
 // ── Pupil panel re-render state ──────────────────────────────────────────────────────────
 let _pupilRaw = [], _pupilTotalPx = 0, _pupilNatToVis = null;
 
@@ -2282,6 +2640,11 @@ let _natToVis = null;
       });
     } else {
       _applyOffset(0, '');
+    }
+    // auto-load annotations if present
+    const annotName = csvName.replace(/_ingescape\.csv$/i, '_annotations.json');
+    if (_folderFiles.has(annotName) && window._loadAnnotsFromFile) {
+      window._loadAnnotsFromFile(_folderFiles.get(annotName));
     }
   };
 

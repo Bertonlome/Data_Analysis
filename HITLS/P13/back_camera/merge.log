@@ -1,8 +1,8 @@
 Camera Merge Log  —  P13 / back_camera
-  Generated     : 2026-04-29 20:11:17 UTC
+  Generated     : 2026-05-07 21:27:59 UTC
   Gap tolerance : 60.0 s  |  Black fill < 60 s
   Total clips   : 218
-  Segments      : 2  (merged: 2, skipped: 0, single: 0, failed: 0)
+  Segments      : 2  (merged: 1, skipped: 1, single: 0, failed: 0)
 
 ────────────────────────────────────────────────────────────────────────
   Segment 1 of 2   [MERGED]   →  merged_20260427_153628_6clips.mp4
@@ -24,7 +24,7 @@ Camera Merge Log  —  P13 / back_camera
     [  6] W441M00S60.mp4                                          15:41:00 → 15:42:00  (60.0 s)
 
 ────────────────────────────────────────────────────────────────────────
-  Segment 2 of 2   [MERGED]   →  merged_20260427_154530_212clips.mp4
+  Segment 2 of 2   [SKIPPED]   →  merged_20260427_154530_212clips.mp4
   Gap from previous segment : 210.0 s
   Wall-clock span : 15:45:30 → 19:17:00  (12690.0 s)
   Content footage : 12690.0 s

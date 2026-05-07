@@ -1,16 +1,13 @@
 Camera Merge Log  —  P13 / front_camera
-  Generated     : 2026-04-29 20:11:26 UTC
+  Generated     : 2026-05-07 21:27:59 UTC
   Gap tolerance : 60.0 s  |  Black fill < 60 s
   Total clips   : 154
-  Segments      : 8  (merged: 8, skipped: 0, single: 0, failed: 0)
+  Segments      : 8  (merged: 0, skipped: 8, single: 0, failed: 0)
 
 ────────────────────────────────────────────────────────────────────────
-  Segment 1 of 8   [MERGED]   →  merged_20260427_153606_6clips.mp4
+  Segment 1 of 8   [SKIPPED]   →  merged_20260427_153606_6clips.mp4
   Wall-clock span : 15:36:06 → 15:42:00  (354.0 s)
   Content footage : 352.0 s
-  Black filler    : 2.00 s (1 gap(s))
-  Video props     : 1920x1080 20/1 fps  yuvj420p
-  Audio props     : 16000 Hz  1ch
   File size       : 48.5 MB
 
   Input clips (6)
@@ -18,12 +15,12 @@ Camera Merge Log  —  P13 / front_camera
     [  2] 37M00S60.mp4                                            15:37:00 → 15:38:00  (60.0 s)
     [  3] 38M00S60.mp4                                            15:38:00 → 15:39:00  (60.0 s)
     [  4] 39M00S60.mp4                                            15:39:00 → 15:40:00  (60.0 s)
-           ↕ gap: 2.00 s  → filled with 2.00 s black frames
+           ↕ gap: 2.00 s
     [  5] 40M02S58.mp4                                            15:40:02 → 15:41:00  (58.0 s)
     [  6] 41M00S60.mp4                                            15:41:00 → 15:42:00  (60.0 s)
 
 ────────────────────────────────────────────────────────────────────────
-  Segment 2 of 8   [MERGED]   →  merged_20260427_160000_2clips.mp4
+  Segment 2 of 8   [SKIPPED]   →  merged_20260427_160000_2clips.mp4
   Gap from previous segment : 1080.0 s
   Wall-clock span : 16:00:00 → 16:02:00  (120.0 s)
   Content footage : 120.0 s
@@ -34,7 +31,7 @@ Camera Merge Log  —  P13 / front_camera
     [  2] 01M00S60.mp4                                            16:01:00 → 16:02:00  (60.0 s)
 
 ────────────────────────────────────────────────────────────────────────
-  Segment 3 of 8   [MERGED]   →  merged_20260427_161457_2clips.mp4
+  Segment 3 of 8   [SKIPPED]   →  merged_20260427_161457_2clips.mp4
   Gap from previous segment : 777.0 s
   Wall-clock span : 16:14:57 → 16:16:00  (63.0 s)
   Content footage : 63.0 s
@@ -45,20 +42,17 @@ Camera Merge Log  —  P13 / front_camera
     [  2] 15M00S60.mp4                                            16:15:00 → 16:16:00  (60.0 s)
 
 ────────────────────────────────────────────────────────────────────────
-  Segment 4 of 8   [MERGED]   →  merged_20260427_162731_34clips.mp4
+  Segment 4 of 8   [SKIPPED]   →  merged_20260427_162731_34clips.mp4
   Gap from previous segment : 691.0 s
   Wall-clock span : 16:27:31 → 17:01:00  (2009.0 s)
   Content footage : 2006.0 s
-  Black filler    : 3.00 s (1 gap(s))
-  Video props     : 1920x1080 20/1 fps  yuvj420p
-  Audio props     : 16000 Hz  1ch
   File size       : 253.1 MB
 
   Input clips (34)
     [  1] 27M31S29.mp4                                            16:27:31 → 16:28:00  (29.0 s)
     [  2] 28M00S60.mp4                                            16:28:00 → 16:29:00  (60.0 s)
     [  3] 29M00S60.mp4                                            16:29:00 → 16:30:00  (60.0 s)
-           ↕ gap: 3.00 s  → filled with 3.00 s black frames
+           ↕ gap: 3.00 s
     [  4] 30M03S57.mp4                                            16:30:03 → 16:31:00  (57.0 s)
     [  5] 31M00S60.mp4                                            16:31:00 → 16:32:00  (60.0 s)
     [  6] 32M00S60.mp4                                            16:32:00 → 16:33:00  (60.0 s)
@@ -92,7 +86,7 @@ Camera Merge Log  —  P13 / front_camera
     [ 34] 00M00S60.mp4                                            17:00:00 → 17:01:00  (60.0 s)
 
 ────────────────────────────────────────────────────────────────────────
-  Segment 5 of 8   [MERGED]   →  merged_20260427_170058_24clips.mp4
+  Segment 5 of 8   [SKIPPED]   →  merged_20260427_170058_24clips.mp4
   Gap from previous segment : -2.0 s
   Wall-clock span : 17:00:58 → 17:24:00  (1382.0 s)
   Content footage : 1382.0 s
@@ -125,7 +119,7 @@ Camera Merge Log  —  P13 / front_camera
     [ 24] 23M00S60.mp4                                            17:23:00 → 17:24:00  (60.0 s)
 
 ────────────────────────────────────────────────────────────────────────
-  Segment 6 of 8   [MERGED]   →  merged_20260427_172358_77clips.mp4
+  Segment 6 of 8   [SKIPPED]   →  merged_20260427_172358_77clips.mp4
   Gap from previous segment : -2.0 s
   Wall-clock span : 17:23:58 → 18:40:00  (4562.0 s)
   Content footage : 4562.0 s
@@ -211,7 +205,7 @@ Camera Merge Log  —  P13 / front_camera
     [ 77] 39M00S60.mp4                                            18:39:00 → 18:40:00  (60.0 s)
 
 ────────────────────────────────────────────────────────────────────────
-  Segment 7 of 8   [MERGED]   →  merged_20260427_183958_4clips.mp4
+  Segment 7 of 8   [SKIPPED]   →  merged_20260427_183958_4clips.mp4
   Gap from previous segment : -2.0 s
   Wall-clock span : 18:39:58 → 18:43:00  (182.0 s)
   Content footage : 182.0 s
@@ -224,20 +218,17 @@ Camera Merge Log  —  P13 / front_camera
     [  4] 42M00S60.mp4                                            18:42:00 → 18:43:00  (60.0 s)
 
 ────────────────────────────────────────────────────────────────────────
-  Segment 8 of 8   [MERGED]   →  merged_20260427_191334_5clips.mp4
+  Segment 8 of 8   [SKIPPED]   →  merged_20260427_191334_5clips.mp4
   Gap from previous segment : 1834.0 s
   Wall-clock span : 19:13:34 → 19:18:00  (266.0 s)
   Content footage : 237.0 s
-  Black filler    : 29.00 s (1 gap(s))
-  Video props     : 1920x1080 20/1 fps  yuvj420p
-  Audio props     : 16000 Hz  1ch
   File size       : 32.3 MB
 
   Input clips (5)
     [  1] 13M34S26.mp4                                            19:13:34 → 19:14:00  (26.0 s)
     [  2] 14M00S60.mp4                                            19:14:00 → 19:15:00  (60.0 s)
     [  3] 15M00S60.mp4                                            19:15:00 → 19:16:00  (60.0 s)
-           ↕ gap: 29.00 s  → filled with 29.00 s black frames
+           ↕ gap: 29.00 s
     [  4] 16M29S31.mp4                                            19:16:29 → 19:17:00  (31.0 s)
     [  5] 17M00S60.mp4                                            19:17:00 → 19:18:00  (60.0 s)
 

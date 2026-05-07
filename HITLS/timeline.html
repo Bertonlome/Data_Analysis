@@ -803,7 +803,7 @@
   </div>
   <div id="annot-bar">
     <label>Annotations</label>
-    <button class="annot-btn" id="annot-mark-btn" onclick="annotMarkNow()" title="Mark current playhead position (shortcut: M)">&#128204; Mark [M]</button>
+    <button class="annot-btn" id="annot-mark-btn" onclick="annotMarkNow()" title="Mark current playhead position (shortcut: M)">&#128204; Mark annotation [M]</button>
     <button class="annot-btn" onclick="annotNudgeSec(-1)" title="Shift selected -1 s">&#9664;1s</button>
     <button class="annot-btn" onclick="annotNudgeFrame(-1)" title="Shift selected one frame earlier">&#9664;&#9664;</button>
     <button class="annot-btn" onclick="annotNudgeFrame(1)"  title="Shift selected one frame later">&#9654;&#9654;</button>
@@ -1085,12 +1085,14 @@ function renderTimeline(text) {
   if (allRows.length < 2) { alert('Empty or unrecognised CSV.'); return; }
 
   // columns: uuid(0) timestamp(1) agent(2) source(3) type(4) igs_ts(5) value(6)
+  // New datalake format uses relative_time_us (integer µs) instead of epoch seconds.
+  const tsScale = (allRows[0][1] === 'relative_time_us') ? 1e-6 : 1.0;
   const data = [];
   for (let i = 1; i < allRows.length; i++) {
     const r = allRows[i];
     if (r.length < 6) continue;
-    const ts = parseFloat(r[1]);
-    if (!isFinite(ts) || ts <= 0) continue;
+    const ts = parseFloat(r[1]) * tsScale;
+    if (!isFinite(ts) || ts < 0) continue;
     data.push({ ts, agent: r[2].trim(), source: r[3].trim(), value: r[6] ?? '' });
   }
 

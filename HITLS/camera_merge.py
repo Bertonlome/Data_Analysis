@@ -22,12 +22,16 @@ Usage
 -----
   python camera_merge.py
   python camera_merge.py --gap 30   # custom gap tolerance (s)
-
+python camera_merge.py -p P13 P17
+python camera_merge.py --participant P13 P17
+python camera_merge.py -p P02          # single still works
+python camera_merge.py                 # all participants
 Filename conventions supported
   Subfolder  : YYYYYMMMDDDHH   e.g.  2026Y04M13D16H
   Back-cam   : W4{mm}M{ss}S{dur}.mp4   (W4 = camera prefix, ignored)
   Front-cam  :   {mm}M{ss}S{dur}.mp4
   where  mm = minute-in-hour (00-59),  ss = start-second,  dur = duration (s)
+
 """
 
 from __future__ import annotations
@@ -506,11 +510,11 @@ def main() -> None:
         help=f'Max gap (s) between clips to still group into one segment '
              f'(default: {GAP_TOLERANCE_S})')
     parser.add_argument(
-        '--participant', '-p', metavar='PXX',
-        help='Process only this participant (e.g. P02). Omit to process all.')
+        '--participant', '-p', metavar='PXX', nargs='+',
+        help='Process only these participant(s) (e.g. -p P13 P17). Omit to process all.')
     args    = parser.parse_args()
     gap_tol = args.gap
-    only_p  = args.participant.upper() if args.participant else None
+    only_p  = {v.upper() for v in args.participant} if args.participant else None
 
     for tool in ('ffmpeg', 'ffprobe'):
         if subprocess.run([tool, '-version'], capture_output=True).returncode != 0:
@@ -519,12 +523,13 @@ def main() -> None:
     participants = sorted(
         [d for d in HITLS_DIR.iterdir()
          if d.is_dir() and PARTICIPANT_RE.match(d.name)
-         and (only_p is None or d.name == only_p)],
+         and (only_p is None or d.name in only_p)],
+
         key=lambda p: p.name,
     )
     if not participants:
         if only_p:
-            print(f"Participant directory '{only_p}' not found in {HITLS_DIR}.")
+            print(f"Participant directory/ies {sorted(only_p)} not found in {HITLS_DIR}.")
         else:
             print("No participant directories (P02, P03 …) found.")
         return

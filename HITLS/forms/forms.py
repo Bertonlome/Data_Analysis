@@ -5,9 +5,10 @@ Scripts run in order:
   1. pre-experiment-forms   (demographics + PTS)
   2. nasa-tlx               (workload)
   3. oversight-bespoke      (oversight)
-  4. sus                    (usability)
-  5. trust-in-automation    (TiA)
-  6. trust-risk             (trust & perceived risk VAS)
+  4. perceived-control      (perceived control)
+  5. sus                    (usability)
+  6. trust-in-automation    (TiA)
+  7. trust-risk             (trust & perceived risk VAS)
 """
 
 import os
@@ -22,6 +23,7 @@ SCRIPTS = [
     ("pre-experiment-forms", "pre-experiment-forms.py"),
     ("nasa-tlx",             "nasa-tlx.py"),
     ("oversight-bespoke",    "oversight-bespoke.py"),
+    ("perceived-control",    "perceived-control.py"),
     ("sus",                  "sus.py"),
     ("trust-in-automation",  "trust-in-automation.py"),
     ("trust-risk",           "trust-risk.py"),

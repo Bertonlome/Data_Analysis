@@ -39,11 +39,11 @@ PYTHON       = sys.executable
 
 # ── Experiment constants ─────────────────────────────────────────────────────
 CONDITIONS      = ["TARS", "TARC", "TARP-S", "TARP-F"]   # all four (used by NASA + box plots)
-CONDITIONS_MAIN = ["TARS", "TARP-S", "TARP-F"]           # TARC excluded (all other questionnaires)
+CONDITIONS_MAIN = ["TARS", "TARC", "TARP-S", "TARP-F"]   # all four questionnaire conditions
 _BASELINE    = "TARS"
-_COMPARISONS = ["TARP-S", "TARP-F"]   # conditions compared vs _BASELINE
+_COMPARISONS = ["TARC", "TARP-S", "TARP-F"]   # conditions compared vs _BASELINE
 # Diff pairs: (reference, compare) — used for the diff panels
-_ALL_PAIRS  = [("TARS", "TARP-S"), ("TARS", "TARP-F"), ("TARP-S", "TARP-F")]
+_ALL_PAIRS  = [("TARS", "TARP-S"), ("TARS", "TARP-F"), ("TARP-S", "TARP-F"), ("TARS", "TARC")]
 _NASA_PAIRS = [("TARS", "TARC"),   ("TARS", "TARP-S"), ("TARS", "TARP-F"), ("TARP-S", "TARP-F")]
 
 COND_COLOR = {
@@ -54,11 +54,12 @@ COND_COLOR = {
 }
 
 # Per-pair visual styles (color, marker) — index aligned with _ALL_PAIRS order
-# TARP-S − TARS | TARP-F − TARS | TARP-F − TARP-S
+# TARP-S − TARS | TARP-F − TARS | TARP-F − TARP-S | TARC − TARS
 _PAIR_STYLES = [
-    ("#70AD47", "o"),   # TARP-S − TARS   (green / circle)
-    ("#C00000", "s"),   # TARP-F − TARS   (red   / square)
+    ("#70AD47", "o"),   # TARP-S − TARS   (green  / circle)
+    ("#C00000", "s"),   # TARP-F − TARS   (red    / square)
     ("#7030A0", "^"),   # TARP-F − TARP-S (purple / triangle)
+    ("#ED7D31", "D"),   # TARC  − TARS    (orange / diamond)
 ]
 
 # ── Likert colour palettes ───────────────────────────────────────────────────

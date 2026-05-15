@@ -1,3 +1,14 @@
+"""
+sus.py — System Usability Scale (SUS) Processor
+================================================
+Scores the 10-item SUS questionnaire (1–5 Likert, alternating scoring).
+Final score scaled to 0–100. Reads from HAT_study.csv
+(questionnaire_id = "sus").
+
+Typically invoked by `forms/forms.py`, but can be run interactively.
+Output: {PID}/cleaned/{PID}_sus_report.txt
+"""
+
 import os
 import csv
 import json

@@ -1,3 +1,14 @@
+"""
+trust-risk.py — Trust & Risk Visual Analogue Scale (VAS) Processor
+===================================================================
+Processes two VAS items (0–100 slider) measuring overall trust in the
+automation system and perceived risk. Reads from HAT_study.csv
+(questionnaire_id = "trust_risk").
+
+Typically invoked by `forms/forms.py`, but can be run interactively.
+Output: {PID}/cleaned/{PID}_trust_risk_report.txt
+"""
+
 import os
 import csv
 import json

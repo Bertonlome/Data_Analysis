@@ -9,11 +9,20 @@ Scripts run in order:
   5. sus                    (usability)
   6. trust-in-automation    (TiA)
   7. trust-risk             (trust & perceived risk VAS)
+
+Usage
+-----
+  python forms/forms.py           # interactive participant selection
+  python forms/forms.py P02       # run directly for participant P02
+  python forms/forms.py 3         # run for 3rd participant in the list
+
+Output: reports saved to HITLS/{PID}/cleaned/{PID}_*_report.txt
 """
 
 import os
 import sys
 import io
+import argparse
 import importlib.util
 
 FORMS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -62,27 +71,48 @@ def main():
         print("No participant folders found.")
         return
 
-    sep = "=" * 78
-    print(f"\n{sep}")
-    print("  HITLS — Questionnaire Analysis Suite")
-    print(f"{sep}")
-    print("\nAvailable participants:")
-    for i, p in enumerate(participants, 1):
-        print(f"  {i}. {p}")
+    # ── Resolve participant from CLI arg or interactive prompt ────────────────
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("participant", nargs="?", default=None)
+    args, _ = parser.parse_known_args()
 
-    while True:
-        choice = input("\nSelect a participant (number or ID, e.g. 1 or P02): ").strip()
-        if choice.isdigit():
-            idx = int(choice) - 1
-            if 0 <= idx < len(participants):
-                participant_id = participants[idx]
-                participant_input = choice
+    if args.participant is not None:
+        raw = args.participant.strip()
+        if raw.isdigit():
+            idx = int(raw) - 1
+            if not (0 <= idx < len(participants)):
+                print(f"Invalid participant number: {raw}")
+                sys.exit(1)
+            participant_id    = participants[idx]
+            participant_input = raw
+        else:
+            participant_id = raw.upper()
+            if participant_id not in participants:
+                print(f"Participant '{participant_id}' not found.")
+                sys.exit(1)
+            participant_input = participant_id
+    else:
+        sep = "=" * 78
+        print(f"\n{sep}")
+        print("  HITLS — Questionnaire Analysis Suite")
+        print(f"{sep}")
+        print("\nAvailable participants:")
+        for i, p in enumerate(participants, 1):
+            print(f"  {i}. {p}")
+
+        while True:
+            choice = input("\nSelect a participant (number or ID, e.g. 1 or P02): ").strip()
+            if choice.isdigit():
+                idx = int(choice) - 1
+                if 0 <= idx < len(participants):
+                    participant_id    = participants[idx]
+                    participant_input = choice
+                    break
+            elif choice.upper() in participants:
+                participant_id    = choice.upper()
+                participant_input = choice.upper()
                 break
-        elif choice.upper() in participants:
-            participant_id = choice.upper()
-            participant_input = choice.upper()
-            break
-        print(f"  Invalid choice.")
+            print(f"  Invalid choice.")
 
     print(f"\n{sep}")
     print(f"  Running all questionnaire scripts for {participant_id}")

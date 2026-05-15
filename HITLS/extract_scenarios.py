@@ -46,6 +46,16 @@ def find_ingescape_csv(participant_dir: Path) -> Path | None:
     return None
 
 
+def find_ingescape_csvs(participant_dir: Path) -> list[Path]:
+    """Return all *_ingescape.csv (and *_ingescape.csv.csv) files, sorted."""
+    found: set[Path] = set()
+    for pattern in ("*_ingescape.csv", "*_ingescape.csv.csv"):
+        for path in participant_dir.glob(pattern):
+            if "train_then_test" not in path.name:
+                found.add(path)
+    return sorted(found)
+
+
 def find_ingescape_logs(participant_dir: Path) -> list[Path]:
     """Return all *_ingescape_backup_*.log files in the participant dir, sorted."""
     return sorted(participant_dir.glob("*_ingescape_backup_*.log"))
@@ -274,6 +284,158 @@ def print_scenario_comparison(reports: list[dict]) -> None:
 
 # ── core extraction ───────────────────────────────────────────────────────────
 
+def _iter_csv_rows(csv_paths: list[Path]):
+    """Yield (row_idx, row, header, ts_scale) across multiple CSV files.
+
+    The header and ts_scale are from the first file; subsequent files' headers
+    are skipped.  row_idx is continuous across all files.
+    """
+    row_idx = 0
+    header: list[str] | None = None
+    ts_scale = 1.0
+    for csv_path in csv_paths:
+        with csv_path.open(newline="", encoding="utf-8") as fh:
+            reader = csv.reader(fh, delimiter=";")
+            file_header = next(reader)
+            if header is None:
+                header = file_header
+                ts_scale = 1e-6 if len(header) > 1 and header[1] == "relative_time_us" else 1.0
+            for row in reader:
+                yield row_idx, row, header, ts_scale
+                row_idx += 1
+
+
+def extract_scenarios_multi(csv_paths: list[Path], output_dir: Path) -> None:
+    """Extract scenario slices from one or more *_ingescape.csv files.
+
+    When multiple files are provided they are treated as a single continuous
+    recording (rows are concatenated in sorted filename order).
+    """
+    if len(csv_paths) == 1:
+        extract_scenarios(csv_paths[0], output_dir)
+        return
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    names = ", ".join(p.name for p in csv_paths)
+    print(f"  Scanning {len(csv_paths)} ingescape files: {names}")
+
+    # ── Pass 1: collect pause-state transitions and slug events ──────────────
+    paused_events: list[tuple[int, bool]] = []
+    slug_events:   list[tuple[int, str]]  = []
+    last_row_idx = 0
+    header: list[str] | None = None
+    ts_scale = 1.0
+
+    for row_idx, row, hdr, tsc in _iter_csv_rows(csv_paths):
+        last_row_idx = row_idx
+        if header is None:
+            header = hdr
+            ts_scale = tsc
+        if len(row) < 7:
+            continue
+        agent, src, val_raw = row[2], row[3], row[6]
+
+        if agent == "Aircraft" and src == "paused":
+            is_paused = val_raw.strip().lower() in ("true", "1")
+            paused_events.append((row_idx, is_paused))
+        elif agent == "TARS Agent" and src == "allocation_reloaded":
+            try:
+                j = json.loads(val_raw)
+                slug = Path(j.get("csv", "UNKNOWN")).stem
+                slug_events.append((row_idx, slug))
+            except json.JSONDecodeError:
+                pass
+
+    # ── Derive scenario boundaries ────────────────────────────────────────────
+    boundaries: list[dict] = []
+    paused_state = False
+    in_scenario  = True
+    scenario_start = 0
+
+    for row_idx, is_paused in paused_events:
+        if is_paused and not paused_state:
+            if in_scenario:
+                boundaries.append({"start": scenario_start, "end": row_idx - 1})
+                in_scenario = False
+            paused_state = True
+        elif not is_paused and paused_state:
+            scenario_start = row_idx
+            in_scenario    = True
+            paused_state   = False
+
+    if in_scenario:
+        boundaries.append({"start": scenario_start, "end": last_row_idx})
+
+    if not boundaries:
+        print("  No scenarios found (no Aircraft/paused events).")
+        return
+
+    # ── Number scenarios and assign slugs ─────────────────────────────────────
+    for i, b in enumerate(boundaries):
+        b["num"] = i + 1
+        slug = "UNKNOWN"
+        for se_idx, se_slug in slug_events:
+            if se_idx <= b["end"]:
+                slug = se_slug
+            else:
+                break
+        b["slug"] = slug
+
+    print(f"  Found {len(boundaries)} scenario(s).")
+
+    # ── Pass 2: write slice files ─────────────────────────────────────────────
+    boundaries.sort(key=lambda b: b["start"])
+
+    out_handles: list[tuple[int, int, object, object]] = []
+    written_paths: list[Path] = []
+
+    for b in boundaries:
+        fname = f"scenario_{b['num']:02d}_{b['slug']}_ingescape.csv"
+        out_path = output_dir / fname
+        fout = out_path.open("w", newline="", encoding="utf-8")
+        writer = csv.writer(fout, delimiter=";")
+        out_handles.append((b["start"], b["end"], writer, fout))
+        written_paths.append(out_path)
+
+    ts_ranges: list[list[float | None]] = [[None, None] for _ in out_handles]
+    header_written = False
+    sci = 0
+    n_scenarios = len(out_handles)
+
+    for row_idx, row, hdr, tsc in _iter_csv_rows(csv_paths):
+        if not header_written:
+            for _, _, writer, _ in out_handles:
+                writer.writerow(hdr)
+            header_written = True
+        while sci < n_scenarios and row_idx > out_handles[sci][1]:
+            sci += 1
+        if sci >= n_scenarios:
+            break
+        s, e, writer, _ = out_handles[sci]
+        if s <= row_idx <= e:
+            writer.writerow(row)
+            if len(row) > 1:
+                try:
+                    ts = float(row[1]) * tsc
+                    if ts_ranges[sci][0] is None:
+                        ts_ranges[sci][0] = ts
+                    ts_ranges[sci][1] = ts
+                except ValueError:
+                    pass
+
+    for _, _, _, fout in out_handles:
+        fout.close()
+
+    for i, out_path in enumerate(written_paths):
+        size_kb = out_path.stat().st_size // 1024
+        first_ts, last_ts = ts_ranges[i]
+        if first_ts is not None and last_ts is not None:
+            duration = last_ts - first_ts
+            print(f"    -> {out_path.name}  ({size_kb} KB, {duration:.1f}s)")
+        else:
+            print(f"    -> {out_path.name}  ({size_kb} KB)")
+
+
 def extract_scenarios(csv_path: Path, output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     print(f"  Scanning {csv_path.name} ...")
@@ -463,16 +625,24 @@ def main() -> None:
         scenarios_dir = pdir / "scenarios"
         all_reports: list[dict] = []
 
-        # ── Primary: ingescape CSV ─────────────────────────────────────────────
-        csv_path = find_ingescape_csv(pdir)
-        if csv_path is None:
+        # ── Primary: ingescape CSV(s) ──────────────────────────────────────────
+        csv_paths = find_ingescape_csvs(pdir)
+        if not csv_paths:
             print("  No *_ingescape.csv found.")
         else:
-            csv_size = csv_path.stat().st_size
-            if csv_size <= csv_path.name.__len__() + 200:  # essentially header-only
-                print(f"  {csv_path.name} is empty (header only) — skipping CSV extraction.")
+            # Filter out header-only files
+            non_empty = [p for p in csv_paths
+                         if p.stat().st_size > len(p.name) + 200]
+            empty = [p for p in csv_paths if p not in non_empty]
+            for p in empty:
+                print(f"  {p.name} is empty (header only) — skipping.")
+            if len(non_empty) == 0:
+                print("  All ingescape CSV files are empty.")
+            elif len(non_empty) == 1:
+                extract_scenarios(non_empty[0], scenarios_dir)
             else:
-                extract_scenarios(csv_path, scenarios_dir)
+                print(f"  Found {len(non_empty)} ingescape CSV files — merging into one stream.")
+                extract_scenarios_multi(non_empty, scenarios_dir)
 
         # ── Fallback / backup: Ingescape log files ────────────────────────────
         log_paths = find_ingescape_logs(pdir)
@@ -482,7 +652,7 @@ def main() -> None:
                 report = extract_scenarios_from_log(log_path, scenarios_dir)
                 if report['scenarios']:
                     all_reports.append(report)
-        elif csv_path is None:
+        elif not csv_paths:
             print("  No backup log files found either.")
 
         # ── Comparison across logs ─────────────────────────────────────────────

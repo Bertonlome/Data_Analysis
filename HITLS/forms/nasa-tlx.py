@@ -1,3 +1,15 @@
+"""
+nasa-tlx.py — NASA Task Load Index (TLX) Processor
+===================================================
+Computes weighted NASA-TLX workload scores from 6 subscales
+(Mental Demand, Physical Demand, Temporal Demand, Performance,
+Effort, Frustration) with pairwise comparison weights.
+Reads from HAT_study.csv (questionnaire_id = "nasa_tlx").
+
+Typically invoked by `forms/forms.py`, but can be run interactively.
+Output: {PID}/cleaned/{PID}_nasa_tlx_report.txt
+"""
+
 import os
 import csv
 import json

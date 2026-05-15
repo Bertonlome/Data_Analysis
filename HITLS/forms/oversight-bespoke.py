@@ -1,3 +1,14 @@
+"""
+oversight-bespoke.py — Oversight Bespoke Scale Processor
+=========================================================
+Scores a custom bespoke questionnaire measuring perceived oversight
+behaviour across automation conditions (5-point Likert items).
+Reads from HAT_study.csv (questionnaire_id = "oversight_bespoke").
+
+Typically invoked by `forms/forms.py`, but can be run interactively.
+Output: {PID}/cleaned/{PID}_oversight_bespoke_report.txt
+"""
+
 import os
 import csv
 import json

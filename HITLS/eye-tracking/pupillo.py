@@ -1,3 +1,15 @@
+"""
+pupillo.py — Pupil Diameter & Eyelid Quality Visualiser
+========================================================
+Loads SmartEyeProBridge CSV data and plots pupil diameter quality and
+eyelid opening quality over time for a selected scenario file.
+
+Fully interactive: prompts for participant (from subdirectories of BASE_DIR),
+CSV scenario file, smoothing window (seconds), and quality threshold.
+
+Output: interactive matplotlib figures (not saved to disk).
+"""
+
 import os
 import pandas as pd
 import matplotlib.pyplot as plt

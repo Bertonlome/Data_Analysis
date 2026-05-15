@@ -2,6 +2,13 @@
 """
 HITLS — TARC Allocation Similarity Analysis
 ============================================
+Compare-type script: operates on ALL participants at once.
+Run from the repository root:
+    python HITLS/allocation.py
+
+The script will show a summary of what will be generated or overwritten and
+ask for confirmation before doing any work.
+
 Reads each participant's TARC CSV (P0x_TARC.csv or briefing_export_*.csv) and
 encodes each task as one of four states:
 
@@ -631,6 +638,31 @@ def _save(fig, filename):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
+_ALLOCATION_PLOTS = [
+    "allocation_river_category.png",
+    "allocation_river_chronological.png",
+    "allocation_category_breakdown.png",
+    "allocation_task_breakdown.png",
+]
+
+
+def _confirm_run(participants, output_plots):
+    """Print a pre-run summary and ask the user to confirm before proceeding."""
+    print(f"\nParticipants:  {', '.join(participants)}")
+    print(f"\nOutput plots that will be written/overwritten ({len(output_plots)}):")
+    for name in output_plots:
+        path = os.path.join(PLOTS_DIR, name)
+        tag  = "[overwrite]" if os.path.exists(path) else "[new     ]"
+        print(f"  {tag}  {name}")
+    print()
+    try:
+        ans = input("Continue? [Y/n]: ").strip().lower()
+    except KeyboardInterrupt:
+        print("\nAborted.")
+        return False
+    return ans in ("", "y", "yes")
+
+
 def main():
     print("=" * 65)
     print("  HITLS — TARC Allocation Similarity Analysis")
@@ -640,6 +672,9 @@ def main():
 
     if len(participants) < 2:
         print("Need at least 2 participants — aborting.")
+        return
+
+    if not _confirm_run(participants, _ALLOCATION_PLOTS):
         return
 
     task_objects = build_task_objects(ref_rows)

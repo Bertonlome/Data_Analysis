@@ -2,6 +2,13 @@
 """
 compare_navigate.py — Cross-participant Navigate Performance Comparison
 =======================================================================
+Compare-type script: operates on ALL participants at once.
+Run from the repository root:
+    python HITLS/performance/compare_navigate.py
+
+The script will show a summary of what will be generated or overwritten and
+ask for confirmation before doing any work.
+
 Mirrors compare_aviate.py for navigation-performance data:
 
   1. Ensures navigate_perf reports exist for every participant
@@ -422,8 +429,33 @@ def plot_nmae_distributions(all_data, participants):
     )
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  Main
+# ═══════════════════════════════════════════════════════════════════════════════#  Interactive pre-run confirmation
+# ═══════════════════════════════════════════════════════════════════════
+
+def _confirm_run(participants, missing_pids, output_plots):
+    """Print a pre-run summary and ask the user to confirm before proceeding."""
+    print()
+    if missing_pids:
+        print(f"Reports to generate ({len(missing_pids)} participant(s) missing reports):")
+        for pid in missing_pids:
+            print(f"  + {pid}")
+    else:
+        print("All participant reports are up to date.")
+    print(f"\nOutput plots that will be written/overwritten ({len(output_plots)}):")
+    for name in output_plots:
+        path = os.path.join(PLOTS_DIR, name)
+        tag  = "[overwrite]" if os.path.exists(path) else "[new     ]"
+        print(f"  {tag}  {name}")
+    print()
+    try:
+        ans = input("Continue? [Y/n]: ").strip().lower()
+    except KeyboardInterrupt:
+        print("\nAborted.")
+        return False
+    return ans in ("", "y", "yes")
+
+
+# ═══════════════════════════════════════════════════════════════════════#  Main
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def main():
@@ -434,7 +466,14 @@ def main():
 
     participants = find_participants()
     print(f"\nParticipants found: {', '.join(participants)}")
-
+    _NAVIGATE_PLOTS = [
+        "navigate_boxplots.png",
+        "navigate_rmse_distributions.png",
+        "navigate_nmae_distributions.png",
+    ]
+    missing = [pid for pid in participants if not has_valid_report(pid)]
+    if not _confirm_run(participants, missing, _NAVIGATE_PLOTS):
+        return
     print("\n[1/3] Checking / generating navigate_perf reports …")
     for i, pid in enumerate(participants, start=1):
         if has_valid_report(pid):

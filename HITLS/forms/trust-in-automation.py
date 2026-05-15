@@ -1,3 +1,16 @@
+"""
+trust-in-automation.py — Trust in Automation (TiA) Processor
+=============================================================
+Scores the 12-item Körber TiA subset across 3 subscales:
+  - Reliability / Competence
+  - Understanding / Predictability
+  - Intention of Developers
+Reads from HAT_study.csv (questionnaire_id = "trust_in_automation").
+
+Typically invoked by `forms/forms.py`, but can be run interactively.
+Output: {PID}/cleaned/{PID}_tia_report.txt
+"""
+
 import os
 import csv
 import json

@@ -6,6 +6,8 @@ Perceived Control (PC) questionnaire processor
 Reads from HAT_study.csv (questionnaire_id = "perceived_control").
 
 Output: {pid}_perceived_control_report.txt in {pid}/cleaned/
+
+Typically invoked by `forms/forms.py`, but can be run interactively.
 """
 
 import os, csv, json

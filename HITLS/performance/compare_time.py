@@ -1,37 +1,31 @@
 #!/usr/bin/env python3
 """
-compare_aviate.py — Cross-participant Aviate Performance Comparison
-===================================================================
+compare_time.py — Cross-participant Time Performance Comparison
+===============================================================
 Compare-type script: operates on ALL participants at once.
 Run from the repository root:
-    python HITLS/performance/compare_aviate.py
+    python HITLS/performance/compare_time.py
 
 The script will show a summary of what will be generated or overwritten and
 ask for confirmation before doing any work.
 
-Mirrors compare_forms.py for flight-performance data:
+Mirrors compare_navigate.py for timing data:
 
-  1. Ensures aviate_perf reports exist for every participant
-     (regenerates if missing or the report pre-dates the nMAE/window_s fields).
-  2. Loads all aviate_perf JSON summaries.
-  3. Generates three figures:
+  1. Ensures time_perf reports exist for every participant
+     (regenerates if missing).
+  2. Loads all time_perf JSON summaries.
+  3. Generates two figures:
 
-       aviate_boxplots.png
-         Box-plot grid — RMSE, nMAE, RMSE/MAE ratio, window duration
-         for each of the three signals (slip · roll · airspeed).
+       time_boxplots.png
+         Box-plot grid — scenario duration, failure→nominal,
+         per-procedure totals and per-task means across conditions.
 
-       aviate_rmse_distributions.png
+       time_distributions.png
          Histogram + KDE + mean ◆ + 95% CI strip per condition,
-         one subplot per signal (raw RMSE values).
-         Style mirrors compare_forms.py → trust_risk_distribution.
-
-       aviate_nmae_distributions.png
-         Same layout for nMAE (MAE / window_duration) — the
-         window-duration-normalised metric that is directly comparable
-         across conditions regardless of scenario length.
+         one subplot per key metric.
 
 Run from the repo root:
-    python HITLS/performance/compare_aviate.py
+    python HITLS/performance/compare_time.py
 """
 
 import os
@@ -46,11 +40,11 @@ from matplotlib.lines import Line2D
 from scipy.stats import gaussian_kde
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-PERF_DIR      = os.path.dirname(os.path.abspath(__file__))
-HITLS_DIR     = os.path.dirname(PERF_DIR)
-AVIATE_SCRIPT = os.path.join(PERF_DIR, "aviate_perf.py")
-PLOTS_DIR     = os.path.join(HITLS_DIR, "plots")
-PYTHON        = sys.executable
+PERF_DIR    = os.path.dirname(os.path.abspath(__file__))
+HITLS_DIR   = os.path.dirname(PERF_DIR)
+TIME_SCRIPT = os.path.join(PERF_DIR, "time_perf.py")
+PLOTS_DIR   = os.path.join(HITLS_DIR, "plots")
+PYTHON      = sys.executable
 
 # ── Conditions ────────────────────────────────────────────────────────────────
 CONDITIONS = ["TARS", "TARC", "TARP-S", "TARP-F"]
@@ -65,7 +59,6 @@ COND_COLOR = {
 # ── Visual parameters ─────────────────────────────────────────────────────────
 FIGURE_DPI         = 150
 
-# Box plots
 BOX_WIDTH          = 0.5
 BOX_JITTER         = 0.15
 BOX_DOT_SIZE       = 20
@@ -73,21 +66,18 @@ BOX_ALPHA          = 0.65
 BOX_HEIGHT_PER_ROW = 3.5
 BOX_FIGW           = 12
 
-# Distribution plots (histogram + KDE)
-DIST_FIGW          = 14
+DIST_FIGW          = 18
 DIST_FIGH          = 5.0
 DIST_HIST_BINS     = 10
 DIST_HIST_ALPHA    = 0.20
 DIST_KDE_LW        = 2.0
-DIST_CI_STRIP_FRAC = 0.28   # fraction of plot height reserved for CI strip
+DIST_CI_STRIP_FRAC = 0.28
 
-# Typography
-FONT_SUPTITLE  = 11
-FONT_TITLE     = 10
-FONT_LABEL     = 9
-FONT_TICK      = 8
-FONT_TICK_SM   = 7
-FONT_ANNOTATION = 6
+FONT_SUPTITLE   = 11
+FONT_TITLE      = 10
+FONT_LABEL      = 9
+FONT_TICK       = 8
+FONT_TICK_SM    = 7
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -103,7 +93,7 @@ def find_participants():
 
 
 def _report_path(pid):
-    return os.path.join(HITLS_DIR, pid, "cleaned", f"{pid}_aviate_perf_report.txt")
+    return os.path.join(HITLS_DIR, pid, "cleaned", f"{pid}_time_perf_report.txt")
 
 
 def load_json(path):
@@ -117,26 +107,24 @@ def load_json(path):
 
 
 def has_valid_report(pid):
-    """True if report exists and contains the nMAE / window_s fields (latest format)."""
     data = load_json(_report_path(pid))
     if not data:
         return False
-    # Check one condition for the nMAE key introduced in the latest refactor
     for cond_data in data.get("conditions", {}).values():
-        return "nmae" in cond_data.get("slip", {})
+        return "scenario_duration_s" in cond_data
     return False
 
 
-def run_aviate_perf(pid, participant_number):
-    print(f"  Generating aviate_perf report for {pid} …", flush=True)
+def run_time_perf(pid, participant_number):
+    print(f"  Generating time_perf report for {pid} …", flush=True)
     proc = subprocess.run(
-        [PYTHON, AVIATE_SCRIPT],
+        [PYTHON, TIME_SCRIPT],
         input=f"{participant_number}\n",
         text=True,
         capture_output=True,
     )
     if proc.returncode != 0:
-        print(f"  ⚠  aviate_perf.py returned code {proc.returncode} for {pid}")
+        print(f"  ⚠  time_perf.py returned code {proc.returncode} for {pid}")
         if proc.stderr:
             print(proc.stderr[:400])
 
@@ -213,26 +201,54 @@ def _box_panel(ax, data_by_cond, title, ylabel, floor_zero=True):
 
 
 def plot_boxplots(all_data, participants):
-    """Box-plot grid for all aviate performance metrics."""
+    """Box-plot grid for all time performance metrics."""
 
-    def g(sig, key):
-        return lambda d, c: _get(d, "conditions", c, sig, key)
+    def g(*path):
+        return lambda d, c: _get(d, "conditions", c, *path)
 
     # (title, ylabel, floor_zero, extract_fn)
     metrics = [
-        ("Slip RMSE",                  "deg",    True,  g("slip",           "rmse")),
-        ("Slip nMAE  (MAE / window)",  "deg/s",  True,  g("slip",           "nmae")),
-        ("Roll Angle RMSE",            "deg",    True,  g("roll_angle",     "rmse")),
-        ("Roll nMAE  (MAE / window)",  "deg/s",  True,  g("roll_angle",     "nmae")),
-        ("Airspeed RMSE",              "kt",     True,  g("airspeed_climb", "rmse")),
-        ("Airspeed MAPE",              "%",      True,  g("airspeed_climb", "mape")),
-        ("Airspeed nMAE (MAE / window)", "kt/s", True,  g("airspeed_climb", "nmae")),
-        ("Slip RMSE / MAE ratio",      "",       False, g("slip",           "rmse_mae")),
-        ("Roll RMSE / MAE ratio",      "",       False, g("roll_angle",     "rmse_mae")),
-        ("Airspeed RMSE / MAE ratio",  "",       False, g("airspeed_climb", "rmse_mae")),
-        ("Slip window duration",       "s",      True,  g("slip",           "window_s")),
-        ("Roll window duration",       "s",      True,  g("roll_angle",     "window_s")),
-        ("Airspeed window duration",   "s",      True,  g("airspeed_climb", "window_s")),
+        # ── Top-level durations ────────────────────────────────────────────
+        ("Scenario Duration",
+         "s", True, g("scenario_duration_s")),
+        ("Failure → Nominal Recovery",
+         "s", True, g("failure_to_nominal_s")),
+
+        # ── ENG FAILURE DURING TAKEOFF ────────────────────────────────────
+        ("ENG FAILURE — Total Duration",
+         "s", True, g("eng_failure", "total_s")),
+        ("ENG FAILURE — Mean Task Duration",
+         "s", True, g("eng_failure", "mean_task_s")),
+
+        # ── ENGINE FIRE ───────────────────────────────────────────────────
+        ("ENGINE FIRE — Total Duration",
+         "s", True, g("engine_fire", "total_s")),
+        ("ENGINE FIRE — Mean Task Duration",
+         "s", True, g("engine_fire", "mean_task_s")),
+
+        # ── BEFORE TAKEOFF ─────────────────────────────────────────────────
+        ("Before Takeoff — Total Duration",
+         "s", True, g("before_takeoff", "total_s")),
+        ("Before Takeoff — Mean Task Duration",
+         "s", True, g("before_takeoff", "mean_task_s")),
+
+        # ── TAKEOFF ────────────────────────────────────────────────────────
+        ("Takeoff — Total Duration",
+         "s", True, g("takeoff", "total_s")),
+        ("Takeoff — Mean Task Duration",
+         "s", True, g("takeoff", "mean_task_s")),
+
+        # ── DECLARE PANPAN ─────────────────────────────────────────────────
+        ("Declare PANPAN — Total Duration",
+         "s", True, g("declare_panpan", "total_s")),
+        ("Declare PANPAN — Mean Task Duration",
+         "s", True, g("declare_panpan", "mean_task_s")),
+
+        # ── AFTER TAKEOFF ──────────────────────────────────────────────────
+        ("After Takeoff — Total Duration",
+         "s", True, g("after_takeoff", "total_s")),
+        ("After Takeoff — Mean Task Duration",
+         "s", True, g("after_takeoff", "mean_task_s")),
     ]
 
     ncols = 2
@@ -242,9 +258,8 @@ def plot_boxplots(all_data, participants):
         figsize=(BOX_FIGW, nrows * BOX_HEIGHT_PER_ROW),
     )
     fig.suptitle(
-        "Aviate Performance — Box Plots across Conditions\n"
-        "(raw dots = individual participants  ·  nMAE = MAE / window_duration"
-        "  ·  ratio near 1.0 = uniform errors)",
+        "Time Performance — Box Plots across Conditions\n"
+        "(raw dots = individual participants)",
         fontsize=FONT_SUPTITLE, fontweight="bold",
     )
     axes_flat = axes.flatten()
@@ -256,14 +271,13 @@ def plot_boxplots(all_data, participants):
             title, ylabel, floor_zero,
         )
 
-    # Hide unused subplots
     for j in range(len(metrics), len(axes_flat)):
         axes_flat[j].set_visible(False)
 
     patches = [mpatches.Patch(color=COND_COLOR[c], label=c) for c in CONDITIONS]
     fig.legend(handles=patches, loc="lower right", fontsize=FONT_TICK, title="Condition")
     plt.tight_layout()
-    save_fig(fig, "aviate_boxplots.png")
+    save_fig(fig, "time_boxplots.png")
     return fig
 
 
@@ -275,17 +289,9 @@ def _plot_metric_distributions(all_data, participants, metric_specs, suptitle, f
     """
     One figure, one subplot per metric_spec.
 
-    metric_specs : list of (signal_key, metric_key, subplot_title, xlabel, x_max_hint)
-      signal_key  : top-level key inside data["conditions"][cond]  e.g. "slip"
-      metric_key  : second-level key                               e.g. "rmse"
+    metric_specs : list of (path, subplot_title, xlabel, x_max_hint)
+      path        : sequence of dict keys inside data["conditions"][cond]
       x_max_hint  : upper bound for the x-axis (None = auto)
-
-    Each subplot overlays per condition:
-      • semi-transparent histogram (density-normalised)
-      • KDE curve
-      • dashed vertical mean line (full height)
-      • ◆ mean marker + 95% SEM CI strip below the x-axis
-        (matching the compare_forms trust/risk distribution style)
     """
     n = len(metric_specs)
     fig, axes = plt.subplots(1, n, figsize=(DIST_FIGW, DIST_FIGH), sharey=False)
@@ -293,15 +299,14 @@ def _plot_metric_distributions(all_data, participants, metric_specs, suptitle, f
         axes = [axes]
     fig.suptitle(suptitle, fontsize=FONT_SUPTITLE, fontweight="bold")
 
-    for ax, (sig_key, met_key, subtitle, xlabel, x_max_hint) in zip(axes, metric_specs):
+    for ax, (path, subtitle, xlabel, x_max_hint) in zip(axes, metric_specs):
         ax.set_title(subtitle, fontsize=FONT_TITLE, fontweight="bold")
 
-        # ── Collect per-condition values ───────────────────────────────────
         cond_vals = {}
         for cond in CONDITIONS:
             vals = []
             for pid in participants:
-                v = _get(all_data.get(pid, {}), "conditions", cond, sig_key, met_key)
+                v = _get(all_data.get(pid, {}), "conditions", cond, *path)
                 if v is not None:
                     vals.append(float(v))
             cond_vals[cond] = vals
@@ -316,7 +321,6 @@ def _plot_metric_distributions(all_data, participants, metric_specs, suptitle, f
             x_max_hint if x_max_hint else max(all_vals) * 1.2,
             max(all_vals) * 1.05,
         )
-        # Small left margin so condition labels in the CI strip fit
         x_margin = x_max * 0.04
         x_kde    = np.linspace(0, x_max, 400)
 
@@ -326,14 +330,12 @@ def _plot_metric_distributions(all_data, participants, metric_specs, suptitle, f
                 continue
             color = COND_COLOR[cond]
 
-            # Histogram (density-normalised)
             ax.hist(
                 vals, bins=DIST_HIST_BINS, range=(0, x_max),
                 density=True, color=color, alpha=DIST_HIST_ALPHA,
                 edgecolor=color, linewidth=0.5,
             )
 
-            # KDE curve
             if len(vals) >= 2:
                 try:
                     kde   = gaussian_kde(vals, bw_method="scott")
@@ -366,22 +368,15 @@ def _plot_metric_distributions(all_data, participants, metric_specs, suptitle, f
             y_pos  = -(ci_idx + 0.5) * row_h
             cap    = row_h * 0.20
 
-            # Dashed mean line (full height)
             ax.axvline(mean_v, color=color, linewidth=1.0,
                        linestyle="--", alpha=0.50, zorder=3)
-
-            # CI bar + end caps
             ax.plot([ci_lo, ci_hi], [y_pos, y_pos],
                     color=color, linewidth=1.8, alpha=0.90, zorder=5)
             for xc in (ci_lo, ci_hi):
                 ax.plot([xc, xc], [y_pos - cap, y_pos + cap],
                         color=color, linewidth=1.5, alpha=0.90, zorder=5)
-
-            # Mean diamond
             ax.scatter(mean_v, y_pos, color=color, marker="D", s=45,
                        edgecolors="black", linewidths=0.7, zorder=6)
-
-            # Condition label to the left of the strip
             ax.text(-x_margin * 0.8, y_pos, cond,
                     ha="right", va="center",
                     fontsize=FONT_TICK_SM, color=color, fontweight="bold")
@@ -394,7 +389,6 @@ def _plot_metric_distributions(all_data, participants, metric_specs, suptitle, f
         ax.grid(axis="x", linestyle=":", alpha=0.20)
         ax.grid(axis="y", linestyle=":", alpha=0.35)
 
-    # Shared legend
     cond_handles = [
         Line2D([0], [0], color=COND_COLOR[c], linewidth=2, label=c)
         for c in CONDITIONS
@@ -414,51 +408,66 @@ def _plot_metric_distributions(all_data, participants, metric_specs, suptitle, f
     return fig
 
 
-def plot_rmse_distributions(all_data, participants):
-    """RMSE distribution per condition for each signal."""
+def plot_distributions(all_data, participants):
+    """Key timing metrics distribution per condition."""
     return _plot_metric_distributions(
         all_data, participants,
         metric_specs=[
-            ("slip",           "rmse", "Slip RMSE",       "RMSE (deg)",  None),
-            ("roll_angle",     "rmse", "Roll Angle RMSE", "RMSE (deg)",  None),
-            ("airspeed_climb", "rmse", "Airspeed RMSE",   "RMSE (kt)",   None),
+            (("scenario_duration_s",),
+             "Scenario Duration",
+             "Duration (s)", None),
+            (("failure_to_nominal_s",),
+             "Failure → Nominal",
+             "Duration (s)", None),
+            (("eng_failure", "total_s"),
+             "ENG FAILURE Total",
+             "Duration (s)", None),
+            (("engine_fire", "total_s"),
+             "ENGINE FIRE Total",
+             "Duration (s)", None),
+            (("before_takeoff", "total_s"),
+             "Before Takeoff Total",
+             "Duration (s)", None),
         ],
         suptitle=(
-            "Aviate Performance — RMSE Distribution per Condition\n"
+            "Time Performance — Distribution per Condition\n"
             "(histogram · KDE · ◆ = mean · ─── = 95% CI)"
         ),
-        filename="aviate_rmse_distributions.png",
+        filename="time_distributions.png",
     )
 
 
-def plot_nmae_distributions(all_data, participants):
-    """nMAE (MAE / window_duration) distribution — comparable across conditions."""
+def plot_mean_task_distributions(all_data, participants):
+    """Mean per-task duration distributions per condition."""
     return _plot_metric_distributions(
         all_data, participants,
         metric_specs=[
-            ("slip",           "nmae", "Slip nMAE",         "nMAE (deg/s)", None),
-            ("roll_angle",     "nmae", "Roll Angle nMAE",   "nMAE (deg/s)", None),
-            ("airspeed_climb", "nmae", "Airspeed nMAE",     "nMAE (kt/s)",  None),
+            (("eng_failure",  "mean_task_s"),
+             "ENG FAILURE Mean/task",
+             "Mean task duration (s)", None),
+            (("engine_fire",  "mean_task_s"),
+             "ENGINE FIRE Mean/task",
+             "Mean task duration (s)", None),
+            (("before_takeoff","mean_task_s"),
+             "Before Takeoff Mean/task",
+             "Mean task duration (s)", None),
+            (("takeoff",      "mean_task_s"),
+             "Takeoff Mean/task",
+             "Mean task duration (s)", None),
+            (("declare_panpan","mean_task_s"),
+             "Declare PANPAN Mean/task",
+             "Mean task duration (s)", None),
         ],
         suptitle=(
-            "Aviate Performance — nMAE Distribution per Condition  "
-            "(MAE / window duration — normalised for scenario length)\n"
+            "Time Performance — Mean Task Duration Distribution per Condition\n"
             "(histogram · KDE · ◆ = mean · ─── = 95% CI)"
         ),
-        filename="aviate_nmae_distributions.png",
+        filename="time_mean_task_distributions.png",
     )
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  Main
-# ═══════════════════════════════════════════════════════════════════════════════
-
-_AVIATE_PLOTS = [
-    "aviate_boxplots.png",
-    "aviate_rmse_distributions.png",
-    "aviate_nmae_distributions.png",
-]
-
+# ═══════════════════════════════════════════════════════════════════════════════#  Interactive pre-run confirmation
+# ═══════════════════════════════════════════════════════════════════════
 
 def _confirm_run(participants, missing_pids, output_plots):
     """Print a pre-run summary and ask the user to confirm before proceeding."""
@@ -483,25 +492,31 @@ def _confirm_run(participants, missing_pids, output_plots):
     return ans in ("", "y", "yes")
 
 
+# ═══════════════════════════════════════════════════════════════════════#  Main
+# ═══════════════════════════════════════════════════════════════════════════════
+
 def main():
     sep = "=" * 70
     print(f"\n{sep}")
-    print("  HITLS — Cross-participant Aviate Performance Comparison")
+    print("  HITLS — Cross-participant Time Performance Comparison")
     print(f"{sep}")
 
     participants = find_participants()
     print(f"\nParticipants found: {', '.join(participants)}")
-
+    _TIME_PLOTS = [
+        "time_boxplots.png",
+        "time_distributions.png",
+        "time_mean_task_distributions.png",
+    ]
     missing = [pid for pid in participants if not has_valid_report(pid)]
-    if not _confirm_run(participants, missing, _AVIATE_PLOTS):
+    if not _confirm_run(participants, missing, _TIME_PLOTS):
         return
-
-    print("\n[1/3] Checking / generating aviate_perf reports …")
+    print("\n[1/3] Checking / generating time_perf reports …")
     for i, pid in enumerate(participants, start=1):
         if has_valid_report(pid):
             print(f"  {pid}: ✓ report exists")
         else:
-            run_aviate_perf(pid, i)
+            run_time_perf(pid, i)
 
     print("\n[2/3] Loading data …")
     all_data = load_all(participants)
@@ -517,8 +532,8 @@ def main():
 
     figs = [
         plot_boxplots(all_data, loaded),
-        plot_rmse_distributions(all_data, loaded),
-        plot_nmae_distributions(all_data, loaded),
+        plot_distributions(all_data, loaded),
+        plot_mean_task_distributions(all_data, loaded),
     ]
 
     n_saved = sum(1 for f in figs if f is not None)

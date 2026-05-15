@@ -2,6 +2,13 @@
 """
 HITLS — Cross-participant questionnaire comparison
 ==================================================
+Compare-type script: operates on ALL participants at once.
+Run from the repository root:
+    python HITLS/compare_forms.py
+
+The script will show a summary of what will be generated or overwritten and
+ask for confirmation before doing any work.
+
 1. Runs forms.py for every participant whose cleaned reports are missing.
 2. Generates per-questionnaire DIVERGING STACKED BAR charts (Likert-style):
      - One bar per item, bars split left/right from a centre axis (x=0).
@@ -1714,6 +1721,43 @@ def plot_preference_clusters(all_data, participants):
 #  MAIN
 # ═══════════════════════════════════════════════════════════════════════════════
 
+_COMPARE_FORMS_PLOTS = [
+    "sus_items.png",
+    "tia_items.png",
+    "ob_items.png",
+    "nasa_tlx_ratings.png",
+    "nasa_tlx_scores.png",
+    "perceived_control_items.png",
+    "trust_risk_distribution.png",
+    "pts_items.png",
+    "preference_profile_coherence.png",
+    "preference_clusters_all_vas.png",
+]
+
+
+def _confirm_run(participants, missing_pids, output_plots):
+    """Print a pre-run summary and ask the user to confirm before proceeding."""
+    print()
+    if missing_pids:
+        print(f"Reports to generate ({len(missing_pids)} participant(s) missing reports):")
+        for pid in missing_pids:
+            print(f"  + {pid}")
+    else:
+        print("All participant reports are up to date.")
+    print(f"\nOutput plots that will be written/overwritten ({len(output_plots)}):")
+    for name in output_plots:
+        path = os.path.join(PLOTS_DIR, name)
+        tag  = "[overwrite]" if os.path.exists(path) else "[new     ]"
+        print(f"  {tag}  {name}")
+    print()
+    try:
+        ans = input("Continue? [Y/n]: ").strip().lower()
+    except KeyboardInterrupt:
+        print("\nAborted.")
+        return False
+    return ans in ("", "y", "yes")
+
+
 def main():
     print("=" * 70)
     print("  HITLS — Cross-participant Questionnaire Comparison")
@@ -1721,6 +1765,10 @@ def main():
 
     participants = find_participants()
     print(f"\nParticipants found: {', '.join(participants)}")
+
+    missing = [pid for pid in participants if not has_all_reports(pid)]
+    if not _confirm_run(participants, missing, _COMPARE_FORMS_PLOTS):
+        return
 
     print("\n[1/3] Checking / generating participant reports …")
     for i, pid in enumerate(participants, start=1):

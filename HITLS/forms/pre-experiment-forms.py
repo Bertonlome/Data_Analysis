@@ -1,8 +1,17 @@
+"""
+pre-experiment-forms.py — Pre-Experiment Questionnaire Processor
+================================================================
+Parses participant demographics and pilot background from
+`Formulaire pré-expérience ADAIR-POLY.csv` and the trust propensity
+scale (PTS, 7 Likert items) from `HAT_study.csv`.
+
+Typically invoked by `forms/forms.py`, but can be run interactively.
+Output: {PID}/cleaned/{PID}_pre_experiment_report.txt
+"""
+
 import os
 import csv
 import json
-
-HITLS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LIKERT_SCORE = {
     "Strongly agree": 5,

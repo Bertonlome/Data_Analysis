@@ -52,14 +52,38 @@ import json
 import glob
 import argparse
 
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+
 # ── Paths ─────────────────────────────────────────────────────────────────────
 PERF_DIR  = os.path.dirname(os.path.abspath(__file__))
 HITLS_DIR = os.path.dirname(PERF_DIR)
+PLOTS_DIR = os.path.join(HITLS_DIR, "plots")
+
+# ── Quad-state visual constants ───────────────────────────────────────────────
+#   (corrected, crosschecked) → (color, label)
+_QUAD_ORDER = [
+    (True,  True),
+    (True,  False),
+    (False, True),
+    (False, False),
+]
+_QUAD_COLORS = ["#2E7D32", "#8BC34A", "#EF6C00", "#B71C1C"]
+_QUAD_LABELS = [
+    "Corrected + Crosschecked",
+    "Corrected, no eye confirm",
+    "Seen but not corrected",
+    "Missed (neither)",
+]
+_QUAD_MAP = dict(zip(_QUAD_ORDER, zip(_QUAD_COLORS, _QUAD_LABELS)))
+
+CONDITIONS = ["TARS", "TARP-S", "TARP-F"]
 
 # ── Participants with error scenarios (P05 onward) ─────────────────────────────
 _PARTICIPANTS_WITH_ERRORS = [
     "P05", "P06", "P07", "P08", "P09", "P10",
-    "P11", "P12", "P13", "P16", "P17",
+    "P11", "P12", "P13", "P16", "P17", "P18"
 ]
 
 # ── Skip patterns ──────────────────────────────────────────────────────────────
@@ -651,6 +675,298 @@ def analyse_participant(pid: str) -> list:
 #  Cross-participant summary table
 # ═══════════════════════════════════════════════════════════════════════════════
 
+def _quad_state(r):
+    """Return (corrected: bool, crosschecked: bool) for a scenario, or None if not yet coded."""
+    et = r["error_type"]
+    if et == "alt":
+        c, cc = r.get("alt_corrected"), r.get("alt_crosschecked_eye")
+    elif et == "flaps":
+        c, cc = r.get("flaps_corrected"), r.get("flaps_crosschecked_eye")
+    elif et == "winds":
+        c, cc = r.get("winds_detected"), r.get("winds_crosschecked")
+    else:
+        return None
+    if c is None or cc is None:
+        return None
+    return (bool(c), bool(cc))
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Visualisation
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def plot_quad_pies(all_results: dict):
+    """
+    Pie charts: quad-state distribution per error type (alt · flaps · winds).
+    Each pie shows what fraction of participants had each (corrected × crosschecked)
+    outcome.  A subplot shows "No data yet" until the field is coded.
+    """
+    from collections import defaultdict
+
+    error_types = ["alt", "flaps", "winds"]
+    et_titles   = {"alt": "Altitude error", "flaps": "Flaps error", "winds": "Winds entry"}
+
+    # counts[et][(corrected, crosschecked)] = int
+    counts = {et: defaultdict(int) for et in error_types}
+    for pid, scenarios in all_results.items():
+        for r in scenarios:
+            et = r["error_type"]
+            if et not in error_types:
+                continue
+            qs = _quad_state(r)
+            if qs is not None:
+                counts[et][qs] += 1
+
+    fig, axes = plt.subplots(1, 3, figsize=(13, 4.5))
+    fig.suptitle("Error detection & correction outcome per error type",
+                 fontsize=11, fontweight="bold")
+
+    for ax, et in zip(axes, error_types):
+        ax.set_title(et_titles[et], fontsize=10)
+        non_zero = [(qs, counts[et][qs]) for qs in _QUAD_ORDER if counts[et][qs] > 0]
+
+        if not non_zero:
+            ax.text(0.5, 0.5, "No data yet", ha="center", va="center",
+                    fontsize=10, transform=ax.transAxes, color="#888888")
+            ax.axis("off")
+            continue
+
+        values = [n for _, n in non_zero]
+        colors = [_QUAD_MAP[qs][0] for qs, _ in non_zero]
+        total  = sum(values)
+
+        def _make_autopct(t):
+            def _autopct(pct):
+                n = round(pct / 100 * t)
+                return f"{pct:.0f}%\n(n={n})" if pct > 7 else ""
+            return _autopct
+
+        _, _, autotexts = ax.pie(
+            values,
+            colors=colors,
+            autopct=_make_autopct(total),
+            startangle=90,
+            wedgeprops=dict(edgecolor="white", linewidth=1.5),
+        )
+        for at in autotexts:
+            at.set_fontsize(8)
+            at.set_color("white")
+            at.set_fontweight("bold")
+
+    legend_handles = [
+        mpatches.Patch(color=c, label=l)
+        for c, l in zip(_QUAD_COLORS, _QUAD_LABELS)
+    ]
+    fig.legend(
+        handles=legend_handles,
+        loc="lower center", ncol=2,
+        fontsize=8, frameon=True,
+        title="Outcome", title_fontsize=8,
+        bbox_to_anchor=(0.5, -0.02),
+    )
+    fig.tight_layout(rect=[0, 0.14, 1, 1])
+
+    os.makedirs(PLOTS_DIR, exist_ok=True)
+    out = os.path.join(PLOTS_DIR, "error_quad_pies.png")
+    fig.savefig(out, dpi=150, bbox_inches="tight")
+    print(f"  Saved → {out}")
+    return fig
+
+
+def plot_cond_pies(all_results: dict):
+    """
+    Pie charts: quad-state distribution per condition (TARS · TARP-S · TARP-F).
+    Each pie shows what fraction of scenarios in that condition had each
+    (corrected × crosschecked) outcome.
+    """
+    from collections import defaultdict
+
+    counts = {cond: defaultdict(int) for cond in CONDITIONS}
+    for pid, scenarios in all_results.items():
+        for r in scenarios:
+            cond = r.get("condition")
+            if cond not in CONDITIONS:
+                continue
+            qs = _quad_state(r)
+            if qs is not None:
+                counts[cond][qs] += 1
+
+    fig, axes = plt.subplots(1, len(CONDITIONS), figsize=(13, 4.5))
+    fig.suptitle("Error detection & correction outcome per condition",
+                 fontsize=11, fontweight="bold")
+
+    for ax, cond in zip(axes, CONDITIONS):
+        ax.set_title(cond, fontsize=10)
+        non_zero = [(qs, counts[cond][qs]) for qs in _QUAD_ORDER if counts[cond][qs] > 0]
+
+        if not non_zero:
+            ax.text(0.5, 0.5, "No data yet", ha="center", va="center",
+                    fontsize=10, transform=ax.transAxes, color="#888888")
+            ax.axis("off")
+            continue
+
+        values = [n for _, n in non_zero]
+        colors = [_QUAD_MAP[qs][0] for qs, _ in non_zero]
+        total  = sum(values)
+
+        def _make_autopct(t):
+            def _autopct(pct):
+                n = round(pct / 100 * t)
+                return f"{pct:.0f}%\n(n={n})" if pct > 7 else ""
+            return _autopct
+
+        _, _, autotexts = ax.pie(
+            values,
+            colors=colors,
+            autopct=_make_autopct(total),
+            startangle=90,
+            wedgeprops=dict(edgecolor="white", linewidth=1.5),
+        )
+        for at in autotexts:
+            at.set_fontsize(8)
+            at.set_color("white")
+            at.set_fontweight("bold")
+
+    legend_handles = [
+        mpatches.Patch(color=c, label=l)
+        for c, l in zip(_QUAD_COLORS, _QUAD_LABELS)
+    ]
+    fig.legend(
+        handles=legend_handles,
+        loc="lower center", ncol=2,
+        fontsize=8, frameon=True,
+        title="Outcome", title_fontsize=8,
+        bbox_to_anchor=(0.5, -0.02),
+    )
+    fig.tight_layout(rect=[0, 0.14, 1, 1])
+
+    os.makedirs(PLOTS_DIR, exist_ok=True)
+    out = os.path.join(PLOTS_DIR, "error_cond_pies.png")
+    fig.savefig(out, dpi=150, bbox_inches="tight")
+    print(f"  Saved → {out}")
+    return fig
+
+def plot_sankey(all_results: dict):
+    """
+    Sankey diagram: error type \u2192 condition \u2192 seen (crosschecked) \u2192 corrected.
+
+    Only flows with complete data (all 4 stages known) are drawn, so the
+    diagram stays balanced.  Winds scenarios appear automatically once
+    winds_detected / winds_crosschecked are coded.
+
+    Saves error_sankey.html (interactive) and error_sankey.png (static).
+    Requires plotly + kaleido.
+    """
+    try:
+        import plotly.graph_objects as go
+    except ImportError:
+        print("  [skip] plotly not installed \u2014 run: pip install plotly kaleido")
+        return None
+
+    # ── Node definitions (stage order matters for x-placement) ──────────────
+    #   0-2  : error types
+    #   3-5  : conditions
+    #   6-7  : crosschecked (seen)
+    #   8-9  : corrected
+    node_labels = [
+        "Alt error", "Flaps error", "Winds entry",   # 0 1 2
+        "TARS", "TARP-S", "TARP-F",                  # 3 4 5
+        "Seen (eye)", "Not seen",                     # 6 7
+        "Corrected", "Not corrected",                 # 8 9
+    ]
+    node_colors = [
+        "#5B9BD5", "#ED7D31", "#A9D18E",   # error types
+        "#4472C4", "#70AD47", "#C00000",   # conditions
+        "#2E7D32", "#B71C1C",              # seen / not seen
+        "#1a7a4a", "#8B0000",              # corrected / not corrected
+    ]
+
+    ET_IDX   = {"alt": 0, "flaps": 1, "winds": 2}
+    COND_IDX = {"TARS": 3, "TARP-S": 4, "TARP-F": 5}
+    CC_IDX   = {True: 6, False: 7}   # crosschecked \u2192 seen node
+    CR_IDX   = {True: 8, False: 9}   # corrected \u2192 outcome node
+
+    # ── Build flows ──────────────────────────────────────────────────────────
+    # Only include a scenario when the full quad-state is known (all 4 stages).
+    from collections import defaultdict
+    flows = defaultdict(int)
+
+    for pid, scenarios in all_results.items():
+        for r in scenarios:
+            et   = r["error_type"]
+            cond = r["condition"]
+            qs   = _quad_state(r)
+            if qs is None:
+                continue   # not yet coded (winds) or N/A \u2014 skip to keep diagram balanced
+
+            et_node   = ET_IDX.get(et)
+            cond_node = COND_IDX.get(cond)
+            if et_node is None or cond_node is None:
+                continue
+
+            corrected, crosschecked = qs
+            cc_node = CC_IDX[crosschecked]
+            cr_node = CR_IDX[corrected]
+
+            flows[(et_node,   cond_node)] += 1
+            flows[(cond_node, cc_node)]   += 1
+            flows[(cc_node,   cr_node)]   += 1
+
+    if not flows:
+        print("  [skip] no complete-data flows for Sankey")
+        return None
+
+    # ── Derive link arrays ───────────────────────────────────────────────────
+    src_list, tgt_list, val_list, link_col = [], [], [], []
+    for (src, tgt), val in flows.items():
+        src_list.append(src)
+        tgt_list.append(tgt)
+        val_list.append(val)
+        # semi-transparent version of source node colour
+        hx = node_colors[src].lstrip("#")
+        r_, g_, b_ = int(hx[0:2], 16), int(hx[2:4], 16), int(hx[4:6], 16)
+        link_col.append(f"rgba({r_},{g_},{b_},0.35)")
+
+    # ── Figure ───────────────────────────────────────────────────────────────
+    fig = go.Figure(go.Sankey(
+        node=dict(
+            pad=20,
+            thickness=20,
+            label=node_labels,
+            color=node_colors,
+            line=dict(color="white", width=0.5),
+        ),
+        link=dict(
+            source=src_list,
+            target=tgt_list,
+            value=val_list,
+            color=link_col,
+        ),
+    ))
+    fig.update_layout(
+        title_text="Error flow: type \u2192 condition \u2192 seen \u2192 corrected",
+        title_font_size=13,
+        font_size=11,
+        width=960,
+        height=580,
+        margin=dict(l=30, r=30, t=50, b=50),
+    )
+
+    os.makedirs(PLOTS_DIR, exist_ok=True)
+
+    html_out = os.path.join(PLOTS_DIR, "error_sankey.html")
+    fig.write_html(html_out)
+    print(f"  Saved \u2192 {html_out}")
+
+    try:
+        png_out = os.path.join(PLOTS_DIR, "error_sankey.png")
+        fig.write_image(png_out, scale=2)
+        print(f"  Saved \u2192 {png_out}")
+    except Exception as exc:
+        print(f"  [note] PNG export skipped ({exc})")
+
+    return fig
+
 def print_summary_table(all_results: dict):
     """Print a cross-participant overview table.
 
@@ -686,6 +1002,96 @@ def print_summary_table(all_results: dict):
                 f"{corr:<10}  {cc:<15}  {note_flag}"
             )
 
+    # ── Per-condition breakdown ───────────────────────────────────────────────
+    from collections import defaultdict
+    error_types = ["alt", "flaps", "winds"]
+
+    cond_et: dict = {c: defaultdict(int) for c in CONDITIONS}
+    for pid, scenarios in all_results.items():
+        for r in scenarios:
+            cond = r.get("condition")
+            if cond in CONDITIONS:
+                cond_et[cond][r["error_type"]] += 1
+
+    print()
+    print("  CONDITION BALANCE")
+    print("  " + "─" * (W - 2))
+    col_w = 7
+    hdr2 = (f"  {'Condition':<10}  " +
+            "  ".join(f"{et:<{col_w}}" for et in error_types) +
+            "  Total")
+    print(hdr2)
+    print("  " + "─" * (W - 2))
+    for cond in CONDITIONS:
+        totals_str = "  ".join(f"{cond_et[cond].get(et, 0):<{col_w}}" for et in error_types)
+        total = sum(cond_et[cond].values())
+        print(f"  {cond:<10}  {totals_str}  {total}")
+
+    # ── Equilibrium analysis ──────────────────────────────────────────────────
+    # Target: maximum count per (error_type) across all conditions
+    et_targets = {et: max(cond_et[c].get(et, 0) for c in CONDITIONS) for et in error_types}
+    cond_total  = {c: sum(cond_et[c].values()) for c in CONDITIONS}
+    max_total   = max(cond_total.values()) if cond_total else 0
+
+    print()
+    print("  EQUILIBRIUM ANALYSIS")
+    print("  " + "─" * (W - 2))
+    print(f"  {'':10}  " +
+          "  ".join(f"{'target':>{col_w}}" for _ in error_types) +
+          f"  {'target':>5}")
+    print(f"  {'':10}  " +
+          "  ".join(f"{et_targets[et]:>{col_w}}" for et in error_types) +
+          f"  {max_total:>5}")
+    print()
+
+    any_gap = False
+    for cond in CONDITIONS:
+        gaps = [et_targets[et] - cond_et[cond].get(et, 0) for et in error_types]
+        total_gap = max_total - cond_total[cond]
+        if any(g > 0 for g in gaps):
+            any_gap = True
+            gap_parts = [
+                f"+{g} {et}" for g, et in zip(gaps, error_types) if g > 0
+            ]
+            print(f"  {cond:<10}  needs {', '.join(gap_parts)}"
+                  f"  (total gap: {total_gap:+d})")
+
+    if not any_gap:
+        print("  All conditions are fully balanced.")
+    else:
+        # Each new standard participant contributes 1 scenario to each condition.
+        # Gaps that are condition-specific (not equal across all conditions)
+        # cannot be closed by standard recruitment alone.
+        et_gap_uniform = all(
+            et_targets[et] - cond_et[c].get(et, 0) == et_targets[et] - cond_et[CONDITIONS[0]].get(et, 0)
+            for et in error_types for c in CONDITIONS
+        )
+        print()
+        if max_total - min(cond_total.values()) == 0:
+            # Only error-type distribution is unequal, not condition totals
+            needed = sum(
+                et_targets[et] - cond_et[c].get(et, 0)
+                for c in CONDITIONS for et in error_types
+                if et_targets[et] - cond_et[c].get(et, 0) > 0
+            )
+            print(f"  Condition totals are balanced ({max_total} each).")
+            print(f"  Error-type distribution is uneven ({needed} extra scenarios needed")
+            print(f"  across under-represented condition × error-type cells).")
+            print(f"  → Recruit participants whose Latin square assignment places")
+            print(f"     the under-represented error types in the deficit conditions.")
+        else:
+            deficit_conds = [c for c in CONDITIONS if cond_total[c] < max_total]
+            deficit_ets   = [(c, et) for c in CONDITIONS
+                             for et in error_types
+                             if et_targets[et] - cond_et[c].get(et, 0) > 0]
+            print(f"  Condition totals differ (max={max_total}, "
+                  f"min={min(cond_total.values())}).")
+            print(f"  Under-represented: {', '.join(deficit_conds)}")
+            print(f"  Standard participants add 1 error to each condition equally,")
+            print(f"  preserving the current imbalance ratio.")
+            print(f"  → To close the total gap: recruit participants with a partial")
+            print(f"     condition set covering only {', '.join(deficit_conds)}.")
+            print(f"  → To minimise imbalance ratio: recruit in groups of {len(CONDITIONS)}.")
     print("=" * W)
 
 
@@ -746,9 +1152,14 @@ def main():
         if res:
             all_results[pid] = res
 
-    # ── Cross-participant table (when >1 participant) ─────────────────────────
+    # ── Cross-participant table and visualisations (when >1 participant) ─────
     if len(all_results) > 1:
         print_summary_table(all_results)
+        print("\nGenerating visualisations …")
+        plot_quad_pies(all_results)
+        plot_cond_pies(all_results)
+        plot_sankey(all_results)
+        plt.show()
 
 
 if __name__ == "__main__":

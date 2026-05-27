@@ -74,6 +74,78 @@
         }
       }
     },
+    "TARC": {
+      "base_score": {
+        "mean": 3.5,
+        "items": {
+          "ob_a2": {
+            "raw": 4,
+            "scored": 4
+          },
+          "ob_a3": {
+            "raw": 2,
+            "scored": 4
+          },
+          "ob_b1": {
+            "raw": 4,
+            "scored": 4
+          },
+          "ob_b3": {
+            "raw": 4,
+            "scored": 2
+          },
+          "ob_c1": {
+            "raw": 3,
+            "scored": 3
+          },
+          "ob_c2": {
+            "raw": 4,
+            "scored": 4
+          }
+        }
+      },
+      "extended_score": {
+        "mean": 3.4444,
+        "items": {
+          "ob_a2": {
+            "raw": 4,
+            "scored": 4
+          },
+          "ob_a3": {
+            "raw": 2,
+            "scored": 4
+          },
+          "ob_b1": {
+            "raw": 4,
+            "scored": 4
+          },
+          "ob_b2": {
+            "raw": 2,
+            "scored": 2
+          },
+          "ob_b3": {
+            "raw": 4,
+            "scored": 2
+          },
+          "ob_c1": {
+            "raw": 3,
+            "scored": 3
+          },
+          "ob_c2": {
+            "raw": 4,
+            "scored": 4
+          },
+          "ob_d1": {
+            "raw": 4,
+            "scored": 4
+          },
+          "ob_d2": {
+            "raw": 2,
+            "scored": 4
+          }
+        }
+      }
+    },
     "TARP-S": {
       "base_score": {
         "mean": 3.3333,
@@ -266,6 +338,41 @@
   Extended OB Mean Score : 3.222 / 5.0
 
 ────────────────────────────────────────────────────────────────────────
+  CONDITION: TARC
+────────────────────────────────────────────────────────────────────────
+
+  ── BASE SCORE (items without *) ──────────────────────────────────
+
+  Item                                           Val   Scored        Raw bar   Scored bar
+  ─────────────────────────────────────────────   ────   ──────   ────────────   ────────────
+   (+) A2 – Enough time/attention to oversee        4        4   [███████░░░]   [███████░░░]
+   (–) A3 – Difficult to follow system actions      2        4   [██░░░░░░░░]   [███████░░░]
+   (+) B1 – Actively verified system's actions      4        4   [███████░░░]   [███████░░░]
+   (–) B3 – May have missed check opportunities     4        2   [███████░░░]   [██░░░░░░░░]
+   (+) C1 – Could detect system errors quickly      3        3   [█████░░░░░]   [█████░░░░░]
+   (+) C2 – Enough time to react to actions         4        4   [███████░░░]   [███████░░░]
+
+  ────────────────────────────────────────────────────────────
+  Base OB Mean Score : 3.500 / 5.0
+
+  ── EXTENDED SCORE (all items including *) ────────────────────────
+
+  Item                                           Val   Scored        Raw bar   Scored bar
+  ─────────────────────────────────────────────   ────   ──────   ────────────   ────────────
+   (+) A2 – Enough time/attention to oversee        4        4   [███████░░░]   [███████░░░]
+   (–) A3 – Difficult to follow system actions      2        4   [██░░░░░░░░]   [███████░░░]
+   (+) B1 – Actively verified system's actions      4        4   [███████░░░]   [███████░░░]
+  *(+) B2 – No need to monitor closely              2        2   [██░░░░░░░░]   [██░░░░░░░░]
+   (–) B3 – May have missed check opportunities     4        2   [███████░░░]   [██░░░░░░░░]
+   (+) C1 – Could detect system errors quickly      3        3   [█████░░░░░]   [█████░░░░░]
+   (+) C2 – Enough time to react to actions         4        4   [███████░░░]   [███████░░░]
+  *(+) D1 – System helped work efficiently          4        4   [███████░░░]   [███████░░░]
+  *(–) D2 – Efficiency came at cost of oversight    2        4   [██░░░░░░░░]   [███████░░░]
+
+  ────────────────────────────────────────────────────────────
+  Extended OB Mean Score : 3.444 / 5.0
+
+────────────────────────────────────────────────────────────────────────
   CONDITION: TARP-S
 ────────────────────────────────────────────────────────────────────────
 
@@ -343,6 +450,7 @@
   Condition               Base Score (/5)    Extended Score (/5)
   ────────────────────   ──────────────────────   ────────────────────────
   TARS                                3.500 / 5                 3.222  / 5
+  TARC                                3.500 / 5                 3.444  / 5
   TARP-S                              3.333 / 5                 3.333  / 5
   TARP-F                              3.167 / 5                 3.111  / 5
 

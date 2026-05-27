@@ -48,6 +48,52 @@
         }
       }
     },
+    "TARC": {
+      "sus_score": 75.0,
+      "adjective_rating": "Excellent",
+      "items": {
+        "sus_1": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_2": {
+          "raw": 2,
+          "converted": 3
+        },
+        "sus_3": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_4": {
+          "raw": 4,
+          "converted": 1
+        },
+        "sus_5": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_6": {
+          "raw": 1,
+          "converted": 4
+        },
+        "sus_7": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_8": {
+          "raw": 1,
+          "converted": 4
+        },
+        "sus_9": {
+          "raw": 4,
+          "converted": 3
+        },
+        "sus_10": {
+          "raw": 2,
+          "converted": 3
+        }
+      }
+    },
     "TARP-S": {
       "sus_score": 65.0,
       "adjective_rating": "Good",
@@ -173,6 +219,27 @@
   Adjective    : Good
 
 ──────────────────────────────────────────────────────────────────────────────
+  CONDITION: TARC
+──────────────────────────────────────────────────────────────────────────────
+
+  #    Item                                                     Raw   Conv        Raw bar   Conv bar
+  ───  ───────────────────────────────────────────────────────  ────  ─────   ────────────   ────────────
+   1.  (+) I think I would like to use this system frequently.    4      3   [███████░░░]   [███████░░░]
+   2.  (–) I found the system unnecessarily complex.              2      3   [██░░░░░░░░]   [███████░░░]
+   3.  (+) I thought the system was easy to use.                  4      3   [███████░░░]   [███████░░░]
+   4.  (–) I would need support of a technical person to use …    4      1   [███████░░░]   [██░░░░░░░░]
+   5.  (+) The various functions were well integrated.            4      3   [███████░░░]   [███████░░░]
+   6.  (–) There was too much inconsistency in this system.       1      4   [░░░░░░░░░░]   [██████████]
+   7.  (+) Most people would learn to use this system very qu…    4      3   [███████░░░]   [███████░░░]
+   8.  (–) I found the system very cumbersome to use.             1      4   [░░░░░░░░░░]   [██████████]
+   9.  (+) I felt very confident using the system.                4      3   [███████░░░]   [███████░░░]
+  10.  (–) I needed to learn a lot before I could get going w…    2      3   [██░░░░░░░░]   [███████░░░]
+
+  ────────────────────────────────────────────────────────────
+  SUS Score    : 75.0 / 100  [██████████████████████░░░░░░░░]
+  Adjective    : Excellent
+
+──────────────────────────────────────────────────────────────────────────────
   CONDITION: TARP-S
 ──────────────────────────────────────────────────────────────────────────────
 
@@ -222,6 +289,7 @@
   Condition                    SUS Score   Adjective Rating
   ─────────────────────────   ────────────   ────────────────────
   TARS                            65.0/100   Good
+  TARC                            75.0/100   Excellent
   TARP-S                          65.0/100   Good
   TARP-F                          62.5/100   Good
 

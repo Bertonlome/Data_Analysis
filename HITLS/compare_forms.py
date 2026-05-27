@@ -1721,6 +1721,510 @@ def plot_preference_clusters(all_data, participants):
 #  MAIN
 # ═══════════════════════════════════════════════════════════════════════════════
 
+# ═══════════════════════════════════════════════════════════════════════════════
+#  CROSS-PARTICIPANT REPORTS  (one .txt per form type)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+REPORTS_DIR = os.path.join(HITLS_DIR, "compare_forms")
+
+
+def _desc(vals):
+    """Return dict of descriptive stats for a list of floats."""
+    if not vals:
+        return {"n": 0, "mean": None, "sd": None, "median": None, "min": None, "max": None}
+    a = np.array(vals, dtype=float)
+    return {
+        "n":      int(len(a)),
+        "mean":   round(float(np.mean(a)), 3),
+        "sd":     round(float(np.std(a, ddof=1)), 3) if len(a) > 1 else 0.0,
+        "median": round(float(np.median(a)), 3),
+        "min":    round(float(np.min(a)), 3),
+        "max":    round(float(np.max(a)), 3),
+    }
+
+
+def _bar_r(value, min_val, max_val, width=20):
+    """ASCII bar proportional to value within [min_val, max_val]."""
+    if max_val <= min_val:
+        return "░" * width
+    frac = (value - min_val) / (max_val - min_val)
+    filled = int(round(frac * width))
+    return "█" * filled + "░" * (width - filled)
+
+
+def _write_report(path, title, summary_json, sections):
+    """Write a report in the standard format (JSON block + human-readable)."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("--- MACHINE-READABLE SUMMARY (JSON) ---\n")
+        f.write(json.dumps(summary_json, indent=2, ensure_ascii=False))
+        f.write("\n--- END SUMMARY ---\n")
+        f.write("=" * 78 + "\n")
+        f.write(f"  {title}\n")
+        f.write("=" * 78 + "\n\n")
+        for section_text in sections:
+            f.write(section_text)
+
+
+def _fmt_desc_table(label_col_w, stats_by_cond, conditions, label):
+    """Format a single-item stats row across conditions."""
+    row = f"  {label:<{label_col_w}}"
+    for cond in conditions:
+        s = stats_by_cond.get(cond, {})
+        if s.get("n", 0) == 0:
+            row += f"  {'—':>22}"
+        else:
+            row += f"  μ={s['mean']:5.2f} σ={s['sd']:4.2f} Md={s['median']:5.2f}"
+    return row + "\n"
+
+
+def _cond_header(label_col_w, conditions):
+    header = " " * (label_col_w + 2)
+    for cond in conditions:
+        header += f"  {cond:^22}"
+    return header + "\n" + " " * (label_col_w + 2) + "  " + ("─" * 22 + "  ") * len(conditions) + "\n"
+
+
+# ── SUS report ────────────────────────────────────────────────────────────────
+
+def write_sus_report(all_data, participants):
+    conditions = CONDITIONS_MAIN
+
+    # Per-item, per-condition stats
+    item_stats = {}
+    for key, label in zip(_SUS_KEYS, _SUS_LABELS):
+        item_stats[key] = {}
+        for cond in conditions:
+            vals = []
+            for pid in participants:
+                try:
+                    v = all_data[pid]["sus"]["conditions"][cond]["items"][key]["converted"]
+                    if v is not None:
+                        vals.append(float(v))
+                except (KeyError, TypeError):
+                    pass
+            item_stats[key][cond] = _desc(vals)
+
+    # Overall SUS score per condition
+    score_stats = {}
+    for cond in conditions:
+        vals = []
+        for pid in participants:
+            try:
+                v = all_data[pid]["sus"]["conditions"][cond]["sus_score"]
+                if v is not None:
+                    vals.append(float(v))
+            except (KeyError, TypeError):
+                pass
+        score_stats[cond] = _desc(vals)
+
+    summary = {
+        "form": "sus",
+        "n_participants": len(participants),
+        "conditions": conditions,
+        "sus_score": score_stats,
+        "items": item_stats,
+    }
+
+    # Human-readable
+    w = 50
+    sec1 = f"{'─' * 78}\n  OVERALL SUS SCORE (0–100)\n{'─' * 78}\n"
+    sec1 += _cond_header(w, conditions)
+    sec1 += _fmt_desc_table(w, score_stats, conditions, "SUS Score (0–100)")
+    sec1 += "\n"
+
+    sec2 = f"{'─' * 78}\n  ITEMS (converted 0–4, high = agree)\n{'─' * 78}\n"
+    sec2 += _cond_header(w, conditions)
+    for key, label in zip(_SUS_KEYS, _SUS_LABELS):
+        sec2 += _fmt_desc_table(w, item_stats[key], conditions, label[:w])
+    sec2 += "\n"
+
+    path = os.path.join(REPORTS_DIR, "sus_report.txt")
+    _write_report(path, "SUS — System Usability Scale  (cross-participant)", summary, [sec1, sec2])
+    print(f"  → {path}")
+
+
+# ── TiA report ────────────────────────────────────────────────────────────────
+
+_TIA_SUBSCALES = ["reliability_competence", "understanding_predictability", "trust_in_automation"]
+_TIA_SUB_LABELS = {
+    "reliability_competence":       "Reliability / Competence",
+    "understanding_predictability": "Understanding / Predictability",
+    "trust_in_automation":          "Trust in Automation",
+}
+
+
+def write_tia_report(all_data, participants):
+    conditions = CONDITIONS_MAIN
+
+    item_stats = {}
+    for key, sub, label in [(k, s, l) for s, k, l in _TIA_SPECS]:
+        item_stats[key] = {}
+        for cond in conditions:
+            vals = []
+            for pid in participants:
+                try:
+                    v = all_data[pid]["tia"]["conditions"][cond]["subscales"][sub]["items"][key]["recoded"]
+                    if v is not None:
+                        vals.append(float(v))
+                except (KeyError, TypeError):
+                    pass
+            item_stats[key][cond] = _desc(vals)
+
+    subscale_stats = {}
+    for sub in _TIA_SUBSCALES:
+        subscale_stats[sub] = {}
+        for cond in conditions:
+            vals = []
+            for pid in participants:
+                try:
+                    v = all_data[pid]["tia"]["conditions"][cond]["subscales"][sub]["mean"]
+                    if v is not None:
+                        vals.append(float(v))
+                except (KeyError, TypeError):
+                    pass
+            subscale_stats[sub][cond] = _desc(vals)
+
+    global_stats = {}
+    for cond in conditions:
+        vals = []
+        for pid in participants:
+            try:
+                v = all_data[pid]["tia"]["conditions"][cond]["global_mean_excl_traits"]
+                if v is not None:
+                    vals.append(float(v))
+            except (KeyError, TypeError):
+                pass
+        global_stats[cond] = _desc(vals)
+
+    summary = {
+        "form": "tia",
+        "n_participants": len(participants),
+        "conditions": conditions,
+        "global_mean_excl_traits": global_stats,
+        "subscales": subscale_stats,
+        "items": item_stats,
+    }
+
+    w = 50
+    sec1 = f"{'─' * 78}\n  GLOBAL MEAN (excl. traits, 1–5)\n{'─' * 78}\n"
+    sec1 += _cond_header(w, conditions)
+    sec1 += _fmt_desc_table(w, global_stats, conditions, "Global mean (1–5)")
+    sec1 += "\n"
+
+    sec2 = f"{'─' * 78}\n  SUBSCALE MEANS (1–5)\n{'─' * 78}\n"
+    sec2 += _cond_header(w, conditions)
+    for sub in _TIA_SUBSCALES:
+        sec2 += _fmt_desc_table(w, subscale_stats[sub], conditions, _TIA_SUB_LABELS[sub])
+    sec2 += "\n"
+
+    sec3 = f"{'─' * 78}\n  ITEMS (recoded 1–5, high = agree)\n{'─' * 78}\n"
+    for sub in _TIA_SUBSCALES:
+        sec3 += f"\n  [{_TIA_SUB_LABELS[sub]}]\n"
+        sec3 += _cond_header(w, conditions)
+        for s2, key, label in _TIA_SPECS:
+            if s2 == sub:
+                sec3 += _fmt_desc_table(w, item_stats[key], conditions, label[:w])
+    sec3 += "\n"
+
+    path = os.path.join(REPORTS_DIR, "tia_report.txt")
+    _write_report(path, "TiA — Trust in Automation Checklist  (cross-participant)", summary, [sec1, sec2, sec3])
+    print(f"  → {path}")
+
+
+# ── NASA-TLX report ───────────────────────────────────────────────────────────
+
+def write_nasa_report(all_data, participants):
+    conditions = CONDITIONS  # NASA uses all 4 including TARC
+
+    dim_stats = {}
+    for key, label in zip(_NASA_KEYS, _NASA_LABELS):
+        dim_stats[key] = {}
+        for cond in conditions:
+            vals = []
+            for pid in participants:
+                try:
+                    v = all_data[pid]["nasa_tlx"]["conditions"][cond]["subscales"][key]["rating_0_20"]
+                    if v is not None:
+                        vals.append(float(v))
+                except (KeyError, TypeError):
+                    pass
+            dim_stats[key][cond] = _desc(vals)
+
+    score_stats = {}
+    for cond in conditions:
+        vals = []
+        for pid in participants:
+            try:
+                v = all_data[pid]["nasa_tlx"]["conditions"][cond]["nasa_tlx_weighted_score"]
+                if v is not None:
+                    vals.append(float(v))
+            except (KeyError, TypeError):
+                pass
+        score_stats[cond] = _desc(vals)
+
+    summary = {
+        "form": "nasa_tlx",
+        "n_participants": len(participants),
+        "conditions": conditions,
+        "nasa_tlx_weighted_score": score_stats,
+        "dimensions": dim_stats,
+    }
+
+    w = 24
+    sec1 = f"{'─' * 78}\n  WEIGHTED SCORE (0–100)\n{'─' * 78}\n"
+    sec1 += _cond_header(w, conditions)
+    sec1 += _fmt_desc_table(w, score_stats, conditions, "Weighted Score (0–100)")
+    sec1 += "\n"
+
+    sec2 = f"{'─' * 78}\n  DIMENSIONS (ratings 0–20, high = more workload)\n{'─' * 78}\n"
+    sec2 += _cond_header(w, conditions)
+    for key, label in zip(_NASA_KEYS, _NASA_LABELS):
+        sec2 += _fmt_desc_table(w, dim_stats[key], conditions, label)
+    sec2 += "\n"
+
+    path = os.path.join(REPORTS_DIR, "nasa_tlx_report.txt")
+    _write_report(path, "NASA-TLX — Cross-participant", summary, [sec1, sec2])
+    print(f"  → {path}")
+
+
+# ── Trust & Risk VAS report ───────────────────────────────────────────────────
+
+def write_trust_risk_report(all_data, participants):
+    conditions = CONDITIONS_MAIN
+
+    stats = {}
+    for key in ("trust_vas", "risk_vas"):
+        stats[key] = {}
+        for cond in conditions:
+            vals = []
+            for pid in participants:
+                try:
+                    v = all_data[pid]["trust_risk"]["conditions"][cond][key]
+                    if v is not None:
+                        vals.append(float(v))
+                except (KeyError, TypeError):
+                    pass
+            stats[key][cond] = _desc(vals)
+
+    summary = {
+        "form": "trust_risk",
+        "n_participants": len(participants),
+        "conditions": conditions,
+        "trust_vas": stats["trust_vas"],
+        "risk_vas":  stats["risk_vas"],
+    }
+
+    w = 20
+    sec1 = f"{'─' * 78}\n  TRUST VAS (0–100, high = more trust)\n{'─' * 78}\n"
+    sec1 += _cond_header(w, conditions)
+    sec1 += _fmt_desc_table(w, stats["trust_vas"], conditions, "Trust VAS (0–100)")
+    sec1 += "\n"
+
+    sec2 = f"{'─' * 78}\n  RISK VAS (0–100, high = more perceived risk)\n{'─' * 78}\n"
+    sec2 += _cond_header(w, conditions)
+    sec2 += _fmt_desc_table(w, stats["risk_vas"], conditions, "Risk VAS (0–100)")
+    sec2 += "\n"
+
+    path = os.path.join(REPORTS_DIR, "trust_risk_report.txt")
+    _write_report(path, "Trust & Risk VAS  (cross-participant)", summary, [sec1, sec2])
+    print(f"  → {path}")
+
+
+# ── Oversight Bespoke report ──────────────────────────────────────────────────
+
+_OB_SCORES = [
+    ("base_score",     "mean", "Base Score mean (1–5)"),
+    ("extended_score", "mean", "Extended Score mean (1–5)"),
+]
+
+
+def write_ob_report(all_data, participants):
+    conditions = CONDITIONS_MAIN
+
+    item_stats = {}
+    for key, label in zip(_OB_KEYS, _OB_LABELS):
+        item_stats[key] = {}
+        for cond in conditions:
+            vals = []
+            for pid in participants:
+                try:
+                    v = all_data[pid]["oversight_bespoke"]["conditions"][cond]["extended_score"]["items"][key]["scored"]
+                    if v is not None:
+                        vals.append(float(v))
+                except (KeyError, TypeError):
+                    pass
+            item_stats[key][cond] = _desc(vals)
+
+    score_stats = {}
+    for score_key, sub_key, _ in _OB_SCORES:
+        score_stats[score_key] = {}
+        for cond in conditions:
+            vals = []
+            for pid in participants:
+                try:
+                    v = all_data[pid]["oversight_bespoke"]["conditions"][cond][score_key][sub_key]
+                    if v is not None:
+                        vals.append(float(v))
+                except (KeyError, TypeError):
+                    pass
+            score_stats[score_key][cond] = _desc(vals)
+
+    summary = {
+        "form": "oversight_bespoke",
+        "n_participants": len(participants),
+        "conditions": conditions,
+        "scores": score_stats,
+        "items": item_stats,
+    }
+
+    w = 50
+    sec1 = f"{'─' * 78}\n  COMPUTED SCORES (1–5)\n{'─' * 78}\n"
+    sec1 += _cond_header(w, conditions)
+    for score_key, sub_key, label in _OB_SCORES:
+        sec1 += _fmt_desc_table(w, score_stats[score_key], conditions, label)
+    sec1 += "\n"
+
+    sec2 = f"{'─' * 78}\n  ITEMS (scored 1–5, * = reversed)\n{'─' * 78}\n"
+    sec2 += _cond_header(w, conditions)
+    for key, label in zip(_OB_KEYS, _OB_LABELS):
+        sec2 += _fmt_desc_table(w, item_stats[key], conditions, label[:w])
+    sec2 += "\n"
+
+    path = os.path.join(REPORTS_DIR, "oversight_bespoke_report.txt")
+    _write_report(path, "Oversight Bespoke  (cross-participant)", summary, [sec1, sec2])
+    print(f"  → {path}")
+
+
+# ── Perceived Control report ──────────────────────────────────────────────────
+
+def write_perceived_control_report(all_data, participants):
+    conditions = CONDITIONS_MAIN
+
+    item_stats = {}
+    for key, label in zip(_PC_KEYS, _PC_LABELS):
+        item_stats[key] = {}
+        for cond in conditions:
+            vals = []
+            for pid in participants:
+                try:
+                    v = all_data[pid]["perceived_control"]["conditions"][cond]["items"][key]["scored"]
+                    if v is not None:
+                        vals.append(float(v))
+                except (KeyError, TypeError):
+                    pass
+            item_stats[key][cond] = _desc(vals)
+
+    mean_stats = {}
+    for cond in conditions:
+        vals = []
+        for pid in participants:
+            try:
+                v = all_data[pid]["perceived_control"]["conditions"][cond]["mean"]
+                if v is not None:
+                    vals.append(float(v))
+            except (KeyError, TypeError):
+                pass
+        mean_stats[cond] = _desc(vals)
+
+    summary = {
+        "form": "perceived_control",
+        "n_participants": len(participants),
+        "conditions": conditions,
+        "mean": mean_stats,
+        "items": item_stats,
+    }
+
+    w = 70
+    sec1 = f"{'─' * 78}\n  MEAN SCORE (1–5)\n{'─' * 78}\n"
+    sec1 += _cond_header(w, conditions)
+    sec1 += _fmt_desc_table(w, mean_stats, conditions, "Mean (1–5)")
+    sec1 += "\n"
+
+    sec2 = f"{'─' * 78}\n  ITEMS (scored 1–5)\n{'─' * 78}\n"
+    sec2 += _cond_header(w, conditions)
+    for key, label in zip(_PC_KEYS, _PC_LABELS):
+        sec2 += _fmt_desc_table(w, item_stats[key], conditions, label[:w])
+    sec2 += "\n"
+
+    path = os.path.join(REPORTS_DIR, "perceived_control_report.txt")
+    _write_report(path, "Perceived Control  (cross-participant)", summary, [sec1, sec2])
+    print(f"  → {path}")
+
+
+# ── Pre-experiment / PTS report ───────────────────────────────────────────────
+
+def write_pts_report(all_data, participants):
+    """Propensity to Trust Automation — trait questionnaire (no conditions)."""
+    item_stats = {}
+    for key, label in zip(_PTS_KEYS, _PTS_LABELS):
+        vals = []
+        for pid in participants:
+            try:
+                v = all_data[pid]["pre_experiment_form"]["pts"][key]["score"]
+                if v is not None:
+                    vals.append(float(v))
+            except (KeyError, TypeError):
+                pass
+        item_stats[key] = _desc(vals)
+
+    total_stats = {}
+    total_vals = []
+    for pid in participants:
+        try:
+            v = all_data[pid]["pre_experiment_form"]["pts_total"]
+            if v is not None:
+                total_vals.append(float(v))
+        except (KeyError, TypeError):
+            pass
+    total_stats = _desc(total_vals)
+
+    summary = {
+        "form": "pre_experiment_form_pts",
+        "n_participants": len(participants),
+        "pts_total": total_stats,
+        "items": item_stats,
+    }
+
+    w = 70
+    sep = "─" * 78
+    sec1 = f"{sep}\n  PTS TOTAL SCORE\n{sep}\n"
+    s = total_stats
+    if s["n"] > 0:
+        sec1 += f"  n={s['n']}  μ={s['mean']:.2f}  σ={s['sd']:.2f}  Md={s['median']:.2f}  [{s['min']}–{s['max']}]\n"
+    else:
+        sec1 += "  No data\n"
+    sec1 += "\n"
+
+    sec2 = f"{sep}\n  ITEMS (scored 1–5, high = trusting)\n{sep}\n"
+    col_h = f"  {'Item':<{w}}  {'n':>3}  {'mean':>5}  {'SD':>4}  {'Md':>5}  [min–max]\n"
+    sec2 += col_h + "  " + "─" * (w + 35) + "\n"
+    for key, label in zip(_PTS_KEYS, _PTS_LABELS):
+        s = item_stats[key]
+        if s["n"] > 0:
+            bar = _bar_r(s["mean"], 1.0, 5.0, width=15)
+            sec2 += f"  {label[:w]:<{w}}  {s['n']:>3}  {s['mean']:>5.2f}  {s['sd']:>4.2f}  {s['median']:>5.2f}  [{s['min']}–{s['max']}]  {bar}\n"
+        else:
+            sec2 += f"  {label[:w]:<{w}}  {'—':>3}\n"
+    sec2 += "\n"
+
+    path = os.path.join(REPORTS_DIR, "pts_report.txt")
+    _write_report(path, "Propensity to Trust Automation (PTS) — Pre-experiment  (cross-participant)", summary, [sec1, sec2])
+    print(f"  → {path}")
+
+
+def write_all_reports(all_data, participants):
+    os.makedirs(REPORTS_DIR, exist_ok=True)
+    print(f"\n[4/4] Generating cross-participant reports → {REPORTS_DIR}/\n")
+    write_sus_report(all_data, participants)
+    write_tia_report(all_data, participants)
+    write_nasa_report(all_data, participants)
+    write_trust_risk_report(all_data, participants)
+    write_ob_report(all_data, participants)
+    write_perceived_control_report(all_data, participants)
+    write_pts_report(all_data, participants)
+
+
 _COMPARE_FORMS_PLOTS = [
     "sus_items.png",
     "tia_items.png",
@@ -1732,6 +2236,17 @@ _COMPARE_FORMS_PLOTS = [
     "pts_items.png",
     "preference_profile_coherence.png",
     "preference_clusters_all_vas.png",
+]
+
+
+_COMPARE_FORMS_REPORTS = [
+    "sus_report.txt",
+    "tia_report.txt",
+    "nasa_tlx_report.txt",
+    "trust_risk_report.txt",
+    "oversight_bespoke_report.txt",
+    "perceived_control_report.txt",
+    "pts_report.txt",
 ]
 
 
@@ -1749,6 +2264,11 @@ def _confirm_run(participants, missing_pids, output_plots):
         path = os.path.join(PLOTS_DIR, name)
         tag  = "[overwrite]" if os.path.exists(path) else "[new     ]"
         print(f"  {tag}  {name}")
+    print(f"\nCross-participant reports that will be written/overwritten ({len(_COMPARE_FORMS_REPORTS)}):")
+    for name in _COMPARE_FORMS_REPORTS:
+        path = os.path.join(REPORTS_DIR, name)
+        tag  = "[overwrite]" if os.path.exists(path) else "[new     ]"
+        print(f"  {tag}  compare_forms/{name}")
     print()
     try:
         ans = input("Continue? [Y/n]: ").strip().lower()
@@ -1797,6 +2317,9 @@ def main():
     figs.extend(plot_preference_clusters(all_data, loaded))
 
     print(f"\nDone — {len(figs)} figures saved to {PLOTS_DIR}/")
+
+    write_all_reports(all_data, loaded)
+
     plt.show()
 
 

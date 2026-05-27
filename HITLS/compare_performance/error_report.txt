@@ -1,0 +1,596 @@
+--- MACHINE-READABLE SUMMARY (JSON) ---
+{
+  "domain": "error_detection_correction",
+  "n_participants": 14,
+  "participants": [
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P15",
+    "P16",
+    "P17",
+    "P18",
+    "P20"
+  ],
+  "conditions": [
+    "TARS",
+    "TARP-S",
+    "TARP-F"
+  ],
+  "error_types": [
+    "alt",
+    "flaps",
+    "winds"
+  ],
+  "by_error_type": {
+    "alt": {
+      "corrected_and_crosschecked": {
+        "n": 5,
+        "pct": 38.5
+      },
+      "corrected_no_eye": {
+        "n": 2,
+        "pct": 15.4
+      },
+      "seen_not_corrected": {
+        "n": 3,
+        "pct": 23.1
+      },
+      "missed": {
+        "n": 3,
+        "pct": 23.1
+      },
+      "total_coded": 13,
+      "total": 13
+    },
+    "flaps": {
+      "corrected_and_crosschecked": {
+        "n": 2,
+        "pct": 15.4
+      },
+      "corrected_no_eye": {
+        "n": 7,
+        "pct": 53.8
+      },
+      "seen_not_corrected": {
+        "n": 1,
+        "pct": 7.7
+      },
+      "missed": {
+        "n": 3,
+        "pct": 23.1
+      },
+      "total_coded": 13,
+      "total": 14
+    },
+    "winds": {
+      "corrected_and_crosschecked": {
+        "n": 0,
+        "pct": 0.0
+      },
+      "corrected_no_eye": {
+        "n": 0,
+        "pct": 0.0
+      },
+      "seen_not_corrected": {
+        "n": 0,
+        "pct": 0.0
+      },
+      "missed": {
+        "n": 0,
+        "pct": 0.0
+      },
+      "total_coded": 0,
+      "total": 14
+    }
+  },
+  "by_condition": {
+    "TARS": {
+      "corrected_and_crosschecked": {
+        "n": 4,
+        "pct": 44.4
+      },
+      "corrected_no_eye": {
+        "n": 4,
+        "pct": 44.4
+      },
+      "seen_not_corrected": {
+        "n": 0,
+        "pct": 0.0
+      },
+      "missed": {
+        "n": 1,
+        "pct": 11.1
+      },
+      "total_coded": 9,
+      "total": 13
+    },
+    "TARP-S": {
+      "corrected_and_crosschecked": {
+        "n": 3,
+        "pct": 33.3
+      },
+      "corrected_no_eye": {
+        "n": 1,
+        "pct": 11.1
+      },
+      "seen_not_corrected": {
+        "n": 4,
+        "pct": 44.4
+      },
+      "missed": {
+        "n": 1,
+        "pct": 11.1
+      },
+      "total_coded": 9,
+      "total": 14
+    },
+    "TARP-F": {
+      "corrected_and_crosschecked": {
+        "n": 0,
+        "pct": 0.0
+      },
+      "corrected_no_eye": {
+        "n": 4,
+        "pct": 50.0
+      },
+      "seen_not_corrected": {
+        "n": 0,
+        "pct": 0.0
+      },
+      "missed": {
+        "n": 4,
+        "pct": 50.0
+      },
+      "total_coded": 8,
+      "total": 14
+    }
+  },
+  "per_participant": {
+    "P05": [
+      {
+        "scenario": "scenario_04_TARP-F_24L_winds_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_07_TARP-S_24R_alt_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "alt",
+        "corrected": false,
+        "crosschecked": true,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_10_TARS_06R_flaps_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "flaps",
+        "corrected": true,
+        "crosschecked": false,
+        "notes": []
+      }
+    ],
+    "P06": [
+      {
+        "scenario": "scenario_09_TARP-S_06R_winds_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_12_TARS_24L_alt_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "alt",
+        "corrected": true,
+        "crosschecked": true,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_15_TARP-F_24R_flaps_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "flaps",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": [
+          "WARNING: 'Takeoff clearance' task not found — eye crosscheck cannot be assessed"
+        ]
+      }
+    ],
+    "P07": [
+      {
+        "scenario": "scenario_13_TARS_24L_winds_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_15_TARP-F_24R_flaps_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "flaps",
+        "corrected": false,
+        "crosschecked": false,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_18_TARP-S_06R_alt_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "alt",
+        "corrected": true,
+        "crosschecked": true,
+        "notes": []
+      }
+    ],
+    "P08": [
+      {
+        "scenario": "scenario_01_TARP-S_06R_winds_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_02_TARP-F_24L_alt_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "alt",
+        "corrected": true,
+        "crosschecked": false,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_03_TARS_24L_flaps_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "flaps",
+        "corrected": true,
+        "crosschecked": false,
+        "notes": []
+      }
+    ],
+    "P09": [
+      {
+        "scenario": "scenario_13_TARP-S_06R_flaps_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "flaps",
+        "corrected": true,
+        "crosschecked": true,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_18_TARS_24R_alt_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "alt",
+        "corrected": true,
+        "crosschecked": true,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_20_TARP-F_24L_winds_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      }
+    ],
+    "P10": [
+      {
+        "scenario": "scenario_12_TARS_24R_winds_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_14_TARP-F_06R_alt_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "alt",
+        "corrected": true,
+        "crosschecked": false,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_16_TARP-S_24L_flaps_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "flaps",
+        "corrected": true,
+        "crosschecked": false,
+        "notes": []
+      }
+    ],
+    "P11": [
+      {
+        "scenario": "scenario_11_TARP-F_24L_winds_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_13_TARP-S_24R_alt_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "alt",
+        "corrected": false,
+        "crosschecked": true,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_17_TARS_06R_flaps_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "flaps",
+        "corrected": true,
+        "crosschecked": false,
+        "notes": []
+      }
+    ],
+    "P12": [
+      {
+        "scenario": "scenario_13_TARP-S_06R_winds_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_17_TARS_24L_alt_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "alt",
+        "corrected": true,
+        "crosschecked": true,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_19_TARP-F_24R_flaps_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "flaps",
+        "corrected": true,
+        "crosschecked": false,
+        "notes": []
+      }
+    ],
+    "P13": [
+      {
+        "scenario": "scenario_16_TARS_24L_winds_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_19_TARP-F_24R_flaps_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "flaps",
+        "corrected": true,
+        "crosschecked": false,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_21_TARP-S_06R_alt_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "alt",
+        "corrected": false,
+        "crosschecked": true,
+        "notes": []
+      }
+    ],
+    "P15": [
+      {
+        "scenario": "scenario_15_TARP-S_06R_flaps_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "flaps",
+        "corrected": false,
+        "crosschecked": true,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_19_TARP-F_24L_winds_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      }
+    ],
+    "P16": [
+      {
+        "scenario": "scenario_09_TARS_24R_winds_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_13_TARP-F_06R_alti_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "alt",
+        "corrected": false,
+        "crosschecked": false,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_15_TARP-S_24L_flaps_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "flaps",
+        "corrected": false,
+        "crosschecked": false,
+        "notes": []
+      }
+    ],
+    "P17": [
+      {
+        "scenario": "scenario_08_TARP-F_24L_winds_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_15_TARP-S_24R_alt_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "alt",
+        "corrected": true,
+        "crosschecked": true,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_18_TARS_06R_flaps_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "flaps",
+        "corrected": true,
+        "crosschecked": false,
+        "notes": []
+      }
+    ],
+    "P18": [
+      {
+        "scenario": "scenario_08_TARP-S_06R_winds_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_09_TARS_24L_alt_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "alt",
+        "corrected": false,
+        "crosschecked": false,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_11_TARP-F_24R_flaps_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "flaps",
+        "corrected": false,
+        "crosschecked": false,
+        "notes": []
+      }
+    ],
+    "P20": [
+      {
+        "scenario": "scenario_07_TARP-F_alt_24L_ingescape.csv",
+        "condition": "TARP-F",
+        "error_type": "alt",
+        "corrected": false,
+        "crosschecked": false,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_10_TARP-S_winds_06R_ingescape.csv",
+        "condition": "TARP-S",
+        "error_type": "winds",
+        "corrected": null,
+        "crosschecked": null,
+        "notes": []
+      },
+      {
+        "scenario": "scenario_15_TARS_flaps_24LR_ingescape.csv",
+        "condition": "TARS",
+        "error_type": "flaps",
+        "corrected": true,
+        "crosschecked": true,
+        "notes": []
+      }
+    ]
+  }
+}
+--- END SUMMARY ---
+==============================================================================
+  Error Detection & Correction  (cross-participant)
+==============================================================================
+
+──────────────────────────────────────────────────────────────────────────────
+  OUTCOME BY ERROR TYPE
+──────────────────────────────────────────────────────────────────────────────
+  Outcome                            Alt error    Flaps error   Winds entry 
+  ────────────────────────────────────────────────────────────────────────────
+  Corrected + Crosschecked            5 (38%)       2 (15%)          —      
+  Corrected, no eye confirm           2 (15%)       7 (54%)          —      
+  Seen but not corrected              3 (23%)        1 (8%)          —      
+  Missed (neither)                    3 (23%)       3 (23%)          —      
+  ────────────────────────────────────────────────────────────────────────────
+  Total coded                            13            13            0      
+
+──────────────────────────────────────────────────────────────────────────────
+  OUTCOME BY CONDITION
+──────────────────────────────────────────────────────────────────────────────
+  Outcome                               TARS         TARP-S        TARP-F   
+  ────────────────────────────────────────────────────────────────────────────
+  Corrected + Crosschecked            4 (44%)       3 (33%)        0 (0%)   
+  Corrected, no eye confirm           4 (44%)       1 (11%)       4 (50%)   
+  Seen but not corrected               0 (0%)       4 (44%)        0 (0%)   
+  Missed (neither)                    1 (11%)       1 (11%)       4 (50%)   
+  ────────────────────────────────────────────────────────────────────────────
+  Total coded                            9             9             8      
+
+──────────────────────────────────────────────────────────────────────────────
+  PER-PARTICIPANT BREAKDOWN
+──────────────────────────────────────────────────────────────────────────────
+  PID     Condition  Error   Corrected   Crosschecked    Notes
+  ────────────────────────────────────────────────────────────────────────────
+  P05     TARP-F    winds   N/A         N/A             
+  P05     TARP-S    alt     NO          YES             
+  P05     TARS      flaps   YES         NO              
+  P06     TARP-S    winds   N/A         N/A             
+  P06     TARS      alt     YES         YES             
+  P06     TARP-F    flaps   N/A         N/A             !
+  P07     TARS      winds   N/A         N/A             
+  P07     TARP-F    flaps   NO          NO              
+  P07     TARP-S    alt     YES         YES             
+  P08     TARP-S    winds   N/A         N/A             
+  P08     TARP-F    alt     YES         NO              
+  P08     TARS      flaps   YES         NO              
+  P09     TARP-S    flaps   YES         YES             
+  P09     TARS      alt     YES         YES             
+  P09     TARP-F    winds   N/A         N/A             
+  P10     TARS      winds   N/A         N/A             
+  P10     TARP-F    alt     YES         NO              
+  P10     TARP-S    flaps   YES         NO              
+  P11     TARP-F    winds   N/A         N/A             
+  P11     TARP-S    alt     NO          YES             
+  P11     TARS      flaps   YES         NO              
+  P12     TARP-S    winds   N/A         N/A             
+  P12     TARS      alt     YES         YES             
+  P12     TARP-F    flaps   YES         NO              
+  P13     TARS      winds   N/A         N/A             
+  P13     TARP-F    flaps   YES         NO              
+  P13     TARP-S    alt     NO          YES             
+  P15     TARP-S    flaps   NO          YES             
+  P15     TARP-F    winds   N/A         N/A             
+  P16     TARS      winds   N/A         N/A             
+  P16     TARP-F    alt     NO          NO              
+  P16     TARP-S    flaps   NO          NO              
+  P17     TARP-F    winds   N/A         N/A             
+  P17     TARP-S    alt     YES         YES             
+  P17     TARS      flaps   YES         NO              
+  P18     TARP-S    winds   N/A         N/A             
+  P18     TARS      alt     NO          NO              
+  P18     TARP-F    flaps   NO          NO              
+  P20     TARP-F    alt     NO          NO              
+  P20     TARP-S    winds   N/A         N/A             
+  P20     TARS      flaps   YES         YES             
+
+──────────────────────────────────────────────────────────────────────────────
+  NOTES & WARNINGS
+──────────────────────────────────────────────────────────────────────────────
+  [P06  scenario_15_TARP-F_24R_flaps_ingescape.csv]  WARNING: 'Takeoff clearance' task not found — eye crosscheck cannot be assessed
+

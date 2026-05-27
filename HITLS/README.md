@@ -1,9 +1,7 @@
 # HITLS — Data Analysis Pipeline
 
 Human-in-the-Loop study with four automation conditions:
-**TARS** (baseline) · **TARC** (recommended) · **TARP-S** (partial-soft) · **TARP-F** (partial-forced)
-
-Participants: P02 – P18 (some numbers skipped due to exclusions).
+**TARS** (Support and suggest) · **TARC** (custom) · **TARP-S** (Performer Slow) · **TARP-F** (Performer Fast)
 
 ---
 
@@ -57,7 +55,7 @@ python HITLS/extract_scenarios.py HITLS/P02 HITLS/P03 ...
 Slices the participant's `{PID}_ingescape.csv` into per-scenario CSV files
 saved in `{PID}/scenarios/`.
 
-> **P17 only:** First convert the backup log format with:
+> **if needed:** First convert the backup log format with:
 > ```bash
 > python HITLS/log_to_ingescape_csv.py
 > ```

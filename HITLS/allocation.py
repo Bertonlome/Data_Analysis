@@ -40,9 +40,11 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # one level behind the script's directory, to find participant folders
 IMAGE_DIR = os.path.join(ROOT_DIR, "images")  # for icons
 
-HITLS_DIR  = os.path.dirname(os.path.abspath(__file__))
-PLOTS_DIR  = os.path.join(HITLS_DIR, "plots")
-IA_V8_PATH = os.path.join(HITLS_DIR, "IA_V8.csv")
+HITLS_DIR   = os.path.dirname(os.path.abspath(__file__))
+PLOTS_DIR   = os.path.join(HITLS_DIR, "plots")
+REPORT_DIR  = os.path.join(HITLS_DIR, "allocation")
+REPORT_PATH = os.path.join(REPORT_DIR, "allocation_report.txt")
+IA_V8_PATH  = os.path.join(HITLS_DIR, "IA_V8.csv")
 
 # ── Encoding constants ────────────────────────────────────────────────────────
 HUMAN     = 0   # human is performer
@@ -636,6 +638,214 @@ def _save(fig, filename):
     print(f"  Saved → {path}")
 
 
+# ── Report ────────────────────────────────────────────────────────────────────
+
+_STATE_KEYS = {
+    HUMAN:     "human",
+    AUTO_FAST: "auto_fast",
+    AUTO_SLOW: "auto_slow",
+}
+
+
+def _bar(value: float, max_value: float, width: int = 20) -> str:
+    filled = round(value / max_value * width) if max_value else 0
+    return "█" * filled + "░" * (width - filled)
+
+
+def write_allocation_report(participants: list, vectors: np.ndarray,
+                            ref_rows: list, is_choice: np.ndarray) -> None:
+    """Compute descriptive statistics and write allocation_report.txt."""
+    import json
+    from datetime import date
+
+    n_p      = len(participants)
+    n_tasks  = vectors.shape[1]
+    n_choice = int(is_choice.sum())
+    n_fixed  = n_tasks - n_choice
+    choice_idx = [i for i in range(n_tasks) if is_choice[i]]
+
+    task_objects = build_task_objects(ref_rows)
+    categories   = build_categories(ref_rows)
+
+    v      = vectors[:, choice_idx]          # (n_p, n_choice)
+    cats_c = [categories[i]   for i in choice_idx]
+    objs_c = [task_objects[i] for i in choice_idx]
+    total_cells = n_p * n_choice
+
+    # ── Overall counts ────────────────────────────────────────────────────────
+    overall = {}
+    for s, key in _STATE_KEYS.items():
+        cnt = int(np.sum(v == s))
+        overall[key] = {"count": cnt, "pct": round(cnt / total_cells * 100, 1)}
+
+    # ── Per-participant ───────────────────────────────────────────────────────
+    per_part = {}
+    for pi, pid in enumerate(participants):
+        d = {key: int(np.sum(v[pi] == s)) for s, key in _STATE_KEYS.items()}
+        d["auto_pct"] = round((d["auto_fast"] + d["auto_slow"]) / n_choice * 100, 1)
+        per_part[pid] = d
+
+    # ── Per-category ──────────────────────────────────────────────────────────
+    cat_order = _unique_ordered(cats_c)
+    per_cat = {}
+    for cat in cat_order:
+        idxs = [i for i, c in enumerate(cats_c) if c == cat]
+        vc   = v[:, idxs]
+        total_cat = n_p * len(idxs)
+        d = {"n_tasks": len(idxs)}
+        for s, key in _STATE_KEYS.items():
+            d[key + "_pct"] = round(int(np.sum(vc == s)) / total_cat * 100, 1)
+        per_cat[cat] = d
+
+    # ── Per-task agreement ────────────────────────────────────────────────────
+    task_agr = []
+    for ti in range(n_choice):
+        col = v[:, ti]
+        unique, counts = np.unique(col, return_counts=True)
+        maj_s   = int(unique[np.argmax(counts)])
+        maj_pct = round(int(np.max(counts)) / n_p * 100, 1)
+        task_agr.append({
+            "task":          objs_c[ti],
+            "category":      cats_c[ti],
+            "majority_state": _STATE_KEYS[maj_s],
+            "majority_pct":  maj_pct,
+        })
+
+    n_consensus = sum(1 for t in task_agr if t["majority_pct"] >= 80)
+    n_majority  = sum(1 for t in task_agr if t["majority_pct"] >= 65)
+    n_split     = sum(1 for t in task_agr if t["majority_pct"] < 50)
+    top_agreed   = sorted(task_agr, key=lambda t: -t["majority_pct"])[:5]
+    top_disputed = sorted(task_agr, key=lambda t:  t["majority_pct"])[:5]
+
+    # ── Pairwise Hamming similarity ───────────────────────────────────────────
+    pairs = [
+        (participants[i], participants[j],
+         round(float(np.mean(v[i] == v[j])), 3))
+        for i in range(n_p)
+        for j in range(i + 1, n_p)
+    ]
+    mean_sim  = round(float(np.mean([s for *_, s in pairs])), 3) if pairs else None
+    most_sim  = max(pairs, key=lambda x: x[2]) if pairs else None
+    most_diff = min(pairs, key=lambda x: x[2]) if pairs else None
+
+    # ── JSON data ─────────────────────────────────────────────────────────────
+    json_data = {
+        "generated":      str(date.today()),
+        "n_participants": n_p,
+        "participants":   participants,
+        "n_choice_tasks": n_choice,
+        "n_fixed_tasks":  n_fixed,
+        "overall_allocation": overall,
+        "per_participant":    per_part,
+        "per_category":       per_cat,
+        "agreement": {
+            "consensus_tasks_ge80pct": n_consensus,
+            "majority_tasks_ge65pct":  n_majority,
+            "split_tasks_lt50pct":     n_split,
+        },
+        "hamming_similarity": {
+            "mean": mean_sim,
+            "most_similar_pair":   {"pair": [most_sim[0],  most_sim[1]],  "similarity": most_sim[2]}  if most_sim  else None,
+            "most_different_pair": {"pair": [most_diff[0], most_diff[1]], "similarity": most_diff[2]} if most_diff else None,
+        },
+    }
+
+    # ── Formatted output ──────────────────────────────────────────────────────
+    SEP  = "=" * 72
+
+    lines = []
+    a = lines.append
+
+    a("--- MACHINE-READABLE SUMMARY (JSON) ---")
+    a(json.dumps(json_data, indent=2))
+    a("--- END SUMMARY ---")
+    a("")
+    a(SEP)
+    a("  TARC ALLOCATION REPORT")
+    a(f"  N = {n_p} participants  |  {n_choice} choice tasks  |  {n_fixed} fixed tasks")
+    a(f"  Generated: {date.today()}")
+    a(SEP)
+    a("")
+
+    # Overall allocation
+    a("\u2500\u2500 OVERALL ALLOCATION (choice tasks only) " + "\u2500" * 29)
+    a("")
+    a(f"  {'State':<22}  {'Count':>6}  {'%':>6}  Bar (0\u2013100%)")
+    a(f"  {'\u2500'*22}  {'\u2500'*6}  {'\u2500'*6}  {'\u2500'*20}")
+    for s, key in _STATE_KEYS.items():
+        cnt = overall[key]["count"]
+        pct = overall[key]["pct"]
+        a(f"  {ALLOC_LABELS[s]:<22}  {cnt:>6}  {pct:>5.1f}%  [{_bar(pct, 100)}]")
+    a("")
+    a(f"  Total cells (N={n_p} \u00d7 {n_choice} choice tasks): {total_cells}")
+    a("")
+
+    # Per-participant
+    a("\u2500\u2500 PER-PARTICIPANT SUMMARY " + "\u2500" * 45)
+    a("")
+    a(f"  {'Participant':<12}  {'Human':>6}  {'Auto-F':>7}  {'Auto-S':>7}  {'Auto%':>6}")
+    a(f"  {'\u2500'*12}  {'\u2500'*6}  {'\u2500'*7}  {'\u2500'*7}  {'\u2500'*6}")
+    for pid in participants:
+        d = per_part[pid]
+        a(f"  {pid:<12}  {d['human']:>6}  {d['auto_fast']:>7}  "
+          f"{d['auto_slow']:>7}  {d['auto_pct']:>5.1f}%")
+    sorted_auto = sorted(participants, key=lambda p: per_part[p]["auto_pct"])
+    a("")
+    a(f"  Least automation: {sorted_auto[0]}  ({per_part[sorted_auto[0]]['auto_pct']:.1f}%)")
+    a(f"  Most automation:  {sorted_auto[-1]}  ({per_part[sorted_auto[-1]]['auto_pct']:.1f}%)")
+    a("")
+
+    # Per-category
+    a("\u2500\u2500 PER-CATEGORY BREAKDOWN " + "\u2500" * 46)
+    a("")
+    a(f"  {'Category':<22}  {'Tasks':>5}  {'Human%':>7}  {'Auto-F%':>8}  {'Auto-S%':>8}")
+    a(f"  {'\u2500'*22}  {'\u2500'*5}  {'\u2500'*7}  {'\u2500'*8}  {'\u2500'*8}")
+    for cat in cat_order:
+        d = per_cat[cat]
+        a(f"  {cat:<22}  {d['n_tasks']:>5}  {d['human_pct']:>6.1f}%  "
+          f"{d['auto_fast_pct']:>7.1f}%  {d['auto_slow_pct']:>7.1f}%")
+    a("")
+
+    # Agreement
+    a("\u2500\u2500 INTER-PARTICIPANT AGREEMENT " + "\u2500" * 41)
+    a("")
+    a(f"  Consensus tasks (\u226580% same choice):  {n_consensus:>2} / {n_choice}")
+    a(f"  Majority tasks  (\u226565% same choice):  {n_majority:>2} / {n_choice}")
+    a(f"  Split tasks     (<50% majority):     {n_split:>2} / {n_choice}")
+    a("")
+    a("  Top-5 most agreed tasks:")
+    for t in top_agreed:
+        a(f"    {t['majority_pct']:>5.1f}%  {t['majority_state']:<16}  "
+          f"{t['task']}  [{t['category']}]")
+    a("")
+    a("  Top-5 most disputed tasks:")
+    for t in top_disputed:
+        a(f"    {t['majority_pct']:>5.1f}%  {t['majority_state']:<16}  "
+          f"{t['task']}  [{t['category']}]")
+    a("")
+
+    # Hamming similarity
+    a("\u2500\u2500 PAIRWISE HAMMING SIMILARITY " + "\u2500" * 41)
+    a("")
+    if mean_sim is not None:
+        a(f"  Mean similarity across all {len(pairs)} pairs: "
+          f"{mean_sim:.3f}  [{_bar(mean_sim * 100, 100)}]")
+    if most_sim:
+        a(f"  Most similar pair:    {most_sim[0]} & {most_sim[1]}  "
+          f"(sim = {most_sim[2]:.3f})")
+    if most_diff:
+        a(f"  Most different pair:  {most_diff[0]} & {most_diff[1]}  "
+          f"(sim = {most_diff[2]:.3f})")
+    a("")
+    a(SEP)
+    a("")
+
+    os.makedirs(REPORT_DIR, exist_ok=True)
+    with open(REPORT_PATH, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lines))
+    print(f"  Report \u2192 {REPORT_PATH}")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 _ALLOCATION_PLOTS = [
@@ -646,14 +856,16 @@ _ALLOCATION_PLOTS = [
 ]
 
 
-def _confirm_run(participants, output_plots):
-    """Print a pre-run summary and ask the user to confirm before proceeding."""
+def _confirm_run(participants, output_files):
+    """Print a pre-run summary and ask the user to confirm before proceeding.
+
+    output_files: list of (display_name, abs_path) tuples.
+    """
     print(f"\nParticipants:  {', '.join(participants)}")
-    print(f"\nOutput plots that will be written/overwritten ({len(output_plots)}):")
-    for name in output_plots:
-        path = os.path.join(PLOTS_DIR, name)
-        tag  = "[overwrite]" if os.path.exists(path) else "[new     ]"
-        print(f"  {tag}  {name}")
+    print(f"\nOutput files that will be written/overwritten ({len(output_files)}):")
+    for label, path in output_files:
+        tag = "[overwrite]" if os.path.exists(path) else "[new     ]"
+        print(f"  {tag}  {label}")
     print()
     try:
         ans = input("Continue? [Y/n]: ").strip().lower()
@@ -674,7 +886,9 @@ def main():
         print("Need at least 2 participants — aborting.")
         return
 
-    if not _confirm_run(participants, _ALLOCATION_PLOTS):
+    output_files = [(name, os.path.join(PLOTS_DIR, name)) for name in _ALLOCATION_PLOTS]
+    output_files.append(("allocation/allocation_report.txt", REPORT_PATH))
+    if not _confirm_run(participants, output_files):
         return
 
     task_objects = build_task_objects(ref_rows)
@@ -692,7 +906,10 @@ def main():
     plot_category_breakdown(participants, vectors, categories, is_choice)
     plot_task_breakdown(vectors, task_objects, task_values, categories, is_choice)
 
-    print(f"\nDone — 4 figures saved.")
+    print(f"\nGenerating report ...")
+    write_allocation_report(participants, vectors, ref_rows, is_choice)
+
+    print(f"\nDone — 4 figures + 1 report saved.")
     plt.show()
 
 

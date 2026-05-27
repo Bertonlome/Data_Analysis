@@ -37,6 +37,7 @@ import sys
 import json
 import importlib.util
 import subprocess
+import numpy as np
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 HITLS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -56,6 +57,284 @@ _ALL_PLOTS = [
     "time_distributions.png",
     "time_mean_task_distributions.png",
 ]
+
+# ── Reports produced by this script ───────────────────────────────────────────
+REPORTS_DIR  = os.path.join(HITLS_DIR, "compare_performance")
+_ALL_REPORTS = ["aviate_report.txt", "navigate_report.txt", "time_report.txt"]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Report helpers
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def _desc(vals):
+    if not vals:
+        return {"n": 0, "mean": None, "sd": None, "median": None, "min": None, "max": None}
+    a = np.array([v for v in vals if v is not None], dtype=float)
+    if len(a) == 0:
+        return {"n": 0, "mean": None, "sd": None, "median": None, "min": None, "max": None}
+    return {
+        "n":      int(len(a)),
+        "mean":   round(float(np.mean(a)), 4),
+        "sd":     round(float(np.std(a, ddof=1)), 4) if len(a) > 1 else 0.0,
+        "median": round(float(np.median(a)), 4),
+        "min":    round(float(np.min(a)), 4),
+        "max":    round(float(np.max(a)), 4),
+    }
+
+
+def _collect_vals(all_data, participants, conditions, *keys):
+    """Collect per-condition value lists for a given key path."""
+    result = {c: [] for c in conditions}
+    for pid in participants:
+        d = all_data.get(pid, {})
+        for cond in conditions:
+            node = d.get("conditions", {}).get(cond, {})
+            for k in keys:
+                if not isinstance(node, dict):
+                    node = None
+                    break
+                node = node.get(k)
+            if node is not None:
+                try:
+                    result[cond].append(float(node))
+                except (TypeError, ValueError):
+                    pass
+    return result
+
+
+def _write_report(path, title, summary_json, sections):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("--- MACHINE-READABLE SUMMARY (JSON) ---\n")
+        f.write(json.dumps(summary_json, indent=2, ensure_ascii=False))
+        f.write("\n--- END SUMMARY ---\n")
+        f.write("=" * 78 + "\n")
+        f.write(f"  {title}\n")
+        f.write("=" * 78 + "\n\n")
+        for sec in sections:
+            f.write(sec)
+
+
+def _cond_header(label_w, conditions):
+    h = " " * (label_w + 2)
+    for c in conditions:
+        h += f"  {c:^22}"
+    return h + "\n" + " " * (label_w + 2) + "  " + ("─" * 22 + "  ") * len(conditions) + "\n"
+
+
+def _fmt_row(label_w, label, stats_by_cond, conditions):
+    row = f"  {label:<{label_w}}"
+    for c in conditions:
+        s = stats_by_cond.get(c, {})
+        if not s or s.get("n", 0) == 0:
+            row += f"  {'—':^22}"
+        else:
+            row += f"  μ={s['mean']:6.3f} σ={s['sd']:5.3f} Md={s['median']:6.3f}"
+    return row + "\n"
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Aviate report
+# ═══════════════════════════════════════════════════════════════════════════════
+
+_AVIATE_CONDITIONS = ["TARS", "TARC", "TARP-S", "TARP-F"]
+
+_AVIATE_SIGNALS = [
+    # (json_key, label, metrics)
+    ("slip",           "Slip",          ["rmse", "nmae", "rmse_mae", "window_s"]),
+    ("roll_angle",     "Roll Angle",    ["rmse", "nmae", "rmse_mae", "window_s"]),
+    ("airspeed_climb", "Airspeed Climb",["rmse", "mape", "nmae", "rmse_mae", "window_s"]),
+]
+
+_AVIATE_METRIC_LABELS = {
+    "rmse":     "RMSE",
+    "nmae":     "nMAE (MAE/window)",
+    "mape":     "MAPE (%)",
+    "rmse_mae": "RMSE/MAE ratio",
+    "window_s": "Window duration (s)",
+}
+
+
+def write_aviate_report(aviate_data, participants):
+    conditions = _AVIATE_CONDITIONS
+    summary_signals = {}
+    for sig_key, sig_label, metrics in _AVIATE_SIGNALS:
+        summary_signals[sig_key] = {}
+        for met in metrics:
+            vals_by_cond = _collect_vals(aviate_data, participants, conditions, sig_key, met)
+            summary_signals[sig_key][met] = {c: _desc(v) for c, v in vals_by_cond.items()}
+
+    summary = {
+        "domain": "aviate",
+        "n_participants": len(participants),
+        "conditions": conditions,
+        "signals": summary_signals,
+    }
+
+    w = 24
+    sections = []
+    for sig_key, sig_label, metrics in _AVIATE_SIGNALS:
+        sec = f"{'─' * 78}\n  {sig_label.upper()}\n{'─' * 78}\n"
+        sec += _cond_header(w, conditions)
+        for met in metrics:
+            label = _AVIATE_METRIC_LABELS.get(met, met)
+            stats_by_cond = summary_signals[sig_key][met]
+            sec += _fmt_row(w, label, stats_by_cond, conditions)
+        sec += "\n"
+        sections.append(sec)
+
+    path = os.path.join(REPORTS_DIR, "aviate_report.txt")
+    _write_report(path, "Aviate Performance  (cross-participant)", summary, sections)
+    print(f"  → {path}")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Navigate report
+# ═══════════════════════════════════════════════════════════════════════════════
+
+_NAVIGATE_CONDITIONS = ["TARS", "TARC", "TARP-S", "TARP-F"]
+
+_NAVIGATE_PHASES = [
+    # (phase_key, phase_label, [(metric_path, metric_label), ...])
+    ("climb", "CLIMB PHASE", [
+        (("xte",          "rmse"),    "XTE RMSE (NM)"),
+        (("xte",          "nmae"),    "XTE nMAE (NM/s)"),
+        (("xte",          "rmse_mae"),"XTE RMSE/MAE ratio"),
+        (("atd_error",    "rmse"),    "ATD RMSE (NM)"),
+        (("atd_error",    "nmae"),    "ATD nMAE (NM/s)"),
+        (("atd_error",    "rmse_mae"),"ATD RMSE/MAE ratio"),
+        (("heading_error","rmse"),    "Heading RMSE (deg)"),
+        (("heading_error","nmae"),    "Heading nMAE (deg/s)"),
+        (("heading_error","rmse_mae"),"Heading RMSE/MAE ratio"),
+        (("window_s",),               "Window duration (s)"),
+    ]),
+    ("leveloff", "LEVEL-OFF PHASE", [
+        (("alt_error", "rmse"),    "Alt RMSE (ft)"),
+        (("alt_error", "nmae"),    "Alt nMAE (ft/s)"),
+        (("alt_error", "rmse_mae"),"Alt RMSE/MAE ratio"),
+        (("window_s",),             "Window duration (s)"),
+    ]),
+]
+
+
+def write_navigate_report(navigate_data, participants):
+    conditions = _NAVIGATE_CONDITIONS
+    summary_phases = {}
+    for phase_key, _, metric_specs in _NAVIGATE_PHASES:
+        summary_phases[phase_key] = {}
+        for path_keys, label in metric_specs:
+            key = "_".join(path_keys)
+            vals_by_cond = _collect_vals(navigate_data, participants, conditions, phase_key, *path_keys)
+            summary_phases[phase_key][key] = {c: _desc(v) for c, v in vals_by_cond.items()}
+
+    summary = {
+        "domain": "navigate",
+        "n_participants": len(participants),
+        "conditions": conditions,
+        "phases": summary_phases,
+    }
+
+    w = 28
+    sections = []
+    for phase_key, phase_label, metric_specs in _NAVIGATE_PHASES:
+        sec = f"{'─' * 78}\n  {phase_label}\n{'─' * 78}\n"
+        sec += _cond_header(w, conditions)
+        for path_keys, label in metric_specs:
+            key = "_".join(path_keys)
+            stats_by_cond = summary_phases[phase_key][key]
+            sec += _fmt_row(w, label, stats_by_cond, conditions)
+        sec += "\n"
+        sections.append(sec)
+
+    path = os.path.join(REPORTS_DIR, "navigate_report.txt")
+    _write_report(path, "Navigate Performance  (cross-participant)", summary, sections)
+    print(f"  → {path}")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Time report
+# ═══════════════════════════════════════════════════════════════════════════════
+
+_TIME_CONDITIONS = ["TARS", "TARC", "TARP-S", "TARP-F"]
+
+_TIME_TOP = [
+    ("scenario_duration_s",   "Scenario duration (s)"),
+    ("failure_to_nominal_s",  "Failure → nominal recovery (s)"),
+]
+
+_TIME_PROCS = [
+    ("crew_briefing",  "Crew Briefing"),
+    ("before_takeoff", "Before Takeoff"),
+    ("lineup_hold",    "Lineup & Hold"),
+    ("takeoff",        "Takeoff"),
+    ("eng_failure",    "ENG Failure during Takeoff"),
+    ("engine_fire",    "ENGINE FIRE"),
+    ("declare_panpan", "Declare PANPAN"),
+    ("after_takeoff",  "After Takeoff"),
+]
+
+
+def write_time_report(time_data, participants):
+    conditions = _TIME_CONDITIONS
+
+    # Top-level durations
+    top_stats = {}
+    for key, label in _TIME_TOP:
+        vals_by_cond = _collect_vals(time_data, participants, conditions, key)
+        top_stats[key] = {c: _desc(v) for c, v in vals_by_cond.items()}
+
+    # Per-procedure metrics
+    proc_stats = {}
+    for proc_key, _ in _TIME_PROCS:
+        proc_stats[proc_key] = {}
+        for met in ("n_tasks", "total_s", "mean_task_s"):
+            vals_by_cond = _collect_vals(time_data, participants, conditions, proc_key, met)
+            proc_stats[proc_key][met] = {c: _desc(v) for c, v in vals_by_cond.items()}
+
+    summary = {
+        "domain": "time",
+        "n_participants": len(participants),
+        "conditions": conditions,
+        "top_level": top_stats,
+        "procedures": proc_stats,
+    }
+
+    w = 36
+    sections = []
+
+    # Section 1 — top-level
+    sec1 = f"{'─' * 78}\n  SCENARIO-LEVEL DURATIONS\n{'─' * 78}\n"
+    sec1 += _cond_header(w, conditions)
+    for key, label in _TIME_TOP:
+        sec1 += _fmt_row(w, label, top_stats[key], conditions)
+    sec1 += "\n"
+    sections.append(sec1)
+
+    # Section 2 — per-procedure
+    sec2 = f"{'─' * 78}\n  PER-PROCEDURE TIMING\n{'─' * 78}\n"
+    for proc_key, proc_label in _TIME_PROCS:
+        sec2 += f"\n  [{proc_label}]\n"
+        sec2 += _cond_header(w, conditions)
+        for met, met_label in [("n_tasks", "n tasks"), ("total_s", "Total (s)"), ("mean_task_s", "Mean task (s)")]:
+            sec2 += _fmt_row(w, met_label, proc_stats[proc_key][met], conditions)
+    sec2 += "\n"
+    sections.append(sec2)
+
+    path = os.path.join(REPORTS_DIR, "time_report.txt")
+    _write_report(path, "Time Performance  (cross-participant)", summary, sections)
+    print(f"  → {path}")
+
+
+def write_all_perf_reports(aviate_data, av_pids, navigate_data, nav_pids, time_data, time_pids):
+    os.makedirs(REPORTS_DIR, exist_ok=True)
+    print(f"\n  Generating performance reports → {REPORTS_DIR}/\n")
+    if av_pids:
+        write_aviate_report(aviate_data, av_pids)
+    if nav_pids:
+        write_navigate_report(navigate_data, nav_pids)
+    if time_pids:
+        write_time_report(time_data, time_pids)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -162,6 +441,11 @@ def _confirm_run(participants, missing_map, output_plots):
         path = os.path.join(PLOTS_DIR, name)
         tag  = "[overwrite]" if os.path.exists(path) else "[new     ]"
         print(f"  {tag}  {name}")
+    print(f"\nCross-participant reports that will be written/overwritten ({len(_ALL_REPORTS)}):")
+    for name in _ALL_REPORTS:
+        path = os.path.join(REPORTS_DIR, name)
+        tag  = "[overwrite]" if os.path.exists(path) else "[new     ]"
+        print(f"  {tag}  compare_performance/{name}")
     print()
     try:
         ans = input("Continue? [Y/n]: ").strip().lower()
@@ -266,6 +550,9 @@ def main():
     import matplotlib.pyplot as plt
     n_saved = sum(1 for f in figs if f is not None)
     print(f"\nDone — {n_saved} figure(s) saved to {PLOTS_DIR}/")
+
+    write_all_perf_reports(aviate_data, av_pids, navigate_data, nav_pids, time_data, time_pids)
+
     plt.show()
 
 

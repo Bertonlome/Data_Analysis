@@ -71,28 +71,32 @@ def main():
         print("No participant folders found.")
         return
 
-    # ── Resolve participant from CLI arg or interactive prompt ────────────────
+    sep = "=" * 78
+
+    # ── Resolve participant(s) from CLI args or interactive prompt ────────────
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("participant", nargs="?", default=None)
+    parser.add_argument("participant", nargs="*", default=[])
     args, _ = parser.parse_known_args()
 
-    if args.participant is not None:
-        raw = args.participant.strip()
+    def resolve_id(raw):
+        """Return a validated participant ID from a raw CLI token."""
+        # Strip any leading path (e.g. HITLS/P02 → P02)
+        raw = os.path.basename(raw.rstrip("/\\")).strip()
         if raw.isdigit():
             idx = int(raw) - 1
             if not (0 <= idx < len(participants)):
                 print(f"Invalid participant number: {raw}")
                 sys.exit(1)
-            participant_id    = participants[idx]
-            participant_input = raw
-        else:
-            participant_id = raw.upper()
-            if participant_id not in participants:
-                print(f"Participant '{participant_id}' not found.")
-                sys.exit(1)
-            participant_input = participant_id
+            return participants[idx], raw
+        pid = raw.upper()
+        if pid not in participants:
+            print(f"Participant '{pid}' not found.")
+            sys.exit(1)
+        return pid, pid
+
+    if args.participant:
+        selected = [resolve_id(a) for a in args.participant]
     else:
-        sep = "=" * 78
         print(f"\n{sep}")
         print("  HITLS — Questionnaire Analysis Suite")
         print(f"{sep}")
@@ -105,33 +109,32 @@ def main():
             if choice.isdigit():
                 idx = int(choice) - 1
                 if 0 <= idx < len(participants):
-                    participant_id    = participants[idx]
-                    participant_input = choice
+                    selected = [(participants[idx], choice)]
                     break
             elif choice.upper() in participants:
-                participant_id    = choice.upper()
-                participant_input = choice.upper()
+                selected = [(choice.upper(), choice.upper())]
                 break
             print(f"  Invalid choice.")
 
-    print(f"\n{sep}")
-    print(f"  Running all questionnaire scripts for {participant_id}")
-    print(f"{sep}")
+    for participant_id, participant_input in selected:
+        print(f"\n{sep}")
+        print(f"  Running all questionnaire scripts for {participant_id}")
+        print(f"{sep}")
 
-    for label, filename in SCRIPTS:
-        print(f"\n{'─'*78}")
-        print(f"  ▶  {label}")
-        print(f"{'─'*78}")
-        try:
-            mod = load_module(label, filename)
-            run_with_participant(mod, participant_input)
-        except Exception as exc:
-            print(f"  ✗  {label} failed: {exc}")
+        for label, filename in SCRIPTS:
+            print(f"\n{'─'*78}")
+            print(f"  ▶  {label}")
+            print(f"{'─'*78}")
+            try:
+                mod = load_module(label, filename)
+                run_with_participant(mod, participant_input)
+            except Exception as exc:
+                print(f"  ✗  {label} failed: {exc}")
 
-    print(f"\n{sep}")
-    print(f"  All scripts completed for {participant_id}.")
-    print(f"  Reports saved to: HITLS/{participant_id}/cleaned/")
-    print(f"{sep}\n")
+        print(f"\n{sep}")
+        print(f"  All scripts completed for {participant_id}.")
+        print(f"  Reports saved to: HITLS/{participant_id}/cleaned/")
+        print(f"{sep}\n")
 
 
 if __name__ == "__main__":

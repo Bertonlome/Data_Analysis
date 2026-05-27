@@ -83,7 +83,7 @@ CONDITIONS = ["TARS", "TARP-S", "TARP-F"]
 # ── Participants with error scenarios (P05 onward) ─────────────────────────────
 _PARTICIPANTS_WITH_ERRORS = [
     "P05", "P06", "P07", "P08", "P09", "P10",
-    "P11", "P12", "P13", "P16", "P17", "P18"
+    "P11", "P12", "P13", "P15","P16", "P17", "P18", "P20"
 ]
 
 # ── Skip patterns ──────────────────────────────────────────────────────────────
@@ -1096,6 +1096,203 @@ def print_summary_table(all_results: dict):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+#  Cross-participant report  (same JSON + human-readable format as other reports)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+_ERROR_REPORT_PATH = os.path.join(
+    HITLS_DIR, "compare_performance", "error_report.txt"
+)
+
+_QUAD_KEYS = [
+    (True,  True,  "corrected_and_crosschecked"),
+    (True,  False, "corrected_no_eye"),
+    (False, True,  "seen_not_corrected"),
+    (False, False, "missed"),
+]
+_ERROR_TYPES = ["alt", "flaps", "winds"]
+
+
+def _quad_counts(scenario_list):
+    """Return {key: count, 'total_coded': n, 'total': n} for a list of scenario dicts."""
+    counts = {k: 0 for _, _, k in _QUAD_KEYS}
+    total_coded = 0
+    for r in scenario_list:
+        qs = _quad_state(r)
+        if qs is None:
+            continue
+        total_coded += 1
+        for c, cc, key in _QUAD_KEYS:
+            if qs == (c, cc):
+                counts[key] += 1
+    counts["total_coded"] = total_coded
+    counts["total"] = len(scenario_list)
+    return counts
+
+
+def _pct(n, total):
+    return round(100.0 * n / total, 1) if total else 0.0
+
+
+def write_error_report(all_results: dict):
+    """
+    Write cross-participant error detection & correction report to
+    compare_performance/error_report.txt.
+
+    all_results : {pid: [scenario_result_dict, ...]}
+    """
+    from collections import defaultdict
+
+    participants = sorted(all_results.keys())
+
+    # ── Aggregate by error type ───────────────────────────────────────────────
+    by_et: dict[str, list] = {et: [] for et in _ERROR_TYPES}
+    for pid in participants:
+        for r in all_results[pid]:
+            et = r["error_type"]
+            if et in by_et:
+                by_et[et].append(r)
+
+    by_et_counts = {et: _quad_counts(by_et[et]) for et in _ERROR_TYPES}
+
+    # ── Aggregate by condition ────────────────────────────────────────────────
+    by_cond: dict[str, list] = {c: [] for c in CONDITIONS}
+    for pid in participants:
+        for r in all_results[pid]:
+            cond = r.get("condition")
+            if cond in by_cond:
+                by_cond[cond].append(r)
+
+    by_cond_counts = {c: _quad_counts(by_cond[c]) for c in CONDITIONS}
+
+    # ── Per-participant summary ────────────────────────────────────────────────
+    per_pid = {}
+    for pid in participants:
+        per_pid[pid] = []
+        for r in all_results[pid]:
+            qs = _quad_state(r)
+            per_pid[pid].append({
+                "scenario":    r["scenario"],
+                "condition":   r["condition"],
+                "error_type":  r["error_type"],
+                "corrected":   (qs[0] if qs is not None else None),
+                "crosschecked": (qs[1] if qs is not None else None),
+                "notes":       r.get("notes") or [],
+            })
+
+    # ── Build JSON summary ────────────────────────────────────────────────────
+    def _counts_json(counts):
+        t = counts["total_coded"]
+        return {k: {"n": counts[k], "pct": _pct(counts[k], t)}
+                for _, _, k in _QUAD_KEYS} | {
+            "total_coded": t,
+            "total":       counts["total"],
+        }
+
+    summary = {
+        "domain":          "error_detection_correction",
+        "n_participants":  len(participants),
+        "participants":    participants,
+        "conditions":      list(CONDITIONS),
+        "error_types":     _ERROR_TYPES,
+        "by_error_type":   {et: _counts_json(by_et_counts[et])  for et in _ERROR_TYPES},
+        "by_condition":    {c:  _counts_json(by_cond_counts[c]) for c in CONDITIONS},
+        "per_participant": per_pid,
+    }
+
+    # ── Human-readable sections ───────────────────────────────────────────────
+    W  = 78
+    S  = "─" * W
+    yn = lambda v: ("YES" if v is True else ("NO" if v is False else "N/A"))
+
+    quad_display = [
+        ("corrected_and_crosschecked", "Corrected + Crosschecked"),
+        ("corrected_no_eye",           "Corrected, no eye confirm"),
+        ("seen_not_corrected",         "Seen but not corrected"),
+        ("missed",                     "Missed (neither)"),
+    ]
+
+    sec1 = f"{S}\n  OUTCOME BY ERROR TYPE\n{S}\n"
+    col_w = 12
+    et_labels = {"alt": "Alt error", "flaps": "Flaps error", "winds": "Winds entry"}
+    hdr = f"  {'Outcome':<32}" + "".join(f"  {et_labels[et]:^{col_w}}" for et in _ERROR_TYPES)
+    sec1 += hdr + "\n  " + "─" * (W - 2) + "\n"
+    for key, disp in quad_display:
+        row = f"  {disp:<32}"
+        for et in _ERROR_TYPES:
+            c = by_et_counts[et]
+            t = c["total_coded"]
+            n = c[key]
+            cell = f"{n} ({_pct(n,t):.0f}%)" if t else "—"
+            row += f"  {cell:^{col_w}}"
+        sec1 += row + "\n"
+    sec1 += "  " + "─" * (W - 2) + "\n"
+    row = f"  {'Total coded':<32}"
+    for et in _ERROR_TYPES:
+        c = by_et_counts[et]
+        row += f"  {c['total_coded']:^{col_w}}"
+    sec1 += row + "\n\n"
+
+    # Section 2 — by condition
+    sec2 = f"{S}\n  OUTCOME BY CONDITION\n{S}\n"
+    hdr2 = f"  {'Outcome':<32}" + "".join(f"  {c:^{col_w}}" for c in CONDITIONS)
+    sec2 += hdr2 + "\n  " + "─" * (W - 2) + "\n"
+    for key, disp in quad_display:
+        row = f"  {disp:<32}"
+        for cond in CONDITIONS:
+            c = by_cond_counts[cond]
+            t = c["total_coded"]
+            n = c[key]
+            cell = f"{n} ({_pct(n,t):.0f}%)" if t else "—"
+            row += f"  {cell:^{col_w}}"
+        sec2 += row + "\n"
+    sec2 += "  " + "─" * (W - 2) + "\n"
+    row = f"  {'Total coded':<32}"
+    for cond in CONDITIONS:
+        c = by_cond_counts[cond]
+        row += f"  {c['total_coded']:^{col_w}}"
+    sec2 += row + "\n\n"
+
+    # Section 3 — per-participant table
+    sec3 = f"{S}\n  PER-PARTICIPANT BREAKDOWN\n{S}\n"
+    sec3 += (f"  {'PID':<6}  {'Condition':<8}  {'Error':<6}  "
+             f"{'Corrected':<10}  {'Crosschecked':<14}  Notes\n")
+    sec3 += "  " + "─" * (W - 2) + "\n"
+    for pid in participants:
+        for entry in per_pid[pid]:
+            note_flag = "!" if entry["notes"] else ""
+            sec3 += (f"  {pid:<6}  {entry['condition']:<8}  {entry['error_type']:<6}  "
+                     f"{yn(entry['corrected']):<10}  {yn(entry['crosschecked']):<14}  {note_flag}\n")
+    sec3 += "\n"
+
+    # Section 4 — notes
+    all_notes = [(pid, e["scenario"], n)
+                 for pid in participants
+                 for e in per_pid[pid]
+                 for n in e["notes"]]
+    if all_notes:
+        sec4 = f"{S}\n  NOTES & WARNINGS\n{S}\n"
+        for pid, scen, note in all_notes:
+            sec4 += f"  [{pid}  {scen}]  {note}\n"
+        sec4 += "\n"
+    else:
+        sec4 = ""
+
+    # ── Write file ────────────────────────────────────────────────────────────
+    os.makedirs(os.path.dirname(_ERROR_REPORT_PATH), exist_ok=True)
+    with open(_ERROR_REPORT_PATH, "w", encoding="utf-8") as fh:
+        fh.write("--- MACHINE-READABLE SUMMARY (JSON) ---\n")
+        fh.write(json.dumps(summary, indent=2, ensure_ascii=False))
+        fh.write("\n--- END SUMMARY ---\n")
+        fh.write("=" * W + "\n")
+        fh.write("  Error Detection & Correction  (cross-participant)\n")
+        fh.write("=" * W + "\n\n")
+        for sec in [sec1, sec2, sec3, sec4]:
+            fh.write(sec)
+
+    print(f"  Report → {_ERROR_REPORT_PATH}")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 #  Entry point
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -1159,6 +1356,8 @@ def main():
         plot_quad_pies(all_results)
         plot_cond_pies(all_results)
         plot_sankey(all_results)
+        print("\nGenerating cross-participant report …")
+        write_error_report(all_results)
         plt.show()
 
 

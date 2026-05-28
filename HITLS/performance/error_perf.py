@@ -283,13 +283,19 @@ def analyse_scenario(filepath: str, error_type: str, condition: str) -> dict:
         result["notes"].append("ERROR: file too short")
         return result
 
+    # Detect timestamp column unit: old format = Unix seconds, new format = relative µs
+    ts_scale = 1.0
+    header_parts = lines[0].rstrip("\r\n").split(";", 2)
+    if len(header_parts) > 1 and header_parts[1] == "relative_time_us":
+        ts_scale = 1e-6
+
     # t0 = first valid timestamp in file
     t0 = None
     for line in lines[1:]:
         p = line.rstrip("\r\n").split(";", 6)
         if len(p) >= 7:
             try:
-                t0 = float(p[1])
+                t0 = float(p[1]) * ts_scale
                 break
             except ValueError:
                 pass
@@ -320,7 +326,7 @@ def analyse_scenario(filepath: str, error_type: str, condition: str) -> dict:
         if len(p) < 7:
             continue
         try:
-            t = float(p[1])
+            t = float(p[1]) * ts_scale
         except ValueError:
             continue
         t_rel  = t - t0
@@ -506,6 +512,10 @@ def build_json_summary(pid: str, scenarios: list) -> dict:
     """Build the JSON block written at the top of the report."""
     out = {"participant": pid, "scenarios": []}
     for s in scenarios:
+        # Pre-built entries (re-injected manual_entry dicts) pass straight through
+        if "file" in s and "scenario" not in s:
+            out["scenarios"].append(s)
+            continue
         entry = {
             "file":               s["scenario"],
             "condition":          s["condition"],
@@ -564,6 +574,16 @@ def build_text_report(pid: str, scenarios: list) -> str:
     lines.append("")
 
     for s in scenarios:
+        # Pre-built manual_entry dicts lack internal parse keys — render a brief note
+        if "file" in s and "scenario" not in s:
+            etype = s.get("error_type", "?")
+            lines.append(SEP)
+            lines.append(f"  SCENARIO  : {s.get('file', 'manual_entry')}")
+            lines.append(f"  Condition : {s.get('condition', '?')}    Error type : {etype.upper()}")
+            lines.append(f"  [MANUALLY ADDED ENTRY — values stored in JSON summary above]")
+            lines.append(SEP)
+            lines.append("")
+            continue
         etype = s["error_type"]
         lines.append(SEP)
         lines.append(f"  SCENARIO  : {s['scenario']}")
@@ -654,8 +674,36 @@ def analyse_participant(pid: str) -> list:
             parts.append(f"({len(r['notes'])} note(s))")
         print("  ".join(parts) if parts else "ok")
 
-    # ── Write report ─────────────────────────────────────────────────────────
+    # ── Restore manually-entered values from existing report ─────────────────
+    # Winds detected/crosschecked and any "manual_entry" scenarios added by hand
+    # are preserved across re-runs so they are not overwritten.
     rpt_path = report_path(pid)
+    if os.path.exists(rpt_path):
+        try:
+            _txt = open(rpt_path, encoding="utf-8").read()
+            _start = _txt.index("{")
+            _end   = _txt.index("--- END SUMMARY ---")
+            _old   = json.loads(_txt[_start:_end].strip())
+            _old_by_file = {s["file"]: s for s in _old.get("scenarios", [])}
+
+            # Restore winds values for matched scenarios
+            for r in results:
+                _prev = _old_by_file.get(r.get("scenario") or r.get("file"))
+                if _prev and r["error_type"] == "winds":
+                    if _prev.get("winds_detected") is not None:
+                        r["winds_detected"] = _prev["winds_detected"]
+                    if _prev.get("winds_crosschecked") is not None:
+                        r["winds_crosschecked"] = _prev["winds_crosschecked"]
+
+            # Re-inject any scenarios added manually (file == "manual_entry")
+            parsed_keys = {r.get("scenario") or r.get("file") for r in results}
+            for _s in _old.get("scenarios", []):
+                if _s.get("file") == "manual_entry" and _s.get("file") not in parsed_keys:
+                    results.append(_s)
+        except Exception:
+            pass  # on any parse error, proceed with freshly parsed data
+
+    # ── Write report ─────────────────────────────────────────────────────────
     os.makedirs(os.path.dirname(rpt_path), exist_ok=True)
 
     summary = build_json_summary(pid, results)

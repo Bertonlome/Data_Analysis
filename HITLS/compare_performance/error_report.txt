@@ -33,22 +33,22 @@
     "alt": {
       "corrected_and_crosschecked": {
         "n": 5,
-        "pct": 35.7
+        "pct": 33.3
       },
       "corrected_no_eye": {
         "n": 2,
-        "pct": 14.3
+        "pct": 13.3
       },
       "seen_not_corrected": {
         "n": 3,
-        "pct": 21.4
+        "pct": 20.0
       },
       "missed": {
-        "n": 4,
-        "pct": 28.6
+        "n": 5,
+        "pct": 33.3
       },
-      "total_coded": 14,
-      "total": 14
+      "total_coded": 15,
+      "total": 15
     },
     "flaps": {
       "corrected_and_crosschecked": {
@@ -72,84 +72,84 @@
     },
     "winds": {
       "corrected_and_crosschecked": {
-        "n": 0,
-        "pct": 0.0
+        "n": 4,
+        "pct": 26.7
       },
       "corrected_no_eye": {
-        "n": 0,
-        "pct": 0.0
+        "n": 1,
+        "pct": 6.7
       },
       "seen_not_corrected": {
-        "n": 0,
-        "pct": 0.0
+        "n": 1,
+        "pct": 6.7
       },
       "missed": {
-        "n": 0,
-        "pct": 0.0
+        "n": 9,
+        "pct": 60.0
       },
-      "total_coded": 0,
+      "total_coded": 15,
       "total": 15
     }
   },
   "by_condition": {
     "TARS": {
       "corrected_and_crosschecked": {
-        "n": 4,
-        "pct": 44.4
+        "n": 7,
+        "pct": 46.7
       },
       "corrected_no_eye": {
         "n": 4,
-        "pct": 44.4
+        "pct": 26.7
       },
       "seen_not_corrected": {
         "n": 0,
         "pct": 0.0
       },
       "missed": {
-        "n": 1,
-        "pct": 11.1
+        "n": 4,
+        "pct": 26.7
       },
-      "total_coded": 9,
-      "total": 14
+      "total_coded": 15,
+      "total": 15
     },
     "TARP-S": {
       "corrected_and_crosschecked": {
         "n": 3,
-        "pct": 30.0
+        "pct": 20.0
       },
       "corrected_no_eye": {
         "n": 2,
-        "pct": 20.0
+        "pct": 13.3
       },
       "seen_not_corrected": {
-        "n": 4,
-        "pct": 40.0
+        "n": 5,
+        "pct": 33.3
       },
       "missed": {
-        "n": 1,
-        "pct": 10.0
+        "n": 5,
+        "pct": 33.3
       },
-      "total_coded": 10,
+      "total_coded": 15,
       "total": 15
     },
     "TARP-F": {
       "corrected_and_crosschecked": {
-        "n": 0,
-        "pct": 0.0
+        "n": 1,
+        "pct": 7.1
       },
       "corrected_no_eye": {
-        "n": 4,
-        "pct": 44.4
+        "n": 5,
+        "pct": 35.7
       },
       "seen_not_corrected": {
         "n": 0,
         "pct": 0.0
       },
       "missed": {
-        "n": 5,
-        "pct": 55.6
+        "n": 8,
+        "pct": 57.1
       },
-      "total_coded": 9,
+      "total_coded": 14,
       "total": 15
     }
   },
@@ -159,8 +159,8 @@
         "scenario": "scenario_04_TARP-F_24L_winds_ingescape.csv",
         "condition": "TARP-F",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": false,
         "notes": []
       },
       {
@@ -185,8 +185,8 @@
         "scenario": "scenario_09_TARP-S_06R_winds_ingescape.csv",
         "condition": "TARP-S",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": true,
         "notes": []
       },
       {
@@ -213,8 +213,8 @@
         "scenario": "scenario_13_TARS_24L_winds_ingescape.csv",
         "condition": "TARS",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": true,
+        "crosschecked": true,
         "notes": []
       },
       {
@@ -239,8 +239,8 @@
         "scenario": "scenario_01_TARP-S_06R_winds_ingescape.csv",
         "condition": "TARP-S",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": false,
         "notes": []
       },
       {
@@ -281,8 +281,8 @@
         "scenario": "scenario_20_TARP-F_24L_winds_ingescape.csv",
         "condition": "TARP-F",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": true,
+        "crosschecked": true,
         "notes": []
       }
     ],
@@ -291,8 +291,8 @@
         "scenario": "scenario_12_TARS_24R_winds_ingescape.csv",
         "condition": "TARS",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": true,
+        "crosschecked": true,
         "notes": []
       },
       {
@@ -317,8 +317,8 @@
         "scenario": "scenario_11_TARP-F_24L_winds_ingescape.csv",
         "condition": "TARP-F",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": true,
+        "crosschecked": false,
         "notes": []
       },
       {
@@ -343,8 +343,8 @@
         "scenario": "scenario_13_TARP-S_06R_winds_ingescape.csv",
         "condition": "TARP-S",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": false,
         "notes": []
       },
       {
@@ -369,8 +369,8 @@
         "scenario": "scenario_16_TARS_24L_winds_ingescape.csv",
         "condition": "TARS",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": false,
         "notes": []
       },
       {
@@ -411,8 +411,8 @@
         "scenario": "scenario_08_TARS_24L_winds_ingescape.csv",
         "condition": "TARS",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": true,
+        "crosschecked": true,
         "notes": []
       }
     ],
@@ -429,8 +429,16 @@
         "scenario": "scenario_19_TARP-F_24L_winds_ingescape.csv",
         "condition": "TARP-F",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": false,
+        "notes": []
+      },
+      {
+        "scenario": "manual_entry",
+        "condition": "TARS",
+        "error_type": "alt",
+        "corrected": false,
+        "crosschecked": false,
         "notes": []
       }
     ],
@@ -439,8 +447,8 @@
         "scenario": "scenario_09_TARS_24R_winds_ingescape.csv",
         "condition": "TARS",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": false,
         "notes": []
       },
       {
@@ -465,8 +473,8 @@
         "scenario": "scenario_08_TARP-F_24L_winds_ingescape.csv",
         "condition": "TARP-F",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": false,
         "notes": []
       },
       {
@@ -491,8 +499,8 @@
         "scenario": "scenario_08_TARP-S_06R_winds_ingescape.csv",
         "condition": "TARP-S",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": false,
         "notes": []
       },
       {
@@ -525,8 +533,8 @@
         "scenario": "scenario_10_TARP-S_winds_06R_ingescape.csv",
         "condition": "TARP-S",
         "error_type": "winds",
-        "corrected": null,
-        "crosschecked": null,
+        "corrected": false,
+        "crosschecked": false,
         "notes": []
       },
       {
@@ -550,77 +558,120 @@
 ──────────────────────────────────────────────────────────────────────────────
   Outcome                            Alt error    Flaps error   Winds entry 
   ────────────────────────────────────────────────────────────────────────────
-  Corrected + Crosschecked            5 (36%)       2 (14%)          —      
-  Corrected, no eye confirm           2 (14%)       8 (57%)          —      
-  Seen but not corrected              3 (21%)        1 (7%)          —      
-  Missed (neither)                    4 (29%)       3 (21%)          —      
+  Corrected + Crosschecked            5 (33%)       2 (14%)       4 (27%)   
+  Corrected, no eye confirm           2 (13%)       8 (57%)        1 (7%)   
+  Seen but not corrected              3 (20%)        1 (7%)        1 (7%)   
+  Missed (neither)                    5 (33%)       3 (21%)       9 (60%)   
   ────────────────────────────────────────────────────────────────────────────
-  Total coded                            14            14            0      
+  Total coded                            15            14            15     
 
 ──────────────────────────────────────────────────────────────────────────────
   OUTCOME BY CONDITION
 ──────────────────────────────────────────────────────────────────────────────
   Outcome                               TARS         TARP-S        TARP-F   
   ────────────────────────────────────────────────────────────────────────────
-  Corrected + Crosschecked            4 (44%)       3 (30%)        0 (0%)   
-  Corrected, no eye confirm           4 (44%)       2 (20%)       4 (44%)   
-  Seen but not corrected               0 (0%)       4 (40%)        0 (0%)   
-  Missed (neither)                    1 (11%)       1 (10%)       5 (56%)   
+  Corrected + Crosschecked            7 (47%)       3 (20%)        1 (7%)   
+  Corrected, no eye confirm           4 (27%)       2 (13%)       5 (36%)   
+  Seen but not corrected               0 (0%)       5 (33%)        0 (0%)   
+  Missed (neither)                    4 (27%)       5 (33%)       8 (57%)   
   ────────────────────────────────────────────────────────────────────────────
-  Total coded                            9             10            9      
+  Total coded                            15            15            14     
 
 ──────────────────────────────────────────────────────────────────────────────
   PER-PARTICIPANT BREAKDOWN
 ──────────────────────────────────────────────────────────────────────────────
   PID     Condition  Error   Corrected   Crosschecked    Notes
   ────────────────────────────────────────────────────────────────────────────
-  P05     TARP-F    winds   N/A         N/A             
+  P05     TARP-F    winds   NO          NO              
   P05     TARP-S    alt     NO          YES             
   P05     TARS      flaps   YES         NO              
-  P06     TARP-S    winds   N/A         N/A             
+  P06     TARP-S    winds   NO          YES             
   P06     TARS      alt     YES         YES             
   P06     TARP-F    flaps   N/A         N/A             !
-  P07     TARS      winds   N/A         N/A             
+  P07     TARS      winds   YES         YES             
   P07     TARP-F    flaps   NO          NO              
   P07     TARP-S    alt     YES         YES             
-  P08     TARP-S    winds   N/A         N/A             
+  P08     TARP-S    winds   NO          NO              
   P08     TARP-F    alt     YES         NO              
   P08     TARS      flaps   YES         NO              
   P09     TARP-S    flaps   YES         YES             
   P09     TARS      alt     YES         YES             
-  P09     TARP-F    winds   N/A         N/A             
-  P10     TARS      winds   N/A         N/A             
+  P09     TARP-F    winds   YES         YES             
+  P10     TARS      winds   YES         YES             
   P10     TARP-F    alt     YES         NO              
   P10     TARP-S    flaps   YES         NO              
-  P11     TARP-F    winds   N/A         N/A             
+  P11     TARP-F    winds   YES         NO              
   P11     TARP-S    alt     NO          YES             
   P11     TARS      flaps   YES         NO              
-  P12     TARP-S    winds   N/A         N/A             
+  P12     TARP-S    winds   NO          NO              
   P12     TARS      alt     YES         YES             
   P12     TARP-F    flaps   YES         NO              
-  P13     TARS      winds   N/A         N/A             
+  P13     TARS      winds   NO          NO              
   P13     TARP-F    flaps   YES         NO              
   P13     TARP-S    alt     NO          YES             
   P14     TARP-F    alt     NO          NO              
   P14     TARP-S    flaps   YES         NO              
-  P14     TARS      winds   N/A         N/A             
+  P14     TARS      winds   YES         YES             
   P15     TARP-S    flaps   NO          YES             
-  P15     TARP-F    winds   N/A         N/A             
-  P16     TARS      winds   N/A         N/A             
+  P15     TARP-F    winds   NO          NO              
+  P15     TARS      alt     NO          NO              
+  P16     TARS      winds   NO          NO              
   P16     TARP-F    alt     NO          NO              
   P16     TARP-S    flaps   NO          NO              
-  P17     TARP-F    winds   N/A         N/A             
+  P17     TARP-F    winds   NO          NO              
   P17     TARP-S    alt     YES         YES             
   P17     TARS      flaps   YES         NO              
-  P18     TARP-S    winds   N/A         N/A             
+  P18     TARP-S    winds   NO          NO              
   P18     TARS      alt     NO          NO              
   P18     TARP-F    flaps   NO          NO              
   P20     TARP-F    alt     NO          NO              
-  P20     TARP-S    winds   N/A         N/A             
+  P20     TARP-S    winds   NO          NO              
   P20     TARS      flaps   YES         YES             
 
 ──────────────────────────────────────────────────────────────────────────────
   NOTES & WARNINGS
 ──────────────────────────────────────────────────────────────────────────────
   [P06  scenario_15_TARP-F_24R_flaps_ingescape.csv]  WARNING: 'Takeoff clearance' task not found — eye crosscheck cannot be assessed
+
+
+══════════════════════════════════════════════════════════════════════════════
+  STATISTICAL ANALYSIS
+  Corrected (yes/no) as the binary outcome
+══════════════════════════════════════════════════════════════════════════════
+
+  ── Overall  (within-subjects, n=14) ──
+  Design: one corrected outcome per participant × condition;
+  error type is counterbalanced across conditions.
+
+  Cochran's Q(2) = 4.667,  p = 0.0970
+
+  TARS        corrected: 10/14 (71%)
+  TARP-S      corrected: 5/14 (36%)
+  TARP-F      corrected: 6/14 (43%)
+
+  McNemar exact pairwise (Holm-corrected):
+  [ ]  TARP-S − TARS        p=0.0625  p_Holm=0.1875  ns  (discordant: 5↔0, n=5)
+  [ ]  TARP-F − TARS        p=0.2188  p_Holm=0.4375  ns  (discordant: 5↔1, n=6)
+  [ ]  TARP-F − TARP-S      p=1.0000  p_Holm=1.0000  ns  (discordant: 3↔4, n=7)
+
+  ──────────────────────────────────────────────────────────────────────────────
+  Per error type  (between-subjects, Fisher's exact)
+  ≈5 different participants per condition per error type;
+  pairwise comparisons with Holm correction.
+  ──────────────────────────────────────────────────────────────────────────────
+
+  ALT  (TARS: 3/5  TARP-S: 2/5  TARP-F: 2/5)
+  [ ]  TARP-S − TARS        p=1.0000  p_Holm=1.0000  ns
+  [ ]  TARP-F − TARS        p=1.0000  p_Holm=1.0000  ns
+  [ ]  TARP-F − TARP-S      p=1.0000  p_Holm=1.0000  ns
+
+  FLAPS  (TARS: 5/5  TARP-S: 3/5  TARP-F: 2/4)
+  [ ]  TARP-S − TARS        p=0.4444  p_Holm=0.8889  ns
+  [ ]  TARP-F − TARS        p=0.1667  p_Holm=0.5000  ns
+  [ ]  TARP-F − TARP-S      p=1.0000  p_Holm=1.0000  ns
+
+  WINDS  (TARS: 3/5  TARP-S: 0/5  TARP-F: 2/5)
+  [ ]  TARP-S − TARS        p=0.1667  p_Holm=0.5000  ns
+  [ ]  TARP-F − TARS        p=1.0000  p_Holm=1.0000  ns
+  [ ]  TARP-F − TARP-S      p=0.4444  p_Holm=0.8889  ns
 

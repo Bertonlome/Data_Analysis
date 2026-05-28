@@ -896,9 +896,9 @@ def plot_cond_pies(all_results: dict):
 
 def plot_sankey(all_results: dict):
     """
-    Sankey diagram: error type \u2192 condition \u2192 seen (crosschecked) \u2192 corrected.
+    Sankey diagram: error type → condition → corrected.
 
-    Only flows with complete data (all 4 stages known) are drawn, so the
+    Only flows with complete data (all stages known) are drawn, so the
     diagram stays balanced.  Winds scenarios appear automatically once
     winds_detected / winds_crosschecked are coded.
 
@@ -908,34 +908,30 @@ def plot_sankey(all_results: dict):
     try:
         import plotly.graph_objects as go
     except ImportError:
-        print("  [skip] plotly not installed \u2014 run: pip install plotly kaleido")
+        print("  [skip] plotly not installed — run: pip install plotly kaleido")
         return None
 
     # ── Node definitions (stage order matters for x-placement) ──────────────
     #   0-2  : error types
     #   3-5  : conditions
-    #   6-7  : crosschecked (seen)
-    #   8-9  : corrected
+    #   6-7  : corrected
     node_labels = [
         "Alt error", "Flaps error", "Winds entry",   # 0 1 2
         "TARS", "TARP-S", "TARP-F",                  # 3 4 5
-        "Seen (eye)", "Not seen",                     # 6 7
-        "Corrected", "Not corrected",                 # 8 9
+        "Corrected", "Not corrected",                 # 6 7
     ]
     node_colors = [
         "#5B9BD5", "#ED7D31", "#A9D18E",   # error types
         "#4472C4", "#70AD47", "#C00000",   # conditions
-        "#2E7D32", "#B71C1C",              # seen / not seen
         "#1a7a4a", "#8B0000",              # corrected / not corrected
     ]
 
     ET_IDX   = {"alt": 0, "flaps": 1, "winds": 2}
     COND_IDX = {"TARS": 3, "TARP-S": 4, "TARP-F": 5}
-    CC_IDX   = {True: 6, False: 7}   # crosschecked \u2192 seen node
-    CR_IDX   = {True: 8, False: 9}   # corrected \u2192 outcome node
+    CR_IDX   = {True: 6, False: 7}   # corrected → outcome node
 
     # ── Build flows ──────────────────────────────────────────────────────────
-    # Only include a scenario when the full quad-state is known (all 4 stages).
+    # Only include a scenario when the full quad-state is known.
     from collections import defaultdict
     flows = defaultdict(int)
 
@@ -945,7 +941,7 @@ def plot_sankey(all_results: dict):
             cond = r["condition"]
             qs   = _quad_state(r)
             if qs is None:
-                continue   # not yet coded (winds) or N/A \u2014 skip to keep diagram balanced
+                continue   # not yet coded (winds) or N/A — skip to keep diagram balanced
 
             et_node   = ET_IDX.get(et)
             cond_node = COND_IDX.get(cond)
@@ -953,12 +949,10 @@ def plot_sankey(all_results: dict):
                 continue
 
             corrected, crosschecked = qs
-            cc_node = CC_IDX[crosschecked]
             cr_node = CR_IDX[corrected]
 
             flows[(et_node,   cond_node)] += 1
-            flows[(cond_node, cc_node)]   += 1
-            flows[(cc_node,   cr_node)]   += 1
+            flows[(cond_node, cr_node)]   += 1
 
     if not flows:
         print("  [skip] no complete-data flows for Sankey")
@@ -992,7 +986,7 @@ def plot_sankey(all_results: dict):
         ),
     ))
     fig.update_layout(
-        title_text="Error flow: type \u2192 condition \u2192 seen \u2192 corrected",
+        title_text="Error flow: type → condition → corrected",
         title_font_size=13,
         font_size=11,
         width=960,
@@ -1004,12 +998,12 @@ def plot_sankey(all_results: dict):
 
     html_out = os.path.join(PLOTS_DIR, "error_sankey.html")
     fig.write_html(html_out)
-    print(f"  Saved \u2192 {html_out}")
+    print(f"  Saved → {html_out}")
 
     try:
         png_out = os.path.join(PLOTS_DIR, "error_sankey.png")
         fig.write_image(png_out, scale=2)
-        print(f"  Saved \u2192 {png_out}")
+        print(f"  Saved → {png_out}")
     except Exception as exc:
         print(f"  [note] PNG export skipped ({exc})")
 
@@ -1042,9 +1036,11 @@ def print_summary_table(all_results: dict):
                 corr = _yn(r["flaps_corrected"])
                 cc   = _yn(r["flaps_crosschecked_eye"])
             else:  # winds
-                corr = "MANUAL"
-                cc   = "MANUAL"
-            note_flag = "!" if r["notes"] else ""
+                wd = r.get("winds_detected")
+                wc = r.get("winds_crosschecked")
+                corr = _yn(wd) if wd is not None else "MANUAL"
+                cc   = _yn(wc) if wc is not None else "MANUAL"
+            note_flag = "!" if r.get("notes") else ""
             print(
                 f"  {pid:<8}  {r['condition']:<8}  {etype:<6}  "
                 f"{corr:<10}  {cc:<15}  {note_flag}"
@@ -1181,6 +1177,174 @@ def _pct(n, total):
     return round(100.0 * n / total, 1) if total else 0.0
 
 
+def _sig_stars(p_raw, significant):
+    if not significant:
+        return "ns"
+    if p_raw < 0.001:
+        return "***"
+    if p_raw < 0.01:
+        return "**"
+    if p_raw < 0.05:
+        return "*"
+    return "†"
+
+
+def _build_error_stats(all_results: dict, W: int) -> str:
+    """
+    Return a formatted statistical-analysis section for the error report.
+
+    Overall analysis (within-subjects):
+      Each of the n participants has one binary (corrected) outcome per
+      condition (TARS · TARP-S · TARP-F), with error type counterbalanced.
+      → Cochran's Q omnibus + McNemar exact pairwise + Holm correction.
+
+    Per-error-type (between-subjects):
+      Each error type (alt / flaps / winds) is distributed ≈5 participants
+      per condition.  Participants differ across conditions, so comparisons
+      are between-subjects.
+      → Fisher's exact pairwise + Holm correction.
+    """
+    import numpy as np
+    from scipy.stats import chi2 as _chi2_dist, binom as _binom, fisher_exact
+    from statsmodels.stats.multitest import multipletests
+
+    S  = "─" * W
+    EQ = "═" * W
+    out = f"\n{EQ}\n  STATISTICAL ANALYSIS\n"
+    out += "  Corrected (yes/no) as the binary outcome\n"
+    out += f"{EQ}\n"
+
+    participants = sorted(all_results.keys())
+    cond_list = list(CONDITIONS)
+    k = len(cond_list)
+
+    # ── Build per-participant corrected values ────────────────────────────────
+    matrix = {}          # pid → {cond: bool}
+    et_matrix = {}       # pid → {cond: error_type}
+    for pid in participants:
+        matrix[pid] = {}
+        et_matrix[pid] = {}
+        for r in all_results[pid]:
+            qs = _quad_state(r)
+            if qs is not None:
+                cond = r.get("condition")
+                if cond in cond_list:
+                    matrix[pid][cond]    = qs[0]   # corrected
+                    et_matrix[pid][cond] = r["error_type"]
+
+    complete = [pid for pid in participants
+                if all(c in matrix[pid] for c in cond_list)]
+    n = len(complete)
+
+    # ── SECTION A: Cochran's Q (overall, within-subjects) ────────────────────
+    out += f"\n  ── Overall  (within-subjects, n={n}) ──\n"
+    out += ("  Design: one corrected outcome per participant × condition;\n"
+            "  error type is counterbalanced across conditions.\n\n")
+
+    data_arr = np.array([[int(matrix[pid][c]) for c in cond_list]
+                         for pid in complete])   # shape (n, k)
+    C = data_arr.sum(axis=0)   # successes per condition
+    R = data_arr.sum(axis=1)   # successes per participant
+
+    num = (k - 1) * (k * float((C**2).sum()) - float(C.sum())**2)
+    den = k * float(R.sum()) - float((R**2).sum())
+    if den == 0:
+        Q, p_q = 0.0, 1.0
+    else:
+        Q = num / den
+        p_q = 1.0 - _chi2_dist.cdf(Q, df=k - 1)
+
+    out += f"  Cochran's Q({k-1}) = {Q:.3f},  p = {p_q:.4f}\n\n"
+
+    # Condition summaries
+    for i, c in enumerate(cond_list):
+        pct = 100 * C[i] / n if n else 0
+        out += f"  {c:<10}  corrected: {int(C[i])}/{n} ({pct:.0f}%)\n"
+    out += "\n"
+
+    # McNemar pairwise
+    pairs = [(cond_list[i], cond_list[j])
+             for i in range(k) for j in range(i + 1, k)]
+    pair_pvals = []
+    pair_details = []
+    for c1, c2 in pairs:
+        paired = [(matrix[pid][c1], matrix[pid][c2])
+                  for pid in complete
+                  if c1 in matrix[pid] and c2 in matrix[pid]]
+        b     = sum(1 for a, b_ in paired if a == 1 and b_ == 0)   # c1=yes, c2=no
+        c_val = sum(1 for a, b_ in paired if a == 0 and b_ == 1)   # c1=no,  c2=yes
+        n_dis = b + c_val
+        if n_dis == 0:
+            p = 1.0
+        else:
+            p = min(1.0, 2.0 * float(_binom.cdf(min(b, c_val), n_dis, 0.5)))
+        pair_pvals.append(p)
+        pair_details.append((c1, c2, b, c_val, n_dis))
+
+    if pair_pvals:
+        _, p_corr, _, _ = multipletests(pair_pvals, method="holm")
+        out += "  McNemar exact pairwise (Holm-corrected):\n"
+        for i, (c1, c2, b, c_val, n_dis) in enumerate(pair_details):
+            p_raw = pair_pvals[i]; p_adj = float(p_corr[i])
+            sig = p_adj < 0.05
+            stars = _sig_stars(p_raw, sig)
+            out += (f"  {'[✓]' if sig else '[ ]'}  {c2} − {c1:<10}"
+                    f"  p={p_raw:.4f}  p_Holm={p_adj:.4f}  {stars}"
+                    f"  (discordant: {b}↔{c_val}, n={n_dis})\n")
+    out += "\n"
+
+    # ── SECTION B: Per error type (between-subjects) ──────────────────────────
+    out += f"  {S}\n  Per error type  (between-subjects, Fisher's exact)\n"
+    out += (f"  ≈5 different participants per condition per error type;\n"
+            f"  pairwise comparisons with Holm correction.\n  {S}\n")
+
+    for et in _ERROR_TYPES:
+        et_by_cond = {c: [] for c in cond_list}
+        for pid in participants:
+            for r in all_results[pid]:
+                if r["error_type"] == et:
+                    qs = _quad_state(r)
+                    if qs is not None:
+                        c = r.get("condition")
+                        if c in et_by_cond:
+                            et_by_cond[c].append(int(qs[0]))
+
+        counts_str = "  ".join(
+            f"{c}: {sum(et_by_cond[c])}/{len(et_by_cond[c])}"
+            for c in cond_list if et_by_cond[c]
+        )
+        out += f"\n  {et.upper()}  ({counts_str})\n"
+
+        et_pairs_data = []
+        et_pvals = []
+        for i, c1 in enumerate(cond_list):
+            for j, c2 in enumerate(cond_list):
+                if i >= j:
+                    continue
+                v1, v2 = et_by_cond[c1], et_by_cond[c2]
+                if not v1 or not v2:
+                    continue
+                a, b_ = sum(v1), len(v1) - sum(v1)
+                c_val, d = sum(v2), len(v2) - sum(v2)
+                _, p = fisher_exact([[a, b_], [c_val, d]])
+                et_pvals.append(float(p))
+                et_pairs_data.append((c1, c2))
+
+        if et_pvals:
+            _, p_corr_et, _, _ = multipletests(et_pvals, method="holm")
+            for i, (c1, c2) in enumerate(et_pairs_data):
+                p_raw = et_pvals[i]; p_adj = float(p_corr_et[i])
+                sig = p_adj < 0.05
+                stars = _sig_stars(p_raw, sig)
+                out += (f"  {'[✓]' if sig else '[ ]'}  {c2} − {c1:<10}"
+                        f"  p={p_raw:.4f}  p_Holm={p_adj:.4f}  {stars}\n")
+        else:
+            out += "  (insufficient data)\n"
+
+    out += "\n"
+    return out
+
+
 def write_error_report(all_results: dict):
     """
     Write cross-participant error detection & correction report to
@@ -1219,7 +1383,7 @@ def write_error_report(all_results: dict):
         for r in all_results[pid]:
             qs = _quad_state(r)
             per_pid[pid].append({
-                "scenario":    r["scenario"],
+                "scenario":    r.get("scenario") or r.get("file", "manual_entry"),
                 "condition":   r["condition"],
                 "error_type":  r["error_type"],
                 "corrected":   (qs[0] if qs is not None else None),
@@ -1326,6 +1490,8 @@ def write_error_report(all_results: dict):
         sec4 = ""
 
     # ── Write file ────────────────────────────────────────────────────────────
+    stats_sec = _build_error_stats(all_results, W)
+
     os.makedirs(os.path.dirname(_ERROR_REPORT_PATH), exist_ok=True)
     with open(_ERROR_REPORT_PATH, "w", encoding="utf-8") as fh:
         fh.write("--- MACHINE-READABLE SUMMARY (JSON) ---\n")
@@ -1336,6 +1502,7 @@ def write_error_report(all_results: dict):
         fh.write("=" * W + "\n\n")
         for sec in [sec1, sec2, sec3, sec4]:
             fh.write(sec)
+        fh.write(stats_sec)
 
     print(f"  Report → {_ERROR_REPORT_PATH}")
 

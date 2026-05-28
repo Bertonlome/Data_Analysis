@@ -1,7 +1,7 @@
 --- MACHINE-READABLE SUMMARY (JSON) ---
 {
   "generated": "2026-05-27",
-  "n_participants": 17,
+  "n_participants": 18,
   "participants": [
     "P02",
     "P03",
@@ -15,6 +15,7 @@
     "P11",
     "P12",
     "P13",
+    "P14",
     "P15",
     "P16",
     "P17",
@@ -25,16 +26,16 @@
   "n_fixed_tasks": 24,
   "overall_allocation": {
     "human": {
-      "count": 328,
-      "pct": 31.1
+      "count": 350,
+      "pct": 31.4
     },
     "auto_fast": {
-      "count": 482,
-      "pct": 45.7
+      "count": 507,
+      "pct": 45.4
     },
     "auto_slow": {
-      "count": 244,
-      "pct": 23.1
+      "count": 259,
+      "pct": 23.2
     }
   },
   "per_participant": {
@@ -110,6 +111,12 @@
       "auto_slow": 2,
       "auto_pct": 91.9
     },
+    "P14": {
+      "human": 22,
+      "auto_fast": 25,
+      "auto_slow": 15,
+      "auto_pct": 64.5
+    },
     "P15": {
       "human": 5,
       "auto_fast": 56,
@@ -144,84 +151,84 @@
   "per_category": {
     "CRM": {
       "n_tasks": 6,
-      "human_pct": 37.3,
-      "auto_fast_pct": 62.7,
+      "human_pct": 40.7,
+      "auto_fast_pct": 59.3,
       "auto_slow_pct": 0.0
     },
     "Switch / Lever": {
       "n_tasks": 20,
-      "human_pct": 44.1,
-      "auto_fast_pct": 40.3,
-      "auto_slow_pct": 15.6
+      "human_pct": 43.9,
+      "auto_fast_pct": 41.4,
+      "auto_slow_pct": 14.7
     },
     "Environment Check": {
       "n_tasks": 1,
-      "human_pct": 29.4,
-      "auto_fast_pct": 41.2,
-      "auto_slow_pct": 29.4
+      "human_pct": 33.3,
+      "auto_fast_pct": 38.9,
+      "auto_slow_pct": 27.8
     },
     "Autopilot Mgmt": {
       "n_tasks": 5,
-      "human_pct": 18.8,
-      "auto_fast_pct": 35.3,
-      "auto_slow_pct": 45.9
+      "human_pct": 17.8,
+      "auto_fast_pct": 37.8,
+      "auto_slow_pct": 44.4
     },
     "System Check": {
       "n_tasks": 4,
-      "human_pct": 19.1,
-      "auto_fast_pct": 27.9,
-      "auto_slow_pct": 52.9
+      "human_pct": 18.1,
+      "auto_fast_pct": 26.4,
+      "auto_slow_pct": 55.6
     },
     "Callout": {
       "n_tasks": 5,
-      "human_pct": 5.9,
-      "auto_fast_pct": 83.5,
-      "auto_slow_pct": 10.6
+      "human_pct": 5.6,
+      "auto_fast_pct": 83.3,
+      "auto_slow_pct": 11.1
     },
     "Parameter Check": {
       "n_tasks": 6,
-      "human_pct": 23.5,
-      "auto_fast_pct": 44.1,
-      "auto_slow_pct": 32.4
+      "human_pct": 25.9,
+      "auto_fast_pct": 42.6,
+      "auto_slow_pct": 31.5
     },
     "Flight Control": {
       "n_tasks": 1,
-      "human_pct": 29.4,
-      "auto_fast_pct": 52.9,
-      "auto_slow_pct": 17.6
+      "human_pct": 27.8,
+      "auto_fast_pct": 55.6,
+      "auto_slow_pct": 16.7
     },
     "ATC Communication": {
       "n_tasks": 4,
-      "human_pct": 33.8,
-      "auto_fast_pct": 17.6,
-      "auto_slow_pct": 48.5
+      "human_pct": 31.9,
+      "auto_fast_pct": 16.7,
+      "auto_slow_pct": 51.4
     },
     "Checklist Mgmt": {
       "n_tasks": 7,
-      "human_pct": 26.9,
-      "auto_fast_pct": 54.6,
-      "auto_slow_pct": 18.5
+      "human_pct": 25.4,
+      "auto_fast_pct": 54.0,
+      "auto_slow_pct": 20.6
     },
     "Navigation": {
       "n_tasks": 2,
-      "human_pct": 38.2,
-      "auto_fast_pct": 50.0,
-      "auto_slow_pct": 11.8
+      "human_pct": 41.7,
+      "auto_fast_pct": 47.2,
+      "auto_slow_pct": 11.1
     },
     "Other": {
       "n_tasks": 1,
-      "human_pct": 23.5,
-      "auto_fast_pct": 35.3,
-      "auto_slow_pct": 41.2
+      "human_pct": 27.8,
+      "auto_fast_pct": 33.3,
+      "auto_slow_pct": 38.9
     }
   },
   "agreement": {
     "consensus_tasks_ge80pct": 6,
-    "majority_tasks_ge65pct": 12,
-    "split_tasks_lt50pct": 31
+    "majority_tasks_ge65pct": 13,
+    "split_tasks_lt50pct": 27
   },
   "hamming_similarity": {
-    "mean": 0.437,
+    "mean": 0.439,
     "most_similar_pair": {
       "pair": [
         "P04",
@@ -242,7 +249,7 @@
 
 ========================================================================
   TARC ALLOCATION REPORT
-  N = 17 participants  |  62 choice tasks  |  24 fixed tasks
+  N = 18 participants  |  62 choice tasks  |  24 fixed tasks
   Generated: 2026-05-27
 ========================================================================
 
@@ -250,11 +257,11 @@
 
   State                    Count       %  Bar (0–100%)
   ──────────────────────  ──────  ──────  ────────────────────
-  Human                      328   31.1%  [██████░░░░░░░░░░░░░░]
-  Auto (no delay)            482   45.7%  [█████████░░░░░░░░░░░]
-  Auto (slow)                244   23.1%  [█████░░░░░░░░░░░░░░░]
+  Human                      350   31.4%  [██████░░░░░░░░░░░░░░]
+  Auto (no delay)            507   45.4%  [█████████░░░░░░░░░░░]
+  Auto (slow)                259   23.2%  [█████░░░░░░░░░░░░░░░]
 
-  Total cells (N=17 × 62 choice tasks): 1054
+  Total cells (N=18 × 62 choice tasks): 1116
 
 ── PER-PARTICIPANT SUMMARY ─────────────────────────────────────────────
 
@@ -272,6 +279,7 @@
   P11                9       29       24   85.5%
   P12               26       11       25   58.1%
   P13                5       55        2   91.9%
+  P14               22       25       15   64.5%
   P15                5       56        1   91.9%
   P16               23       15       24   62.9%
   P17               35        8       19   43.5%
@@ -285,42 +293,42 @@
 
   Category                Tasks   Human%   Auto-F%   Auto-S%
   ──────────────────────  ─────  ───────  ────────  ────────
-  CRM                         6    37.3%     62.7%      0.0%
-  Switch / Lever             20    44.1%     40.3%     15.6%
-  Environment Check           1    29.4%     41.2%     29.4%
-  Autopilot Mgmt              5    18.8%     35.3%     45.9%
-  System Check                4    19.1%     27.9%     52.9%
-  Callout                     5     5.9%     83.5%     10.6%
-  Parameter Check             6    23.5%     44.1%     32.4%
-  Flight Control              1    29.4%     52.9%     17.6%
-  ATC Communication           4    33.8%     17.6%     48.5%
-  Checklist Mgmt              7    26.9%     54.6%     18.5%
-  Navigation                  2    38.2%     50.0%     11.8%
-  Other                       1    23.5%     35.3%     41.2%
+  CRM                         6    40.7%     59.3%      0.0%
+  Switch / Lever             20    43.9%     41.4%     14.7%
+  Environment Check           1    33.3%     38.9%     27.8%
+  Autopilot Mgmt              5    17.8%     37.8%     44.4%
+  System Check                4    18.1%     26.4%     55.6%
+  Callout                     5     5.6%     83.3%     11.1%
+  Parameter Check             6    25.9%     42.6%     31.5%
+  Flight Control              1    27.8%     55.6%     16.7%
+  ATC Communication           4    31.9%     16.7%     51.4%
+  Checklist Mgmt              7    25.4%     54.0%     20.6%
+  Navigation                  2    41.7%     47.2%     11.1%
+  Other                       1    27.8%     33.3%     38.9%
 
 ── INTER-PARTICIPANT AGREEMENT ─────────────────────────────────────────
 
   Consensus tasks (≥80% same choice):   6 / 62
-  Majority tasks  (≥65% same choice):  12 / 62
-  Split tasks     (<50% majority):     31 / 62
+  Majority tasks  (≥65% same choice):  13 / 62
+  Split tasks     (<50% majority):     27 / 62
 
   Top-5 most agreed tasks:
     100.0%  auto_fast         "70 kts"  [Callout]
-     94.1%  auto_fast         "Airspeed's alive"  [Callout]
-     94.1%  auto_fast         "V1"  [Callout]
-     88.2%  auto_fast         "Rotate"  [Callout]
-     88.2%  auto_fast         Checklist  [Checklist Mgmt]
+     94.4%  auto_fast         "Airspeed's alive"  [Callout]
+     94.4%  auto_fast         "V1"  [Callout]
+     88.9%  auto_fast         "Rotate"  [Callout]
+     88.9%  auto_fast         Checklist  [Checklist Mgmt]
 
   Top-5 most disputed tasks:
-     35.3%  human             Autopilot  [Autopilot Mgmt]
-     35.3%  human             Checklist  [Checklist Mgmt]
-     35.3%  human             Test  [Switch / Lever]
-     35.3%  human             Next Checklist  [Checklist Mgmt]
-     41.2%  human             ENGINE ANTI-ICE Switches  [Switch / Lever]
+     33.3%  human             Checklist  [Checklist Mgmt]
+     33.3%  human             Next Checklist  [Checklist Mgmt]
+     38.9%  auto_fast         Winds  [Environment Check]
+     38.9%  auto_fast         Climb rate  [Parameter Check]
+     38.9%  auto_slow         Airspeed  [Parameter Check]
 
 ── PAIRWISE HAMMING SIMILARITY ─────────────────────────────────────────
 
-  Mean similarity across all 136 pairs: 0.437  [█████████░░░░░░░░░░░]
+  Mean similarity across all 153 pairs: 0.439  [█████████░░░░░░░░░░░]
   Most similar pair:    P04 & P05  (sim = 1.000)
   Most different pair:  P03 & P09  (sim = 0.129)
 

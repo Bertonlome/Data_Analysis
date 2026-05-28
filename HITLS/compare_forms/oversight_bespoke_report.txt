@@ -1,7 +1,7 @@
 --- MACHINE-READABLE SUMMARY (JSON) ---
 {
   "form": "oversight_bespoke",
-  "n_participants": 17,
+  "n_participants": 18,
   "conditions": [
     "TARS",
     "TARC",
@@ -11,68 +11,68 @@
   "scores": {
     "base_score": {
       "TARS": {
-        "n": 17,
-        "mean": 3.314,
-        "sd": 0.766,
+        "n": 18,
+        "mean": 3.315,
+        "sd": 0.743,
         "median": 3.5,
         "min": 1.667,
         "max": 4.333
       },
       "TARC": {
-        "n": 15,
-        "mean": 3.6,
-        "sd": 0.6,
-        "median": 3.667,
+        "n": 16,
+        "mean": 3.594,
+        "sd": 0.58,
+        "median": 3.583,
         "min": 2.333,
         "max": 4.667
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 3.284,
-        "sd": 0.603,
+        "n": 18,
+        "mean": 3.315,
+        "sd": 0.599,
         "median": 3.333,
         "min": 2.0,
         "max": 4.167
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 3.118,
-        "sd": 0.6,
-        "median": 3.167,
+        "n": 18,
+        "mean": 3.056,
+        "sd": 0.639,
+        "median": 3.083,
         "min": 2.0,
         "max": 4.0
       }
     },
     "extended_score": {
       "TARS": {
-        "n": 17,
-        "mean": 3.301,
-        "sd": 0.554,
-        "median": 3.333,
+        "n": 18,
+        "mean": 3.315,
+        "sd": 0.541,
+        "median": 3.389,
         "min": 2.222,
         "max": 4.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 3.585,
-        "sd": 0.552,
+        "n": 16,
+        "mean": 3.59,
+        "sd": 0.533,
         "median": 3.556,
         "min": 2.556,
         "max": 4.556
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 3.253,
-        "sd": 0.396,
+        "n": 18,
+        "mean": 3.276,
+        "sd": 0.397,
         "median": 3.333,
         "min": 2.667,
         "max": 3.889
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 3.144,
-        "sd": 0.615,
-        "median": 3.111,
+        "n": 18,
+        "mean": 3.093,
+        "sd": 0.635,
+        "median": 3.056,
         "min": 2.111,
         "max": 4.111
       }
@@ -81,85 +81,17 @@
   "items": {
     "ob_a2": {
       "TARS": {
-        "n": 17,
-        "mean": 3.059,
-        "sd": 1.197,
-        "median": 3.0,
+        "n": 18,
+        "mean": 3.111,
+        "sd": 1.183,
+        "median": 3.5,
         "min": 1.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 3.933,
-        "sd": 0.961,
-        "median": 4.0,
-        "min": 2.0,
-        "max": 5.0
-      },
-      "TARP-S": {
         "n": 16,
-        "mean": 3.75,
-        "sd": 0.775,
-        "median": 4.0,
-        "min": 2.0,
-        "max": 5.0
-      },
-      "TARP-F": {
-        "n": 17,
-        "mean": 3.529,
-        "sd": 1.068,
-        "median": 4.0,
-        "min": 1.0,
-        "max": 5.0
-      }
-    },
-    "ob_a3": {
-      "TARS": {
-        "n": 17,
-        "mean": 3.647,
-        "sd": 0.862,
-        "median": 4.0,
-        "min": 2.0,
-        "max": 5.0
-      },
-      "TARC": {
-        "n": 15,
-        "mean": 3.4,
-        "sd": 1.056,
-        "median": 4.0,
-        "min": 2.0,
-        "max": 5.0
-      },
-      "TARP-S": {
-        "n": 17,
-        "mean": 2.824,
-        "sd": 1.015,
-        "median": 3.0,
-        "min": 1.0,
-        "max": 4.0
-      },
-      "TARP-F": {
-        "n": 17,
-        "mean": 3.412,
-        "sd": 0.87,
-        "median": 4.0,
-        "min": 1.0,
-        "max": 4.0
-      }
-    },
-    "ob_b1": {
-      "TARS": {
-        "n": 17,
-        "mean": 3.706,
-        "sd": 0.985,
-        "median": 4.0,
-        "min": 1.0,
-        "max": 5.0
-      },
-      "TARC": {
-        "n": 15,
-        "mean": 3.733,
-        "sd": 0.884,
+        "mean": 3.938,
+        "sd": 0.929,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
@@ -167,15 +99,83 @@
       "TARP-S": {
         "n": 17,
         "mean": 3.765,
-        "sd": 0.831,
+        "sd": 0.752,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 3.706,
-        "sd": 1.105,
+        "n": 18,
+        "mean": 3.444,
+        "sd": 1.097,
+        "median": 4.0,
+        "min": 1.0,
+        "max": 5.0
+      }
+    },
+    "ob_a3": {
+      "TARS": {
+        "n": 18,
+        "mean": 3.556,
+        "sd": 0.922,
+        "median": 4.0,
+        "min": 2.0,
+        "max": 5.0
+      },
+      "TARC": {
+        "n": 16,
+        "mean": 3.438,
+        "sd": 1.031,
+        "median": 4.0,
+        "min": 2.0,
+        "max": 5.0
+      },
+      "TARP-S": {
+        "n": 18,
+        "mean": 2.889,
+        "sd": 1.023,
+        "median": 3.0,
+        "min": 1.0,
+        "max": 4.0
+      },
+      "TARP-F": {
+        "n": 18,
+        "mean": 3.333,
+        "sd": 0.907,
+        "median": 4.0,
+        "min": 1.0,
+        "max": 4.0
+      }
+    },
+    "ob_b1": {
+      "TARS": {
+        "n": 18,
+        "mean": 3.611,
+        "sd": 1.037,
+        "median": 4.0,
+        "min": 1.0,
+        "max": 5.0
+      },
+      "TARC": {
+        "n": 16,
+        "mean": 3.75,
+        "sd": 0.856,
+        "median": 4.0,
+        "min": 2.0,
+        "max": 5.0
+      },
+      "TARP-S": {
+        "n": 18,
+        "mean": 3.778,
+        "sd": 0.808,
+        "median": 4.0,
+        "min": 2.0,
+        "max": 5.0
+      },
+      "TARP-F": {
+        "n": 18,
+        "mean": 3.722,
+        "sd": 1.074,
         "median": 4.0,
         "min": 1.0,
         "max": 5.0
@@ -183,33 +183,33 @@
     },
     "ob_b2": {
       "TARS": {
-        "n": 17,
-        "mean": 2.882,
-        "sd": 1.219,
-        "median": 2.0,
+        "n": 18,
+        "mean": 2.944,
+        "sd": 1.211,
+        "median": 2.5,
         "min": 1.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 2.933,
-        "sd": 1.28,
-        "median": 2.0,
+        "n": 16,
+        "mean": 2.938,
+        "sd": 1.237,
+        "median": 2.5,
         "min": 1.0,
         "max": 5.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 2.588,
-        "sd": 1.176,
+        "n": 18,
+        "mean": 2.556,
+        "sd": 1.149,
         "median": 2.0,
         "min": 1.0,
         "max": 5.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 2.529,
-        "sd": 1.463,
+        "n": 18,
+        "mean": 2.5,
+        "sd": 1.425,
         "median": 2.0,
         "min": 1.0,
         "max": 5.0
@@ -217,33 +217,33 @@
     },
     "ob_b3": {
       "TARS": {
-        "n": 17,
-        "mean": 2.588,
-        "sd": 1.121,
-        "median": 2.0,
+        "n": 18,
+        "mean": 2.667,
+        "sd": 1.138,
+        "median": 2.5,
         "min": 1.0,
         "max": 4.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 2.8,
-        "sd": 0.941,
+        "n": 16,
+        "mean": 2.75,
+        "sd": 0.931,
         "median": 3.0,
         "min": 1.0,
         "max": 4.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 2.412,
-        "sd": 0.939,
+        "n": 18,
+        "mean": 2.444,
+        "sd": 0.922,
         "median": 2.0,
         "min": 1.0,
         "max": 4.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 2.118,
-        "sd": 0.6,
+        "n": 18,
+        "mean": 2.056,
+        "sd": 0.639,
         "median": 2.0,
         "min": 1.0,
         "max": 3.0
@@ -251,101 +251,101 @@
     },
     "ob_c1": {
       "TARS": {
-        "n": 17,
-        "mean": 3.176,
-        "sd": 1.131,
-        "median": 3.0,
+        "n": 18,
+        "mean": 3.222,
+        "sd": 1.114,
+        "median": 3.5,
         "min": 1.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 3.733,
-        "sd": 0.884,
+        "n": 16,
+        "mean": 3.688,
+        "sd": 0.873,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 3.235,
-        "sd": 1.091,
-        "median": 3.0,
+        "n": 18,
+        "mean": 3.278,
+        "sd": 1.074,
+        "median": 3.5,
         "min": 1.0,
         "max": 5.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 3.059,
-        "sd": 1.345,
-        "median": 4.0,
+        "n": 18,
+        "mean": 3.0,
+        "sd": 1.328,
+        "median": 3.0,
         "min": 1.0,
         "max": 5.0
       }
     },
     "ob_c2": {
       "TARS": {
-        "n": 17,
-        "mean": 3.706,
-        "sd": 1.16,
+        "n": 18,
+        "mean": 3.722,
+        "sd": 1.127,
         "median": 4.0,
         "min": 1.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
+        "n": 16,
         "mean": 4.0,
-        "sd": 0.756,
+        "sd": 0.73,
         "median": 4.0,
         "min": 3.0,
         "max": 5.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 3.824,
-        "sd": 0.728,
+        "n": 18,
+        "mean": 3.833,
+        "sd": 0.707,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 2.882,
-        "sd": 1.269,
-        "median": 3.0,
+        "n": 18,
+        "mean": 2.778,
+        "sd": 1.309,
+        "median": 2.5,
         "min": 1.0,
         "max": 5.0
       }
     },
     "ob_d1": {
       "TARS": {
-        "n": 17,
-        "mean": 3.647,
-        "sd": 0.786,
+        "n": 18,
+        "mean": 3.667,
+        "sd": 0.767,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 4.067,
-        "sd": 0.594,
+        "n": 16,
+        "mean": 4.125,
+        "sd": 0.619,
         "median": 4.0,
         "min": 3.0,
         "max": 5.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 3.882,
-        "sd": 0.781,
+        "n": 18,
+        "mean": 3.889,
+        "sd": 0.758,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 4.118,
-        "sd": 0.6,
+        "n": 18,
+        "mean": 4.167,
+        "sd": 0.618,
         "median": 4.0,
         "min": 3.0,
         "max": 5.0
@@ -353,33 +353,33 @@
     },
     "ob_d2": {
       "TARS": {
-        "n": 17,
-        "mean": 3.294,
-        "sd": 0.985,
-        "median": 3.0,
+        "n": 18,
+        "mean": 3.333,
+        "sd": 0.97,
+        "median": 3.5,
         "min": 1.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 3.667,
-        "sd": 0.816,
+        "n": 16,
+        "mean": 3.688,
+        "sd": 0.793,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 3.059,
-        "sd": 0.827,
+        "n": 18,
+        "mean": 3.111,
+        "sd": 0.832,
         "median": 3.0,
         "min": 2.0,
         "max": 4.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 2.941,
-        "sd": 1.088,
+        "n": 18,
+        "mean": 2.833,
+        "sd": 1.15,
         "median": 3.0,
         "min": 1.0,
         "max": 4.0
@@ -397,21 +397,92 @@
 ──────────────────────────────────────────────────────────────────────────────
                                                                TARS                    TARC                   TARP-S                  TARP-F        
                                                       ──────────────────────  ──────────────────────  ──────────────────────  ──────────────────────  
-  Base Score mean (1–5)                               μ= 3.31 σ=0.77 Md= 3.50  μ= 3.60 σ=0.60 Md= 3.67  μ= 3.28 σ=0.60 Md= 3.33  μ= 3.12 σ=0.60 Md= 3.17
-  Extended Score mean (1–5)                           μ= 3.30 σ=0.55 Md= 3.33  μ= 3.58 σ=0.55 Md= 3.56  μ= 3.25 σ=0.40 Md= 3.33  μ= 3.14 σ=0.61 Md= 3.11
+  Base Score mean (1–5)                               μ= 3.31 σ=0.74 Md= 3.50  μ= 3.59 σ=0.58 Md= 3.58  μ= 3.31 σ=0.60 Md= 3.33  μ= 3.06 σ=0.64 Md= 3.08
+  Extended Score mean (1–5)                           μ= 3.31 σ=0.54 Md= 3.39  μ= 3.59 σ=0.53 Md= 3.56  μ= 3.28 σ=0.40 Md= 3.33  μ= 3.09 σ=0.64 Md= 3.06
 
 ──────────────────────────────────────────────────────────────────────────────
   ITEMS (scored 1–5, * = reversed)
 ──────────────────────────────────────────────────────────────────────────────
                                                                TARS                    TARC                   TARP-S                  TARP-F        
                                                       ──────────────────────  ──────────────────────  ──────────────────────  ──────────────────────  
-  A2(+) Enough time / attention to oversee system     μ= 3.06 σ=1.20 Md= 3.00  μ= 3.93 σ=0.96 Md= 4.00  μ= 3.75 σ=0.78 Md= 4.00  μ= 3.53 σ=1.07 Md= 4.00
-  A3(–) Difficult to follow system actions  *         μ= 3.65 σ=0.86 Md= 4.00  μ= 3.40 σ=1.06 Md= 4.00  μ= 2.82 σ=1.01 Md= 3.00  μ= 3.41 σ=0.87 Md= 4.00
-  B1(+) Actively verified system's actions            μ= 3.71 σ=0.98 Md= 4.00  μ= 3.73 σ=0.88 Md= 4.00  μ= 3.77 σ=0.83 Md= 4.00  μ= 3.71 σ=1.10 Md= 4.00
-  B2(+) No need to monitor closely  [ext]             μ= 2.88 σ=1.22 Md= 2.00  μ= 2.93 σ=1.28 Md= 2.00  μ= 2.59 σ=1.18 Md= 2.00  μ= 2.53 σ=1.46 Md= 2.00
-  B3(–) May have missed check opportunities  *        μ= 2.59 σ=1.12 Md= 2.00  μ= 2.80 σ=0.94 Md= 3.00  μ= 2.41 σ=0.94 Md= 2.00  μ= 2.12 σ=0.60 Md= 2.00
-  C1(+) Could detect system errors quickly            μ= 3.18 σ=1.13 Md= 3.00  μ= 3.73 σ=0.88 Md= 4.00  μ= 3.23 σ=1.09 Md= 3.00  μ= 3.06 σ=1.34 Md= 4.00
-  C2(+) Enough time to react to actions               μ= 3.71 σ=1.16 Md= 4.00  μ= 4.00 σ=0.76 Md= 4.00  μ= 3.82 σ=0.73 Md= 4.00  μ= 2.88 σ=1.27 Md= 3.00
-  D1(+) System helped work efficiently  [ext]         μ= 3.65 σ=0.79 Md= 4.00  μ= 4.07 σ=0.59 Md= 4.00  μ= 3.88 σ=0.78 Md= 4.00  μ= 4.12 σ=0.60 Md= 4.00
-  D2(–) Efficiency came at cost of oversight  * [ext  μ= 3.29 σ=0.98 Md= 3.00  μ= 3.67 σ=0.82 Md= 4.00  μ= 3.06 σ=0.83 Md= 3.00  μ= 2.94 σ=1.09 Md= 3.00
+  A2(+) Enough time / attention to oversee system     μ= 3.11 σ=1.18 Md= 3.50  μ= 3.94 σ=0.93 Md= 4.00  μ= 3.77 σ=0.75 Md= 4.00  μ= 3.44 σ=1.10 Md= 4.00
+  A3(–) Difficult to follow system actions  *         μ= 3.56 σ=0.92 Md= 4.00  μ= 3.44 σ=1.03 Md= 4.00  μ= 2.89 σ=1.02 Md= 3.00  μ= 3.33 σ=0.91 Md= 4.00
+  B1(+) Actively verified system's actions            μ= 3.61 σ=1.04 Md= 4.00  μ= 3.75 σ=0.86 Md= 4.00  μ= 3.78 σ=0.81 Md= 4.00  μ= 3.72 σ=1.07 Md= 4.00
+  B2(+) No need to monitor closely  [ext]             μ= 2.94 σ=1.21 Md= 2.50  μ= 2.94 σ=1.24 Md= 2.50  μ= 2.56 σ=1.15 Md= 2.00  μ= 2.50 σ=1.43 Md= 2.00
+  B3(–) May have missed check opportunities  *        μ= 2.67 σ=1.14 Md= 2.50  μ= 2.75 σ=0.93 Md= 3.00  μ= 2.44 σ=0.92 Md= 2.00  μ= 2.06 σ=0.64 Md= 2.00
+  C1(+) Could detect system errors quickly            μ= 3.22 σ=1.11 Md= 3.50  μ= 3.69 σ=0.87 Md= 4.00  μ= 3.28 σ=1.07 Md= 3.50  μ= 3.00 σ=1.33 Md= 3.00
+  C2(+) Enough time to react to actions               μ= 3.72 σ=1.13 Md= 4.00  μ= 4.00 σ=0.73 Md= 4.00  μ= 3.83 σ=0.71 Md= 4.00  μ= 2.78 σ=1.31 Md= 2.50
+  D1(+) System helped work efficiently  [ext]         μ= 3.67 σ=0.77 Md= 4.00  μ= 4.12 σ=0.62 Md= 4.00  μ= 3.89 σ=0.76 Md= 4.00  μ= 4.17 σ=0.62 Md= 4.00
+  D2(–) Efficiency came at cost of oversight  * [ext  μ= 3.33 σ=0.97 Md= 3.50  μ= 3.69 σ=0.79 Md= 4.00  μ= 3.11 σ=0.83 Md= 3.00  μ= 2.83 σ=1.15 Md= 3.00
+
+──────────────────────────────────────────────────────────────────────────────
+  STATISTICAL ANALYSIS — PER ITEM  (Friedman + Wilcoxon + Holm-Bonferroni)
+──────────────────────────────────────────────────────────────────────────────
+  Note: OB is an in-house questionnaire — no validated composite score.
+  Tests run per item; Holm correction applied within each item (4 pairs).
+  [✓] = Holm-Bonferroni corrected rejection at α=.05
+  r = rank-biserial
+
+  A2(+) Enough time / attention to oversee system
+    Friedman χ²(3) = 4.402,  p = 0.2212
+    [ ] TARP-S − TARS      W p=0.0433  p_Holm=0.1555  r=+0.948  ns
+    [ ] TARP-F − TARS      W p=0.3340  p_Holm=0.6680  r=+0.626  ns
+    [ ] TARP-F − TARP-S    W p=0.4705  p_Holm=0.6680  r=+0.830  ns
+    [ ] TARC − TARS      W p=0.0389  p_Holm=0.1555  r=+0.882  ns
+
+  A3(–) Difficult to follow system actions  *
+    Friedman χ²(3) = 6.178,  p = 0.1033
+    [ ] TARP-S − TARS      W p=0.0862  p_Holm=0.3448  r=+0.836  ns
+    [ ] TARP-F − TARS      W p=0.4174  p_Holm=0.8348  r=+0.813  ns
+    [ ] TARP-F − TARP-S    W p=0.2395  p_Holm=0.7184  r=+0.661  ns
+    [ ] TARC − TARS      W p=0.5873  p_Holm=0.8348  r=+0.735  ns
+
+  B1(+) Actively verified system's actions
+    Friedman χ²(3) = 0.129,  p = 0.9882
+    [ ] TARP-S − TARS      W p=0.4652  p_Holm=1.0000  r=+0.807  ns
+    [ ] TARP-F − TARS      W p=0.5637  p_Holm=1.0000  r=+0.789  ns
+    [ ] TARP-F − TARP-S    W p=0.9416  p_Holm=1.0000  r=+0.795  ns
+    [ ] TARC − TARS      W p=1.0000  p_Holm=1.0000  r=+0.890  ns
+
+  B2(+) No need to monitor closely  [ext]
+    Friedman χ²(3) = 2.842,  p = 0.4166
+    [ ] TARP-S − TARS      W p=0.2527  p_Holm=1.0000  r=+0.807  ns
+    [ ] TARP-F − TARS      W p=0.3568  p_Holm=1.0000  r=+0.556  ns
+    [ ] TARP-F − TARP-S    W p=0.9718  p_Holm=1.0000  r=+0.474  ns
+    [ ] TARC − TARS      W p=0.6793  p_Holm=1.0000  r=+0.654  ns
+
+  B3(–) May have missed check opportunities  *
+    Friedman χ²(3) = 5.303,  p = 0.1509
+    [ ] TARP-S − TARS      W p=0.4585  p_Holm=0.9169  r=+0.649  ns
+    [ ] TARP-F − TARS      W p=0.0311  p_Holm=0.1244  r=+0.982  ns
+    [ ] TARP-F − TARP-S    W p=0.0522  p_Holm=0.1566  r=+0.883  ns
+    [ ] TARC − TARS      W p=0.8292  p_Holm=0.9169  r=+0.757  ns
+
+  C1(+) Could detect system errors quickly
+    Friedman χ²(3) = 3.649,  p = 0.3020
+    [ ] TARP-S − TARS      W p=0.7389  p_Holm=0.7591  r=+0.766  ns
+    [ ] TARP-F − TARS      W p=0.3719  p_Holm=0.7591  r=+0.778  ns
+    [ ] TARP-F − TARP-S    W p=0.1898  p_Holm=0.7591  r=+0.860  ns
+    [ ] TARC − TARS      W p=0.1902  p_Holm=0.7591  r=+0.824  ns
+
+  C2(+) Enough time to react to actions
+    Friedman χ²(3) = 10.435,  p = 0.0152
+    [ ] TARP-S − TARS      W p=0.6441  p_Holm=1.0000  r=+0.608  ns
+    [ ] TARP-F − TARS      W p=0.0471  p_Holm=0.1414  r=+0.836  ns
+    [✓] TARP-F − TARP-S    W p=0.0020  p_Holm=0.0079  r=+0.947  **
+    [ ] TARC − TARS      W p=0.7737  p_Holm=1.0000  r=+0.765  ns
+
+  D1(+) System helped work efficiently  [ext]
+    Friedman χ²(3) = 6.523,  p = 0.0887
+    [ ] TARP-S − TARS      W p=0.3767  p_Holm=0.4444  r=+0.725  ns
+    [✓] TARP-F − TARS      W p=0.0067  p_Holm=0.0266  r=+1.000  **
+    [ ] TARP-F − TARP-S    W p=0.2222  p_Holm=0.4444  r=+0.813  ns
+    [ ] TARC − TARS      W p=0.0588  p_Holm=0.1763  r=+0.941  ns
+
+  D2(–) Efficiency came at cost of oversight  * [ext]
+    Friedman χ²(3) = 8.228,  p = 0.0415
+    [ ] TARP-S − TARS      W p=0.4701  p_Holm=0.9139  r=+0.515  ns
+    [ ] TARP-F − TARS      W p=0.1535  p_Holm=0.6141  r=+0.702  ns
+    [ ] TARP-F − TARP-S    W p=0.3275  p_Holm=0.9139  r=+0.830  ns
+    [ ] TARC − TARS      W p=0.3046  p_Holm=0.9139  r=+0.838  ns
 

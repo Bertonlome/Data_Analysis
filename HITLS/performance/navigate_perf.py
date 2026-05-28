@@ -213,14 +213,19 @@ def _extract_nav_signals(path: str) -> dict:
     panpan_time        = None
     t0                 = None
     t_last             = None
+    ts_scale           = 1.0  # set to 1e-6 for relative_time_us columns
 
     with open(path, encoding="utf-8", errors="replace") as fh:
         for line in fh:
+            if line.startswith("uuid;"):
+                if line.rstrip("\r\n").split(";", 2)[1] == "relative_time_us":
+                    ts_scale = 1e-6
+                continue
             parts = line.rstrip("\n").split(";")
             if len(parts) < 7:
                 continue
             try:
-                ts = float(parts[1])
+                ts = float(parts[1]) * ts_scale
             except ValueError:
                 continue
 

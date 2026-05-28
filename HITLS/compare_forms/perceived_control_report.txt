@@ -1,7 +1,7 @@
 --- MACHINE-READABLE SUMMARY (JSON) ---
 {
   "form": "perceived_control",
-  "n_participants": 17,
+  "n_participants": 18,
   "conditions": [
     "TARS",
     "TARC",
@@ -10,34 +10,34 @@
   ],
   "mean": {
     "TARS": {
-      "n": 17,
-      "mean": 3.794,
-      "sd": 0.645,
+      "n": 18,
+      "mean": 3.806,
+      "sd": 0.628,
       "median": 4.0,
       "min": 2.0,
       "max": 4.75
     },
     "TARC": {
-      "n": 15,
-      "mean": 4.133,
-      "sd": 0.566,
+      "n": 16,
+      "mean": 4.156,
+      "sd": 0.554,
       "median": 4.25,
       "min": 2.75,
       "max": 4.75
     },
     "TARP-S": {
-      "n": 17,
-      "mean": 3.397,
-      "sd": 0.613,
+      "n": 18,
+      "mean": 3.431,
+      "sd": 0.611,
       "median": 3.5,
       "min": 2.0,
       "max": 4.25
     },
     "TARP-F": {
-      "n": 17,
-      "mean": 3.676,
-      "sd": 0.44,
-      "median": 3.75,
+      "n": 18,
+      "mean": 3.639,
+      "sd": 0.456,
+      "median": 3.625,
       "min": 2.75,
       "max": 4.25
     }
@@ -45,67 +45,67 @@
   "items": {
     "pc_01": {
       "TARS": {
-        "n": 17,
-        "mean": 4.0,
-        "sd": 0.935,
+        "n": 18,
+        "mean": 4.056,
+        "sd": 0.938,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 4.2,
-        "sd": 0.862,
+        "n": 16,
+        "mean": 4.188,
+        "sd": 0.834,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 3.706,
-        "sd": 0.772,
+        "n": 18,
+        "mean": 3.722,
+        "sd": 0.752,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 3.353,
-        "sd": 0.931,
-        "median": 4.0,
+        "n": 18,
+        "mean": 3.333,
+        "sd": 0.907,
+        "median": 3.5,
         "min": 2.0,
         "max": 5.0
       }
     },
     "pc_02": {
       "TARS": {
-        "n": 17,
-        "mean": 3.765,
-        "sd": 1.091,
+        "n": 18,
+        "mean": 3.778,
+        "sd": 1.06,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 4.067,
-        "sd": 0.884,
+        "n": 16,
+        "mean": 4.125,
+        "sd": 0.885,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 2.882,
-        "sd": 0.928,
+        "n": 18,
+        "mean": 2.944,
+        "sd": 0.938,
         "median": 3.0,
         "min": 2.0,
         "max": 4.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 3.176,
-        "sd": 0.951,
+        "n": 18,
+        "mean": 3.111,
+        "sd": 0.963,
         "median": 3.0,
         "min": 1.0,
         "max": 4.0
@@ -113,33 +113,33 @@
     },
     "pc_03": {
       "TARS": {
-        "n": 17,
-        "mean": 3.706,
-        "sd": 0.686,
+        "n": 18,
+        "mean": 3.722,
+        "sd": 0.669,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 4.133,
-        "sd": 0.352,
+        "n": 16,
+        "mean": 4.125,
+        "sd": 0.342,
         "median": 4.0,
         "min": 4.0,
         "max": 5.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 3.588,
-        "sd": 1.064,
+        "n": 18,
+        "mean": 3.611,
+        "sd": 1.037,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 3.941,
-        "sd": 0.748,
+        "n": 18,
+        "mean": 3.889,
+        "sd": 0.758,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
@@ -147,33 +147,33 @@
     },
     "pc_04": {
       "TARS": {
-        "n": 17,
-        "mean": 3.706,
+        "n": 18,
+        "mean": 3.667,
         "sd": 0.686,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARC": {
-        "n": 15,
-        "mean": 4.133,
+        "n": 16,
+        "mean": 4.188,
         "sd": 0.834,
         "median": 4.0,
         "min": 3.0,
         "max": 5.0
       },
       "TARP-S": {
-        "n": 17,
-        "mean": 3.412,
-        "sd": 0.87,
+        "n": 18,
+        "mean": 3.444,
+        "sd": 0.856,
         "median": 4.0,
         "min": 2.0,
         "max": 5.0
       },
       "TARP-F": {
-        "n": 17,
-        "mean": 4.235,
-        "sd": 0.437,
+        "n": 18,
+        "mean": 4.222,
+        "sd": 0.428,
         "median": 4.0,
         "min": 4.0,
         "max": 5.0
@@ -191,15 +191,51 @@
 ──────────────────────────────────────────────────────────────────────────────
                                                                                    TARS                    TARC                   TARP-S                  TARP-F        
                                                                           ──────────────────────  ──────────────────────  ──────────────────────  ──────────────────────  
-  Mean (1–5)                                                              μ= 3.79 σ=0.65 Md= 4.00  μ= 4.13 σ=0.57 Md= 4.25  μ= 3.40 σ=0.61 Md= 3.50  μ= 3.68 σ=0.44 Md= 3.75
+  Mean (1–5)                                                              μ= 3.81 σ=0.63 Md= 4.00  μ= 4.16 σ=0.55 Md= 4.25  μ= 3.43 σ=0.61 Md= 3.50  μ= 3.64 σ=0.46 Md= 3.62
 
 ──────────────────────────────────────────────────────────────────────────────
   ITEMS (scored 1–5)
 ──────────────────────────────────────────────────────────────────────────────
                                                                                    TARS                    TARC                   TARP-S                  TARP-F        
                                                                           ──────────────────────  ──────────────────────  ──────────────────────  ──────────────────────  
-  PC1(+) I feel in control while using this autonomous system             μ= 4.00 σ=0.94 Md= 4.00  μ= 4.20 σ=0.86 Md= 4.00  μ= 3.71 σ=0.77 Md= 4.00  μ= 3.35 σ=0.93 Md= 4.00
-  PC2(+) I feel I can control how the autonomous system behaves           μ= 3.77 σ=1.09 Md= 4.00  μ= 4.07 σ=0.88 Md= 4.00  μ= 2.88 σ=0.93 Md= 3.00  μ= 3.18 σ=0.95 Md= 3.00
-  PC3(+) I have the resources and ability to make use of this system      μ= 3.71 σ=0.69 Md= 4.00  μ= 4.13 σ=0.35 Md= 4.00  μ= 3.59 σ=1.06 Md= 4.00  μ= 3.94 σ=0.75 Md= 4.00
-  PC4(+) Team was effective in accomplishing the mission                  μ= 3.71 σ=0.69 Md= 4.00  μ= 4.13 σ=0.83 Md= 4.00  μ= 3.41 σ=0.87 Md= 4.00  μ= 4.24 σ=0.44 Md= 4.00
+  PC1(+) I feel in control while using this autonomous system             μ= 4.06 σ=0.94 Md= 4.00  μ= 4.19 σ=0.83 Md= 4.00  μ= 3.72 σ=0.75 Md= 4.00  μ= 3.33 σ=0.91 Md= 3.50
+  PC2(+) I feel I can control how the autonomous system behaves           μ= 3.78 σ=1.06 Md= 4.00  μ= 4.12 σ=0.89 Md= 4.00  μ= 2.94 σ=0.94 Md= 3.00  μ= 3.11 σ=0.96 Md= 3.00
+  PC3(+) I have the resources and ability to make use of this system      μ= 3.72 σ=0.67 Md= 4.00  μ= 4.12 σ=0.34 Md= 4.00  μ= 3.61 σ=1.04 Md= 4.00  μ= 3.89 σ=0.76 Md= 4.00
+  PC4(+) Team was effective in accomplishing the mission                  μ= 3.67 σ=0.69 Md= 4.00  μ= 4.19 σ=0.83 Md= 4.00  μ= 3.44 σ=0.86 Md= 4.00  μ= 4.22 σ=0.43 Md= 4.00
+
+──────────────────────────────────────────────────────────────────────────────
+  STATISTICAL ANALYSIS — PER ITEM  (Friedman + Wilcoxon + Holm-Bonferroni)
+──────────────────────────────────────────────────────────────────────────────
+  Note: Perceived Control is an in-house questionnaire — no validated composite score.
+  Tests run per item; Holm correction applied within each item (4 pairs).
+  [✓] = Holm-Bonferroni corrected rejection at α=.05
+  r = rank-biserial
+
+  PC1(+) I feel in control while using this autonomous system
+    Friedman χ²(3) = 11.205,  p = 0.0107
+    [ ] TARP-S − TARS      W p=0.2183  p_Holm=0.4728  r=+0.766  ns
+    [ ] TARP-F − TARS      W p=0.0362  p_Holm=0.1448  r=+0.766  ns
+    [ ] TARP-F − TARP-S    W p=0.1576  p_Holm=0.4728  r=+0.836  ns
+    [ ] TARC − TARS      W p=0.4773  p_Holm=0.4773  r=+0.625  ns
+
+  PC2(+) I feel I can control how the autonomous system behaves
+    Friedman χ²(3) = 16.902,  p = 0.0007
+    [✓] TARP-S − TARS      W p=0.0093  p_Holm=0.0374  r=+0.971  **
+    [✓] TARP-F − TARS      W p=0.0146  p_Holm=0.0437  r=+0.895  *
+    [ ] TARP-F − TARP-S    W p=0.4904  p_Holm=0.4904  r=+0.702  ns
+    [ ] TARC − TARS      W p=0.2439  p_Holm=0.4879  r=+0.757  ns
+
+  PC3(+) I have the resources and ability to make use of this system
+    Friedman χ²(3) = 5.506,  p = 0.1383
+    [ ] TARP-S − TARS      W p=0.6078  p_Holm=0.7314  r=+0.830  ns
+    [ ] TARP-F − TARS      W p=0.3657  p_Holm=0.7314  r=+0.719  ns
+    [ ] TARP-F − TARP-S    W p=0.1597  p_Holm=0.4792  r=+0.930  ns
+    [ ] TARC − TARS      W p=0.0348  p_Holm=0.1392  r=+0.941  ns
+
+  PC4(+) Team was effective in accomplishing the mission
+    Friedman χ²(3) = 18.031,  p = 0.0004
+    [ ] TARP-S − TARS      W p=0.2714  p_Holm=0.2714  r=+0.877  ns
+    [✓] TARP-F − TARS      W p=0.0083  p_Holm=0.0249  r=+1.000  **
+    [✓] TARP-F − TARP-S    W p=0.0036  p_Holm=0.0143  r=+1.000  **
+    [✓] TARC − TARS      W p=0.0209  p_Holm=0.0418  r=+0.934  *
 

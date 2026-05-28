@@ -1,7 +1,7 @@
 --- MACHINE-READABLE SUMMARY (JSON) ---
 {
   "form": "pre_experiment_form_pts",
-  "n_participants": 17,
+  "n_participants": 18,
   "pts_total": {
     "n": 13,
     "mean": 25.692,

@@ -38,6 +38,8 @@ import json
 import importlib.util
 import subprocess
 import numpy as np
+from scipy.stats import friedmanchisquare, wilcoxon as _sp_wilcoxon
+from statsmodels.stats.multitest import multipletests
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 HITLS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -61,6 +63,112 @@ _ALL_PLOTS = [
 # ── Reports produced by this script ───────────────────────────────────────────
 REPORTS_DIR  = os.path.join(HITLS_DIR, "compare_performance")
 _ALL_REPORTS = ["aviate_report.txt", "navigate_report.txt", "time_report.txt"]
+
+# ── Pairwise comparison pairs ──────────────────────────────────────────────────
+_ALL_PAIRS = [("TARS", "TARP-S"), ("TARS", "TARP-F"), ("TARP-S", "TARP-F"), ("TARS", "TARC")]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Statistical helpers
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def _wilcoxon_test(a, b):
+    """Paired Wilcoxon signed-rank test. Returns (p_value, rank_biserial_r).
+    Drops pairs where either value is None.  Minimum 4 valid pairs required.
+    """
+    pairs = [(float(x), float(y)) for x, y in zip(a, b)
+             if x is not None and y is not None]
+    if len(pairs) < 4:
+        return 1.0, 0.0
+    xa, xb = np.array([p[0] for p in pairs]), np.array([p[1] for p in pairs])
+    try:
+        res = _sp_wilcoxon(xa, xb, alternative="two-sided", zero_method="wilcox")
+        n   = len(pairs)
+        r   = 1.0 - 2.0 * res.statistic / (n * (n + 1) / 2.0)
+        return float(res.pvalue), float(r)
+    except Exception:
+        return 1.0, 0.0
+
+
+def _friedman_test(groups):
+    """Friedman chi-square for k groups (list of lists, equal length).
+    Drops rows with any None across conditions.  Returns (chi2, p).
+    """
+    rows = list(zip(*groups))
+    valid = [r for r in rows if all(x is not None for x in r)]
+    if len(valid) < 3:
+        return 0.0, 1.0
+    aligned = [[float(r[i]) for r in valid] for i in range(len(groups))]
+    try:
+        res = friedmanchisquare(*aligned)
+        return float(res.statistic), float(res.pvalue)
+    except Exception:
+        return 0.0, 1.0
+
+
+def _holm_correct(pvals, alpha=0.05):
+    """Holm-Bonferroni correction. Returns (reject_array, pvals_corrected)."""
+    pvals = list(pvals)
+    if not pvals:
+        return np.array([], dtype=bool), np.array([])
+    reject, pvals_corr, _, _ = multipletests(pvals, alpha=alpha, method="holm")
+    return reject, pvals_corr
+
+
+def _sig_stars(p_raw, sig):
+    """Return significance label string (raw p + Holm rejection)."""
+    if not sig:
+        return ""
+    if p_raw < 0.001:
+        return "***"
+    if p_raw < 0.01:
+        return "**"
+    if p_raw < 0.05:
+        return "*"
+    return "†"
+
+
+def _fmt_stat_section(label, friedman, pairwise, diff_pairs):
+    """Format a stats block for one metric.
+
+    friedman : {'chi2': float, 'p': float, 'df': int}
+    pairwise : list of dicts per pair (same order as diff_pairs)
+    """
+    lines = [f"  {label}"]
+    chi2, p_f, df = friedman['chi2'], friedman['p'], friedman['df']
+    p_f_str = f"{p_f:.4f}" if p_f >= 0.0001 else f"{p_f:.2e}"
+    lines.append(f"    Friedman \u03c7\u00b2({df}) = {chi2:.3f},  p = {p_f_str}")
+    for pi, (bl, comp) in enumerate(diff_pairs):
+        pw = pairwise[pi]
+        p_raw = pw['p_raw']
+        p_cor = pw['p_corr']
+        r_val = pw['r']
+        sig   = "\u2713" if pw['reject'] else " "
+        p_raw_str = f"{p_raw:.4f}" if p_raw >= 0.0001 else f"{p_raw:.2e}"
+        p_cor_str = f"{p_cor:.4f}" if p_cor >= 0.0001 else f"{p_cor:.2e}"
+        stars = pw['stars'] or "ns"
+        lines.append(
+            f"    [{sig}] {comp} \u2212 {bl:<8}  W p={p_raw_str}  p_Holm={p_cor_str}  r={r_val:+.3f}  {stars}"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def _run_stats(vals_by_cond, conditions, pairs):
+    """Run Friedman + Wilcoxon + Holm for one metric. Returns (frd_dict, pairwise_list)."""
+    chi2, p_f = _friedman_test([vals_by_cond[c] for c in conditions])
+    frd = {"chi2": chi2, "p": p_f, "df": len(conditions) - 1}
+    ps_raw, rs = [], []
+    for bl, comp in pairs:
+        p, r = _wilcoxon_test(vals_by_cond[bl], vals_by_cond[comp])
+        ps_raw.append(p)
+        rs.append(r)
+    reject, p_corr = _holm_correct(ps_raw)
+    pairwise = [
+        {"p_raw": ps_raw[i], "r": rs[i], "reject": bool(reject[i]),
+         "p_corr": float(p_corr[i]), "stars": _sig_stars(ps_raw[i], bool(reject[i]))}
+        for i in range(len(pairs))
+    ]
+    return frd, pairwise
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -158,12 +266,16 @@ _AVIATE_METRIC_LABELS = {
 
 def write_aviate_report(aviate_data, participants):
     conditions = _AVIATE_CONDITIONS
+
+    # Collect all values up front
+    vals_cache = {}  # (sig_key, met) -> {cond: [vals]}
     summary_signals = {}
     for sig_key, sig_label, metrics in _AVIATE_SIGNALS:
         summary_signals[sig_key] = {}
         for met in metrics:
-            vals_by_cond = _collect_vals(aviate_data, participants, conditions, sig_key, met)
-            summary_signals[sig_key][met] = {c: _desc(v) for c, v in vals_by_cond.items()}
+            v = _collect_vals(aviate_data, participants, conditions, sig_key, met)
+            vals_cache[(sig_key, met)] = v
+            summary_signals[sig_key][met] = {c: _desc(v[c]) for c in conditions}
 
     summary = {
         "domain": "aviate",
@@ -183,6 +295,20 @@ def write_aviate_report(aviate_data, participants):
             sec += _fmt_row(w, label, stats_by_cond, conditions)
         sec += "\n"
         sections.append(sec)
+
+    # ── Statistical analysis: Slip & Roll Angle (RMSE + nMAE) ────────────────
+    stat_sec  = f"{'─' * 78}\n"
+    stat_sec += "  STATISTICAL ANALYSIS  (Friedman + Wilcoxon + Holm-Bonferroni)\n"
+    stat_sec += "  Signals: Slip, Roll Angle  |  Metrics: RMSE, nMAE\n"
+    stat_sec += "  Non-parametric within-subjects tests across 4 conditions\n"
+    stat_sec += f"{'─' * 78}\n\n"
+    for sig_key, sig_label in [("slip", "Slip"), ("roll_angle", "Roll Angle")]:
+        stat_sec += f"  ── {sig_label} ──\n"
+        for met, met_label in [("rmse", "RMSE"), ("nmae", "nMAE")]:
+            frd, pw = _run_stats(vals_cache[(sig_key, met)], conditions, _ALL_PAIRS)
+            stat_sec += _fmt_stat_section(f"{sig_label} — {met_label}", frd, pw, _ALL_PAIRS)
+        stat_sec += "\n"
+    sections.append(stat_sec)
 
     path = os.path.join(REPORTS_DIR, "aviate_report.txt")
     _write_report(path, "Aviate Performance  (cross-participant)", summary, sections)
@@ -220,13 +346,17 @@ _NAVIGATE_PHASES = [
 
 def write_navigate_report(navigate_data, participants):
     conditions = _NAVIGATE_CONDITIONS
+
+    # Collect all values up front
+    vals_cache = {}  # (phase_key, path_keys) -> {cond: [vals]}
     summary_phases = {}
     for phase_key, _, metric_specs in _NAVIGATE_PHASES:
         summary_phases[phase_key] = {}
         for path_keys, label in metric_specs:
             key = "_".join(path_keys)
-            vals_by_cond = _collect_vals(navigate_data, participants, conditions, phase_key, *path_keys)
-            summary_phases[phase_key][key] = {c: _desc(v) for c, v in vals_by_cond.items()}
+            v = _collect_vals(navigate_data, participants, conditions, phase_key, *path_keys)
+            vals_cache[(phase_key, path_keys)] = v
+            summary_phases[phase_key][key] = {c: _desc(v[c]) for c in conditions}
 
     summary = {
         "domain": "navigate",
@@ -246,6 +376,25 @@ def write_navigate_report(navigate_data, participants):
             sec += _fmt_row(w, label, stats_by_cond, conditions)
         sec += "\n"
         sections.append(sec)
+
+    # ── Statistical analysis: XTE, ATD, Heading in climb phase (RMSE + nMAE) ─
+    stat_sec  = f"{'─' * 78}\n"
+    stat_sec += "  STATISTICAL ANALYSIS  (Friedman + Wilcoxon + Holm-Bonferroni)\n"
+    stat_sec += "  Signals: XTE, ATD error, Heading error (climb phase)  |  Metrics: RMSE, nMAE\n"
+    stat_sec += "  Non-parametric within-subjects tests across 4 conditions\n"
+    stat_sec += f"{'─' * 78}\n\n"
+    for sig_key, sig_label in [
+        ("xte",           "XTE"),
+        ("atd_error",     "ATD Error"),
+        ("heading_error", "Heading Error"),
+    ]:
+        stat_sec += f"  ── {sig_label} (climb) ──\n"
+        for met, met_label in [("rmse", "RMSE"), ("nmae", "nMAE")]:
+            v = vals_cache[("climb", (sig_key, met))]
+            frd, pw = _run_stats(v, conditions, _ALL_PAIRS)
+            stat_sec += _fmt_stat_section(f"{sig_label} — {met_label}", frd, pw, _ALL_PAIRS)
+        stat_sec += "\n"
+    sections.append(stat_sec)
 
     path = os.path.join(REPORTS_DIR, "navigate_report.txt")
     _write_report(path, "Navigate Performance  (cross-participant)", summary, sections)
@@ -278,19 +427,23 @@ _TIME_PROCS = [
 def write_time_report(time_data, participants):
     conditions = _TIME_CONDITIONS
 
-    # Top-level durations
+    # Collect top-level durations
+    top_vals_cache = {}  # key -> {cond: [vals]}
     top_stats = {}
     for key, label in _TIME_TOP:
-        vals_by_cond = _collect_vals(time_data, participants, conditions, key)
-        top_stats[key] = {c: _desc(v) for c, v in vals_by_cond.items()}
+        v = _collect_vals(time_data, participants, conditions, key)
+        top_vals_cache[key] = v
+        top_stats[key] = {c: _desc(v[c]) for c in conditions}
 
-    # Per-procedure metrics
+    # Collect per-procedure metrics
+    proc_vals_cache = {}  # (proc_key, met) -> {cond: [vals]}
     proc_stats = {}
     for proc_key, _ in _TIME_PROCS:
         proc_stats[proc_key] = {}
         for met in ("n_tasks", "total_s", "mean_task_s"):
-            vals_by_cond = _collect_vals(time_data, participants, conditions, proc_key, met)
-            proc_stats[proc_key][met] = {c: _desc(v) for c, v in vals_by_cond.items()}
+            v = _collect_vals(time_data, participants, conditions, proc_key, met)
+            proc_vals_cache[(proc_key, met)] = v
+            proc_stats[proc_key][met] = {c: _desc(v[c]) for c in conditions}
 
     summary = {
         "domain": "time",
@@ -303,7 +456,7 @@ def write_time_report(time_data, participants):
     w = 36
     sections = []
 
-    # Section 1 — top-level
+    # Section 1 — top-level descriptives
     sec1 = f"{'─' * 78}\n  SCENARIO-LEVEL DURATIONS\n{'─' * 78}\n"
     sec1 += _cond_header(w, conditions)
     for key, label in _TIME_TOP:
@@ -311,7 +464,7 @@ def write_time_report(time_data, participants):
     sec1 += "\n"
     sections.append(sec1)
 
-    # Section 2 — per-procedure
+    # Section 2 — per-procedure descriptives
     sec2 = f"{'─' * 78}\n  PER-PROCEDURE TIMING\n{'─' * 78}\n"
     for proc_key, proc_label in _TIME_PROCS:
         sec2 += f"\n  [{proc_label}]\n"
@@ -320,6 +473,35 @@ def write_time_report(time_data, participants):
             sec2 += _fmt_row(w, met_label, proc_stats[proc_key][met], conditions)
     sec2 += "\n"
     sections.append(sec2)
+
+    # ── Statistical analysis ─────────────────────────────────────────────────
+    stat_sec  = f"{'─' * 78}\n"
+    stat_sec += "  STATISTICAL ANALYSIS  (Friedman + Wilcoxon + Holm-Bonferroni)\n"
+    stat_sec += "  Non-parametric within-subjects tests across 4 conditions\n"
+    stat_sec += f"{'─' * 78}\n\n"
+
+    # Scenario-level: scenario_duration_s + failure_to_nominal_s
+    stat_sec += "  ── Scenario-level durations ──\n"
+    for key, label in [
+        ("scenario_duration_s",  "Scenario duration (s)"),
+        ("failure_to_nominal_s", "Failure \u2192 nominal (s)"),
+    ]:
+        frd, pw = _run_stats(top_vals_cache[key], conditions, _ALL_PAIRS)
+        stat_sec += _fmt_stat_section(label, frd, pw, _ALL_PAIRS)
+    stat_sec += "\n"
+
+    # Per-procedure: total_s (procedure duration) + mean_task_s (avg task duration)
+    stat_sec += "  ── Per-procedure: duration & mean task duration ──\n\n"
+    for proc_key, proc_label in _TIME_PROCS:
+        stat_sec += f"  [{proc_label}]\n"
+        for met, met_label in [
+            ("total_s",      "Procedure duration (s)"),
+            ("mean_task_s",  "Mean task duration (s)"),
+        ]:
+            frd, pw = _run_stats(proc_vals_cache[(proc_key, met)], conditions, _ALL_PAIRS)
+            stat_sec += _fmt_stat_section(met_label, frd, pw, _ALL_PAIRS)
+        stat_sec += "\n"
+    sections.append(stat_sec)
 
     path = os.path.join(REPORTS_DIR, "time_report.txt")
     _write_report(path, "Time Performance  (cross-participant)", summary, sections)

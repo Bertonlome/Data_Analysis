@@ -37,6 +37,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from scipy.stats import gaussian_kde
+from scipy.stats import friedmanchisquare, wilcoxon as _sp_wilcoxon
+from statsmodels.stats.multitest import multipletests
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 HITLS_DIR    = os.path.dirname(os.path.abspath(__file__))
@@ -357,6 +359,107 @@ def _studentized_bootstrap_ci(diffs, B=9999, rng=None):
     return d_bar, d_bar - q975 * se_obs, d_bar - q025 * se_obs
 
 
+# ── Statistical testing helpers ───────────────────────────────────────────────
+
+def _wilcoxon_test(a, b):
+    """Paired Wilcoxon signed-rank test. Returns (p_value, rank_biserial_r).
+    Drops pairs where either value is None.  Minimum 4 valid pairs required.
+    """
+    pairs = [(float(x), float(y)) for x, y in zip(a, b)
+             if x is not None and y is not None]
+    if len(pairs) < 4:
+        return 1.0, 0.0
+    xa, xb = np.array([p[0] for p in pairs]), np.array([p[1] for p in pairs])
+    try:
+        res = _sp_wilcoxon(xa, xb, alternative="two-sided", zero_method="wilcox")
+        n   = len(pairs)
+        # rank-biserial effect size: r = 1 - 2W / (n*(n+1)/2)
+        r   = 1.0 - 2.0 * res.statistic / (n * (n + 1) / 2.0)
+        return float(res.pvalue), float(r)
+    except Exception:
+        return 1.0, 0.0
+
+
+def _friedman_test(groups):
+    """Friedman chi-square for k groups (list of arrays/lists, equal length).
+    Drops participants (rows) with any None across conditions.
+    Returns (chi2, p).
+    """
+    rows = list(zip(*groups))
+    valid = [r for r in rows if all(x is not None for x in r)]
+    if len(valid) < 3:
+        return 0.0, 1.0
+    aligned = [[float(r[i]) for r in valid] for i in range(len(groups))]
+    try:
+        res = friedmanchisquare(*aligned)
+        return float(res.statistic), float(res.pvalue)
+    except Exception:
+        return 0.0, 1.0
+
+
+def _holm_correct(pvals, alpha=0.05):
+    """Holm-Bonferroni correction via statsmodels multipletests.
+    Returns (reject_array, pvals_corrected).
+    """
+    pvals = list(pvals)
+    if not pvals:
+        return np.array([], dtype=bool), np.array([])
+    reject, pvals_corr, _, _ = multipletests(pvals, alpha=alpha, method="holm")
+    return reject, pvals_corr
+
+
+def _sig_stars(p_raw, sig):
+    """Return significance label string (based on raw p and Holm rejection)."""
+    if not sig:
+        return ""
+    if p_raw < 0.001:
+        return "***"
+    if p_raw < 0.01:
+        return "**"
+    if p_raw < 0.05:
+        return "*"
+    return "†"   # Holm-rejected but raw p >= .05 (shouldn't happen, kept for safety)
+
+
+def _compute_pairwise_stats(raw_by_cond, diff_pairs, n_items):
+    """Compute Wilcoxon pairwise tests with Holm correction within each item.
+
+    Returns pairwise_by_item[ki][pi] = {
+        'p_raw': float, 'r': float, 'reject': bool, 'p_corr': float, 'stars': str
+    }
+    """
+    pairwise = [[None] * len(diff_pairs) for _ in range(n_items)]
+    for ki in range(n_items):
+        raw_ps, raw_rs = [], []
+        for bl, comp in diff_pairs:
+            p, r = _wilcoxon_test(raw_by_cond[bl][ki], raw_by_cond[comp][ki])
+            raw_ps.append(p)
+            raw_rs.append(r)
+        reject, p_corr = _holm_correct(raw_ps)
+        for pi in range(len(diff_pairs)):
+            pairwise[ki][pi] = {
+                "p_raw":  raw_ps[pi],
+                "r":      raw_rs[pi],
+                "reject": bool(reject[pi]),
+                "p_corr": float(p_corr[pi]),
+                "stars":  _sig_stars(raw_ps[pi], bool(reject[pi])),
+            }
+    return pairwise
+
+
+def _compute_friedman_stats(raw_by_cond, n_items, conditions):
+    """Compute Friedman test per item across all conditions.
+
+    Returns friedman_by_item[ki] = {'chi2': float, 'p': float, 'df': int}
+    """
+    friedman = []
+    for ki in range(n_items):
+        groups = [raw_by_cond[c][ki] for c in conditions]
+        chi2, p = _friedman_test(groups)
+        friedman.append({"chi2": chi2, "p": p, "df": len(conditions) - 1})
+    return friedman
+
+
 def _draw_diff_panel(ax, raw_by_cond, baseline, compare, n_items, rng,
                      inverted=False):
     """Horizontal mean-difference plot (compare − baseline) with 95 % CI.
@@ -405,12 +508,13 @@ def _draw_diff_panel(ax, raw_by_cond, baseline, compare, n_items, rng,
 
 
 def _draw_multi_diff_panel(ax, raw_by_cond, diff_pairs, n_items, rng,
-                           inverted=False):
+                           inverted=False, pairwise_stats=None):
     """Single consolidated forest-plot panel: all comparison pairs in one column.
 
     For each item row, pairs are offset vertically (±0.28 spacing).
     Filled marker = CI entirely on one side (reliable effect).
     Open  marker  = CI crosses 0 (inconclusive).
+    When pairwise_stats is provided, significance stars are annotated.
     """
     n_pairs = len(diff_pairs)
     offsets = np.linspace(-DIFF_OFFSET_RANGE, DIFF_OFFSET_RANGE, n_pairs) if n_pairs > 1 else [0.0]
@@ -446,6 +550,13 @@ def _draw_multi_diff_panel(ax, raw_by_cond, diff_pairs, n_items, rng,
             else:
                 ax.scatter(m, y_pos, color=color, edgecolors="black",
                            marker=marker, s=DIFF_DOT_SIZE, linewidths=0.5, zorder=5)
+
+            # significance stars from Wilcoxon + Holm correction
+            if pairwise_stats is not None:
+                stars = pairwise_stats[ki][pi]["stars"]
+                if stars:
+                    ax.text(hi, y_pos, f" {stars}", va="center", ha="left",
+                            fontsize=6, color=color, zorder=7)
 
             all_ext.extend([abs(lo), abs(hi), abs(m)])
 
@@ -521,8 +632,10 @@ def _make_combined_figure(suptitle, item_labels, counts_by_cond, raw_by_cond,
 
     # ── Consolidated diff panel (all pairs overlaid in one column) ──────────
     rng = np.random.default_rng(42)
+    pairwise_stats = _compute_pairwise_stats(raw_by_cond, diff_pairs, n_items)
     _draw_multi_diff_panel(axes[n_div], raw_by_cond, diff_pairs,
-                           n_items, rng, inverted=inverted)
+                           n_items, rng, inverted=inverted,
+                           pairwise_stats=pairwise_stats)
 
     # ── Combined legend ───────────────────────────────────────────────────────
     from matplotlib.lines import Line2D
@@ -1785,6 +1898,32 @@ def _cond_header(label_col_w, conditions):
     return header + "\n" + " " * (label_col_w + 2) + "  " + ("─" * 22 + "  ") * len(conditions) + "\n"
 
 
+def _fmt_stat_section(label, friedman, pairwise, diff_pairs):
+    """Format a statistical-analysis block for one composite score or item.
+
+    friedman : {'chi2': float, 'p': float, 'df': int}
+    pairwise : list of dicts per pair (same order as diff_pairs)
+    """
+    lines = []
+    lines.append(f"  {label}")
+    chi2, p_f, df = friedman['chi2'], friedman['p'], friedman['df']
+    p_f_str = f"{p_f:.4f}" if p_f >= 0.0001 else f"{p_f:.2e}"
+    lines.append(f"    Friedman χ²({df}) = {chi2:.3f},  p = {p_f_str}")
+    for pi, (bl, comp) in enumerate(diff_pairs):
+        pw = pairwise[pi]
+        p_raw = pw['p_raw']
+        p_cor = pw['p_corr']
+        r_val = pw['r']
+        sig   = "✓" if pw['reject'] else " "
+        p_raw_str = f"{p_raw:.4f}" if p_raw >= 0.0001 else f"{p_raw:.2e}"
+        p_cor_str = f"{p_cor:.4f}" if p_cor >= 0.0001 else f"{p_cor:.2e}"
+        stars = pw['stars'] or "ns"
+        lines.append(
+            f"    [{sig}] {comp} − {bl:<8}  W p={p_raw_str}  p_Holm={p_cor_str}  r={r_val:+.3f}  {stars}"
+        )
+    return "\n".join(lines) + "\n"
+
+
 # ── SUS report ────────────────────────────────────────────────────────────────
 
 def write_sus_report(all_data, participants):
@@ -1839,8 +1978,39 @@ def write_sus_report(all_data, participants):
         sec2 += _fmt_desc_table(w, item_stats[key], conditions, label[:w])
     sec2 += "\n"
 
+    # ── Statistical analysis ──────────────────────────────────────────────────
+    diff_pairs = _ALL_PAIRS
+    # Raw SUS scores per condition per participant
+    raw_sus = {c: [None] * len(participants) for c in conditions}
+    for ci, cond in enumerate(conditions):
+        for pi, pid in enumerate(participants):
+            try:
+                v = all_data[pid]["sus"]["conditions"][cond]["sus_score"]
+                raw_sus[cond][pi] = float(v) if v is not None else None
+            except (KeyError, TypeError):
+                pass
+    friedman_sus, _ = _friedman_test([raw_sus[c] for c in conditions]), None
+    friedman_sus = {"chi2": friedman_sus[0], "p": friedman_sus[1], "df": len(conditions) - 1}
+    pairwise_sus_raw = []
+    for bl, comp in diff_pairs:
+        p, r = _wilcoxon_test(raw_sus[bl], raw_sus[comp])
+        pairwise_sus_raw.append(p)
+    reject_sus, p_corr_sus = _holm_correct(pairwise_sus_raw)
+    pairwise_sus = []
+    for pi2, (bl, comp) in enumerate(diff_pairs):
+        p_r = pairwise_sus_raw[pi2]
+        pairwise_sus.append({
+            "p_raw": p_r, "r": _wilcoxon_test(raw_sus[bl], raw_sus[comp])[1],
+            "reject": bool(reject_sus[pi2]), "p_corr": float(p_corr_sus[pi2]),
+            "stars": _sig_stars(p_r, bool(reject_sus[pi2])),
+        })
+    sec3 = f"{'─' * 78}\n  STATISTICAL ANALYSIS  (Friedman + Wilcoxon + Holm-Bonferroni)\n{'─' * 78}\n"
+    sec3 += _fmt_stat_section("SUS Score (0–100)", friedman_sus, pairwise_sus, diff_pairs)
+    sec3 += "\n  [✓] = Holm-Bonferroni corrected rejection at α=.05\n"
+    sec3 += "  r = rank-biserial effect size\n\n"
+
     path = os.path.join(REPORTS_DIR, "sus_report.txt")
-    _write_report(path, "SUS — System Usability Scale  (cross-participant)", summary, [sec1, sec2])
+    _write_report(path, "SUS — System Usability Scale  (cross-participant)", summary, [sec1, sec2, sec3])
     print(f"  → {path}")
 
 
@@ -1927,8 +2097,47 @@ def write_tia_report(all_data, participants):
                 sec3 += _fmt_desc_table(w, item_stats[key], conditions, label[:w])
     sec3 += "\n"
 
+    # ── Statistical analysis ──────────────────────────────────────────────────
+    diff_pairs = _ALL_PAIRS
+
+    def _tia_raw(path_fn):
+        raw = {c: [None] * len(participants) for c in conditions}
+        for ci, cond in enumerate(conditions):
+            for pi2, pid in enumerate(participants):
+                try:
+                    raw[cond][pi2] = float(path_fn(pid, cond))
+                except (KeyError, TypeError, ValueError):
+                    pass
+        return raw
+
+    sec4 = f"{'─' * 78}\n  STATISTICAL ANALYSIS  (Friedman + Wilcoxon + Holm-Bonferroni)\n{'─' * 78}\n"
+    sec4 += "  [✓] = Holm-Bonferroni corrected rejection at α=.05\n  r = rank-biserial\n\n"
+
+    tia_metrics = [
+        ("TiA Global mean (1–5)",
+         lambda pid, c: all_data[pid]["tia"]["conditions"][c]["global_mean_excl_traits"]),
+        ("Reliability/Competence (1–5)",
+         lambda pid, c: all_data[pid]["tia"]["conditions"][c]["subscales"]["reliability_competence"]["mean"]),
+        ("Understanding/Predictability (1–5)",
+         lambda pid, c: all_data[pid]["tia"]["conditions"][c]["subscales"]["understanding_predictability"]["mean"]),
+        ("Trust in Automation (1–5)",
+         lambda pid, c: all_data[pid]["tia"]["conditions"][c]["subscales"]["trust_in_automation"]["mean"]),
+    ]
+    for metric_label, path_fn in tia_metrics:
+        raw_m = _tia_raw(path_fn)
+        chi2, p_f = _friedman_test([raw_m[c] for c in conditions])
+        frd = {"chi2": chi2, "p": p_f, "df": len(conditions) - 1}
+        ps_raw = [_wilcoxon_test(raw_m[bl], raw_m[comp])[0] for bl, comp in diff_pairs]
+        rs_raw = [_wilcoxon_test(raw_m[bl], raw_m[comp])[1] for bl, comp in diff_pairs]
+        reject_m, p_corr_m = _holm_correct(ps_raw)
+        pw_m = [{"p_raw": ps_raw[i], "r": rs_raw[i], "reject": bool(reject_m[i]),
+                 "p_corr": float(p_corr_m[i]),
+                 "stars": _sig_stars(ps_raw[i], bool(reject_m[i]))} for i in range(len(diff_pairs))]
+        sec4 += _fmt_stat_section(metric_label, frd, pw_m, diff_pairs)
+        sec4 += "\n"
+
     path = os.path.join(REPORTS_DIR, "tia_report.txt")
-    _write_report(path, "TiA — Trust in Automation Checklist  (cross-participant)", summary, [sec1, sec2, sec3])
+    _write_report(path, "TiA — Trust in Automation Checklist  (cross-participant)", summary, [sec1, sec2, sec3, sec4])
     print(f"  → {path}")
 
 
@@ -1983,8 +2192,31 @@ def write_nasa_report(all_data, participants):
         sec2 += _fmt_desc_table(w, dim_stats[key], conditions, label)
     sec2 += "\n"
 
+    # ── Statistical analysis ──────────────────────────────────────────────────
+    diff_pairs = _NASA_PAIRS
+    raw_nasa = {c: [None] * len(participants) for c in conditions}
+    for cond in conditions:
+        for pi2, pid in enumerate(participants):
+            try:
+                v = all_data[pid]["nasa_tlx"]["conditions"][cond]["nasa_tlx_weighted_score"]
+                raw_nasa[cond][pi2] = float(v) if v is not None else None
+            except (KeyError, TypeError):
+                pass
+    chi2_n, p_n = _friedman_test([raw_nasa[c] for c in conditions])
+    frd_nasa = {"chi2": chi2_n, "p": p_n, "df": len(conditions) - 1}
+    ps_n = [_wilcoxon_test(raw_nasa[bl], raw_nasa[comp])[0] for bl, comp in diff_pairs]
+    rs_n = [_wilcoxon_test(raw_nasa[bl], raw_nasa[comp])[1] for bl, comp in diff_pairs]
+    rej_n, pc_n = _holm_correct(ps_n)
+    pw_n = [{"p_raw": ps_n[i], "r": rs_n[i], "reject": bool(rej_n[i]),
+              "p_corr": float(pc_n[i]), "stars": _sig_stars(ps_n[i], bool(rej_n[i]))}
+            for i in range(len(diff_pairs))]
+    sec3 = f"{'─' * 78}\n  STATISTICAL ANALYSIS  (Friedman + Wilcoxon + Holm-Bonferroni)\n{'─' * 78}\n"
+    sec3 += "  [✓] = Holm-Bonferroni corrected rejection at α=.05\n  r = rank-biserial\n\n"
+    sec3 += _fmt_stat_section("NASA-TLX Weighted Score (0–100, high=bad)", frd_nasa, pw_n, diff_pairs)
+    sec3 += "\n"
+
     path = os.path.join(REPORTS_DIR, "nasa_tlx_report.txt")
-    _write_report(path, "NASA-TLX — Cross-participant", summary, [sec1, sec2])
+    _write_report(path, "NASA-TLX — Cross-participant", summary, [sec1, sec2, sec3])
     print(f"  → {path}")
 
 
@@ -2026,8 +2258,33 @@ def write_trust_risk_report(all_data, participants):
     sec2 += _fmt_desc_table(w, stats["risk_vas"], conditions, "Risk VAS (0–100)")
     sec2 += "\n"
 
+    # ── Statistical analysis ──────────────────────────────────────────────────
+    diff_pairs = _ALL_PAIRS
+    sec3 = f"{'─' * 78}\n  STATISTICAL ANALYSIS  (Friedman + Wilcoxon + Holm-Bonferroni)\n{'─' * 78}\n"
+    sec3 += "  [✓] = Holm-Bonferroni corrected rejection at α=.05\n  r = rank-biserial\n\n"
+    for vas_key, vas_label in [("trust_vas", "Trust VAS (0–100, high=good)"),
+                                ("risk_vas",  "Risk VAS (0–100, high=bad)")]:
+        raw_v = {c: [None] * len(participants) for c in conditions}
+        for cond in conditions:
+            for pi2, pid in enumerate(participants):
+                try:
+                    v = all_data[pid]["trust_risk"]["conditions"][cond][vas_key]
+                    raw_v[cond][pi2] = float(v) if v is not None else None
+                except (KeyError, TypeError):
+                    pass
+        chi2_v, p_v = _friedman_test([raw_v[c] for c in conditions])
+        frd_v = {"chi2": chi2_v, "p": p_v, "df": len(conditions) - 1}
+        ps_v = [_wilcoxon_test(raw_v[bl], raw_v[comp])[0] for bl, comp in diff_pairs]
+        rs_v = [_wilcoxon_test(raw_v[bl], raw_v[comp])[1] for bl, comp in diff_pairs]
+        rej_v, pc_v = _holm_correct(ps_v)
+        pw_v = [{"p_raw": ps_v[i], "r": rs_v[i], "reject": bool(rej_v[i]),
+                  "p_corr": float(pc_v[i]), "stars": _sig_stars(ps_v[i], bool(rej_v[i]))}
+                for i in range(len(diff_pairs))]
+        sec3 += _fmt_stat_section(vas_label, frd_v, pw_v, diff_pairs)
+        sec3 += "\n"
+
     path = os.path.join(REPORTS_DIR, "trust_risk_report.txt")
-    _write_report(path, "Trust & Risk VAS  (cross-participant)", summary, [sec1, sec2])
+    _write_report(path, "Trust & Risk VAS  (cross-participant)", summary, [sec1, sec2, sec3])
     print(f"  → {path}")
 
 
@@ -2091,8 +2348,34 @@ def write_ob_report(all_data, participants):
         sec2 += _fmt_desc_table(w, item_stats[key], conditions, label[:w])
     sec2 += "\n"
 
+    # ── Statistical analysis — per item (no composite score for OB) ───────────
+    diff_pairs = _ALL_PAIRS
+    sec3 = f"{'─' * 78}\n  STATISTICAL ANALYSIS — PER ITEM  (Friedman + Wilcoxon + Holm-Bonferroni)\n{'─' * 78}\n"
+    sec3 += "  Note: OB is an in-house questionnaire — no validated composite score.\n"
+    sec3 += "  Tests run per item; Holm correction applied within each item (4 pairs).\n"
+    sec3 += "  [✓] = Holm-Bonferroni corrected rejection at α=.05\n  r = rank-biserial\n\n"
+    for ob_key, ob_label in zip(_OB_KEYS, _OB_LABELS):
+        raw_ob = {c: [None] * len(participants) for c in conditions}
+        for cond in conditions:
+            for pi2, pid in enumerate(participants):
+                try:
+                    v = all_data[pid]["oversight_bespoke"]["conditions"][cond]["extended_score"]["items"][ob_key]["scored"]
+                    raw_ob[cond][pi2] = float(v) if v is not None else None
+                except (KeyError, TypeError):
+                    pass
+        chi2_ob, p_ob = _friedman_test([raw_ob[c] for c in conditions])
+        frd_ob = {"chi2": chi2_ob, "p": p_ob, "df": len(conditions) - 1}
+        ps_ob = [_wilcoxon_test(raw_ob[bl], raw_ob[comp])[0] for bl, comp in diff_pairs]
+        rs_ob = [_wilcoxon_test(raw_ob[bl], raw_ob[comp])[1] for bl, comp in diff_pairs]
+        rej_ob, pc_ob = _holm_correct(ps_ob)
+        pw_ob = [{"p_raw": ps_ob[i], "r": rs_ob[i], "reject": bool(rej_ob[i]),
+                   "p_corr": float(pc_ob[i]), "stars": _sig_stars(ps_ob[i], bool(rej_ob[i]))}
+                 for i in range(len(diff_pairs))]
+        sec3 += _fmt_stat_section(ob_label[:60], frd_ob, pw_ob, diff_pairs)
+        sec3 += "\n"
+
     path = os.path.join(REPORTS_DIR, "oversight_bespoke_report.txt")
-    _write_report(path, "Oversight Bespoke  (cross-participant)", summary, [sec1, sec2])
+    _write_report(path, "Oversight Bespoke  (cross-participant)", summary, [sec1, sec2, sec3])
     print(f"  → {path}")
 
 
@@ -2147,8 +2430,34 @@ def write_perceived_control_report(all_data, participants):
         sec2 += _fmt_desc_table(w, item_stats[key], conditions, label[:w])
     sec2 += "\n"
 
+    # ── Statistical analysis — per item (no validated composite for PC) ─────
+    diff_pairs = _ALL_PAIRS
+    sec3 = f"{'─' * 78}\n  STATISTICAL ANALYSIS — PER ITEM  (Friedman + Wilcoxon + Holm-Bonferroni)\n{'─' * 78}\n"
+    sec3 += "  Note: Perceived Control is an in-house questionnaire — no validated composite score.\n"
+    sec3 += "  Tests run per item; Holm correction applied within each item (4 pairs).\n"
+    sec3 += "  [✓] = Holm-Bonferroni corrected rejection at α=.05\n  r = rank-biserial\n\n"
+    for pc_key, pc_label in zip(_PC_KEYS, _PC_LABELS):
+        raw_pc_item = {c: [None] * len(participants) for c in conditions}
+        for cond in conditions:
+            for pi2, pid in enumerate(participants):
+                try:
+                    v = all_data[pid]["perceived_control"]["conditions"][cond]["items"][pc_key]["scored"]
+                    raw_pc_item[cond][pi2] = float(v) if v is not None else None
+                except (KeyError, TypeError):
+                    pass
+        chi2_pc, p_pc = _friedman_test([raw_pc_item[c] for c in conditions])
+        frd_pc = {"chi2": chi2_pc, "p": p_pc, "df": len(conditions) - 1}
+        ps_pc = [_wilcoxon_test(raw_pc_item[bl], raw_pc_item[comp])[0] for bl, comp in diff_pairs]
+        rs_pc = [_wilcoxon_test(raw_pc_item[bl], raw_pc_item[comp])[1] for bl, comp in diff_pairs]
+        rej_pc, pc_corr = _holm_correct(ps_pc)
+        pw_pc = [{"p_raw": ps_pc[i], "r": rs_pc[i], "reject": bool(rej_pc[i]),
+                   "p_corr": float(pc_corr[i]), "stars": _sig_stars(ps_pc[i], bool(rej_pc[i]))}
+                 for i in range(len(diff_pairs))]
+        sec3 += _fmt_stat_section(pc_label[:70], frd_pc, pw_pc, diff_pairs)
+        sec3 += "\n"
+
     path = os.path.join(REPORTS_DIR, "perceived_control_report.txt")
-    _write_report(path, "Perceived Control  (cross-participant)", summary, [sec1, sec2])
+    _write_report(path, "Perceived Control  (cross-participant)", summary, [sec1, sec2, sec3])
     print(f"  → {path}")
 
 

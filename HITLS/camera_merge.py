@@ -502,6 +502,53 @@ def process_camera(participant: str, cam_dir: Path,
 
 
 # ─── Entry point ───────────────────────────────────────────────────────────────
+def _interactive_select(all_dirs: List[Path]) -> Optional[set]:
+    """Prompt the user to pick participants interactively.
+
+    Returns a set of names to process, or None meaning 'all'.
+    """
+    names = [d.name for d in all_dirs]
+    print("Available participants:")
+    for i, name in enumerate(names, 1):
+        print(f"  [{i:>2}]  {name}")
+    print()
+    print("Enter selection  (e.g.  1 3 5  or  2-4  or  all  or blank = all):")
+    try:
+        raw = input("  > ").strip()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        return None
+
+    if not raw or raw.lower() == 'all':
+        return None   # process all
+
+    selected: set = set()
+    for token in raw.replace(',', ' ').split():
+        if '-' in token:
+            parts = token.split('-', 1)
+            try:
+                lo, hi = int(parts[0]), int(parts[1])
+                for idx in range(lo, hi + 1):
+                    if 1 <= idx <= len(names):
+                        selected.add(names[idx - 1])
+            except ValueError:
+                print(f"  Ignoring unrecognised token: {token!r}")
+        else:
+            try:
+                idx = int(token)
+                if 1 <= idx <= len(names):
+                    selected.add(names[idx - 1])
+                else:
+                    print(f"  Index {idx} out of range – ignored.")
+            except ValueError:
+                up = token.upper()
+                if up in names:
+                    selected.add(up)
+                else:
+                    print(f"  Unknown participant {token!r} – ignored.")
+    return selected or None
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description='Merge camera clips into timed segments with black-frame gap fill.')
@@ -514,17 +561,29 @@ def main() -> None:
         help='Process only these participant(s) (e.g. -p P13 P17). Omit to process all.')
     args    = parser.parse_args()
     gap_tol = args.gap
-    only_p  = {v.upper() for v in args.participant} if args.participant else None
+
+    # Discover all participant directories first (needed for interactive mode)
+    all_dirs = sorted(
+        [d for d in HITLS_DIR.iterdir()
+         if d.is_dir() and PARTICIPANT_RE.match(d.name)],
+        key=lambda p: p.name,
+    )
+
+    if args.participant:
+        only_p = {v.upper() for v in args.participant}
+    elif sys.stdin.isatty():
+        only_p = _interactive_select(all_dirs)
+        print()
+    else:
+        only_p = None
 
     for tool in ('ffmpeg', 'ffprobe'):
         if subprocess.run([tool, '-version'], capture_output=True).returncode != 0:
             sys.exit(f"ERROR: {tool} not found in PATH – aborting.")
 
     participants = sorted(
-        [d for d in HITLS_DIR.iterdir()
-         if d.is_dir() and PARTICIPANT_RE.match(d.name)
-         and (only_p is None or d.name in only_p)],
-
+        [d for d in all_dirs
+         if only_p is None or d.name in only_p],
         key=lambda p: p.name,
     )
     if not participants:

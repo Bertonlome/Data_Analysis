@@ -49,39 +49,94 @@ MATCH_TOLERANCE_S: float = 30.0
 
 
 # ─── CSV parsing ───────────────────────────────────────────────────────────────
-def parse_scenario_csv(path: Path) -> tuple[float, float] | None:
+def parse_scenario_csv(path: Path) -> tuple[float, float] | tuple[None, str]:
     """
-    Return (start_utc, end_utc) in true UTC epoch seconds.
+    Return (start_utc, end_utc) in true UTC epoch seconds, or (None, reason).
 
-    start = first data row timestamp (simulator resumed)
-    end   = last  data row timestamp (last recorded event)
+    Two formats are supported:
 
-    Returns None if the file cannot be parsed.
+    Old format  – column 1 header: ``timestamp``
+        Values are Unix epoch seconds in UTC+8 (INGESCAPE_OFFSET_S applied).
+
+    New format  – column 1 header: ``relative_time_us``
+        Values are microseconds from platform start.  A ``TARS Agent /
+        session_epoch`` row must be present to anchor relative time to wall
+        clock.  The session_epoch value is the UTC+4 wall-clock epoch at the
+        moment that row was written (CAMERA_OFFSET_S applied).
     """
-    start_ts: float | None = None
-    end_ts:   float | None = None
-
     with path.open(newline='', encoding='utf-8', errors='replace') as fh:
         reader = csv.reader(fh, delimiter=';')
-        next(reader, None)          # skip header line
-        for row in reader:
-            if len(row) < 2:
-                continue
-            try:
-                ts = float(row[1])
-            except ValueError:
-                continue
-            if start_ts is None:
-                start_ts = ts
-            end_ts = ts
+        header = next(reader, None)
+        if header is None:
+            return None, 'empty file'
 
-    if start_ts is None or end_ts is None:
-        return None
+        col1_name = header[1].strip() if len(header) > 1 else ''
 
-    return (
-        start_ts - INGESCAPE_OFFSET_S,
-        end_ts   - INGESCAPE_OFFSET_S,
-    )
+        if col1_name == 'relative_time_us':
+            # ── New format ────────────────────────────────────────────────────
+            ses_epoch_val: float | None = None
+            ses_epoch_rel: float | None = None
+            first_rel: float | None = None
+            last_rel:  float | None = None
+
+            for row in reader:
+                if len(row) < 2:
+                    continue
+                try:
+                    rel = float(row[1])
+                except ValueError:
+                    continue
+
+                # Detect the session_epoch anchor row
+                if (len(row) >= 7
+                        and row[2].strip() == 'TARS Agent'
+                        and row[3].strip() == 'session_epoch'):
+                    try:
+                        ses_epoch_val = float(row[6])
+                        ses_epoch_rel = rel
+                    except (ValueError, IndexError):
+                        pass
+                    continue
+
+                if first_rel is None:
+                    first_rel = rel
+                last_rel = rel
+
+            if first_rel is None or last_rel is None:
+                return None, 'no data rows found'
+            if ses_epoch_val is None:
+                return None, 'relative_time_us format but no session_epoch row found'
+
+            # session_epoch is emitted in UTC+4; subtract CAMERA_OFFSET_S to reach UTC.
+            base_utc = ses_epoch_val - CAMERA_OFFSET_S - ses_epoch_rel / 1e6
+            return (
+                base_utc + first_rel / 1e6,
+                base_utc + last_rel  / 1e6,
+            )
+
+        else:
+            # ── Old format (timestamp = UTC+8 epoch seconds) ──────────────────
+            start_ts: float | None = None
+            end_ts:   float | None = None
+
+            for row in reader:
+                if len(row) < 2:
+                    continue
+                try:
+                    ts = float(row[1])
+                except ValueError:
+                    continue
+                if start_ts is None:
+                    start_ts = ts
+                end_ts = ts
+
+            if start_ts is None or end_ts is None:
+                return None, 'no data rows found'
+
+            return (
+                start_ts - INGESCAPE_OFFSET_S,
+                end_ts   - INGESCAPE_OFFSET_S,
+            )
 
 
 # ─── Video helpers ─────────────────────────────────────────────────────────────
@@ -214,8 +269,8 @@ def process_participant(part_dir: Path, dry_run: bool) -> None:
         print(f'\n  ── scenario_{num}_{name} ──')
 
         times = parse_scenario_csv(csv_path)
-        if times is None:
-            print('    [FAIL] Could not parse timestamps')
+        if times[0] is None:
+            print(f'    [FAIL] Could not parse timestamps: {times[1]}')
             continue
 
         s_start, s_end = times

@@ -3,66 +3,66 @@
   "form": "pre_experiment_form_pts",
   "n_participants": 18,
   "pts_total": {
-    "n": 13,
-    "mean": 25.692,
-    "sd": 3.199,
-    "median": 26.0,
+    "n": 18,
+    "mean": 25.667,
+    "sd": 3.049,
+    "median": 26.5,
     "min": 20.0,
     "max": 31.0
   },
   "items": {
     "Q1": {
-      "n": 13,
-      "mean": 4.154,
-      "sd": 0.899,
+      "n": 18,
+      "mean": 4.111,
+      "sd": 0.758,
       "median": 4.0,
       "min": 2.0,
       "max": 5.0
     },
     "Q2": {
-      "n": 13,
-      "mean": 4.308,
-      "sd": 0.48,
+      "n": 18,
+      "mean": 4.167,
+      "sd": 0.514,
       "median": 4.0,
-      "min": 4.0,
+      "min": 3.0,
       "max": 5.0
     },
     "Q3": {
-      "n": 13,
-      "mean": 3.692,
-      "sd": 0.751,
+      "n": 18,
+      "mean": 3.722,
+      "sd": 0.669,
       "median": 4.0,
       "min": 2.0,
       "max": 5.0
     },
     "Q4": {
-      "n": 13,
-      "mean": 3.538,
-      "sd": 0.776,
+      "n": 18,
+      "mean": 3.556,
+      "sd": 0.705,
       "median": 4.0,
       "min": 2.0,
       "max": 5.0
     },
     "Q5": {
-      "n": 13,
-      "mean": 3.385,
-      "sd": 0.87,
+      "n": 18,
+      "mean": 3.444,
+      "sd": 0.784,
       "median": 4.0,
       "min": 2.0,
       "max": 4.0
     },
     "Q6": {
-      "n": 13,
-      "mean": 2.462,
-      "sd": 0.967,
+      "n": 18,
+      "mean": 2.5,
+      "sd": 0.924,
       "median": 2.0,
       "min": 1.0,
       "max": 4.0
     },
     "Q7": {
-      "n": 13,
-      "mean": 4.154,
-      "sd": 0.801,
+      "n": 18,
+      "mean": 4.167,
+      "sd": 0.786,
       "median": 4.0,
       "min": 2.0,
       "max": 5.0
@@ -77,18 +77,18 @@
 ──────────────────────────────────────────────────────────────────────────────
   PTS TOTAL SCORE
 ──────────────────────────────────────────────────────────────────────────────
-  n=13  μ=25.69  σ=3.20  Md=26.00  [20.0–31.0]
+  n=18  μ=25.67  σ=3.05  Md=26.50  [20.0–31.0]
 
 ──────────────────────────────────────────────────────────────────────────────
   ITEMS (scored 1–5, high = trusting)
 ──────────────────────────────────────────────────────────────────────────────
   Item                                                                      n   mean    SD     Md  [min–max]
   ─────────────────────────────────────────────────────────────────────────────────────────────────────────
-  Q1(+) I usually trust machines until there is a reason not to            13   4.15  0.90   4.00  [2.0–5.0]  ████████████░░░
-  Q2(–) For the most part, I distrust machines                             13   4.31  0.48   4.00  [4.0–5.0]  ████████████░░░
-  Q3(+) In general, I would rely on a machine to assist me                 13   3.69  0.75   4.00  [2.0–5.0]  ██████████░░░░░
-  Q4(+) My tendency to trust machines is high                              13   3.54  0.78   4.00  [2.0–5.0]  ██████████░░░░░
-  Q5(+) It is easy for me to trust machines to do their job.               13   3.38  0.87   4.00  [2.0–4.0]  █████████░░░░░░
-  Q6(+) I am likely to trust a machine even when I have little knowledge   13   2.46  0.97   2.00  [1.0–4.0]  █████░░░░░░░░░░
-  Q7(+) I have a generally positive attitude toward advanced automation    13   4.15  0.80   4.00  [2.0–5.0]  ████████████░░░
+  Q1(+) I usually trust machines until there is a reason not to            18   4.11  0.76   4.00  [2.0–5.0]  ████████████░░░
+  Q2(–) For the most part, I distrust machines                             18   4.17  0.51   4.00  [3.0–5.0]  ████████████░░░
+  Q3(+) In general, I would rely on a machine to assist me                 18   3.72  0.67   4.00  [2.0–5.0]  ██████████░░░░░
+  Q4(+) My tendency to trust machines is high                              18   3.56  0.70   4.00  [2.0–5.0]  ██████████░░░░░
+  Q5(+) It is easy for me to trust machines to do their job.               18   3.44  0.78   4.00  [2.0–4.0]  █████████░░░░░░
+  Q6(+) I am likely to trust a machine even when I have little knowledge   18   2.50  0.92   2.00  [1.0–4.0]  ██████░░░░░░░░░
+  Q7(+) I have a generally positive attitude toward advanced automation    18   4.17  0.79   4.00  [2.0–5.0]  ████████████░░░
 

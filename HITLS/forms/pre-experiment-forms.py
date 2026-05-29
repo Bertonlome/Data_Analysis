@@ -13,6 +13,8 @@ import os
 import csv
 import json
 
+HITLS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 LIKERT_SCORE = {
     "Strongly agree": 5,
     "Agree": 4,
@@ -87,7 +89,7 @@ def load_participant_row(csv_path, participant_id):
         reader = csv.reader(f)
         headers = next(reader)
         for row in reader:
-            if len(row) > 1 and row[1].strip() == participant_id:
+            if len(row) > 1 and row[1].strip().upper() == participant_id.upper():
                 return headers, row
     return None, None
 

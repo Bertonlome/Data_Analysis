@@ -83,9 +83,14 @@ GAP_THRESHOLD = 0.150  # seconds
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def extract_condition(filename):
-    """Return condition label from scenario filename, or None (training/unfinished)."""
+    """Return condition label from scenario filename, or None for skipped files."""
     fname = os.path.basename(filename).lower()
-    if 'training' in fname or 'unfinish' in fname:
+    if (
+        'training' in fname
+        or 'unfinish' in fname
+        or 'no_birds_strike' in fname
+        or 'birds_strike' in fname
+    ):
         return None
     for cond in CONDITIONS:
         if cond.lower() in fname or cond.replace('-', '_').lower() in fname:
@@ -402,7 +407,7 @@ def analyse_participant(pid, participant_dir, verbose=True):
     for filepath in scenario_files:
         cond = extract_condition(filepath)
         if cond is None:
-            continue  # skip training / unfinished
+            continue  # skip training / unfinished / aborted variants
 
         fname = os.path.basename(filepath)
         if verbose:
@@ -520,6 +525,49 @@ def tars_vs_nontars_stats(cond_data):
             result['p'] = float(p)
         except Exception:
             pass
+
+    return result
+
+
+def friedman_tars_across_conditions(all_results):
+    """
+    Run a Friedman omnibus test on per-participant TARS dwell time across
+    the four experimental conditions.
+
+    Only participants with a valid TARS aggregate in every condition are kept.
+    Returns a dict with n, chi2, p, and df.
+    """
+    per_cond = {cond: {} for cond in CONDITIONS}
+    for pid, participant_results in all_results.items():
+        for cond in CONDITIONS:
+            scenario_list = participant_results.get(cond, [])
+            if not scenario_list:
+                continue
+            agg = aggregate_metrics([s['metrics'] for s in scenario_list])
+            per_cond[cond][pid] = agg['TARS']['total_dwell_time']
+
+    if not all(per_cond[cond] for cond in CONDITIONS):
+        common_pids = []
+    else:
+        common_pids = sorted(set.intersection(*[set(per_cond[cond].keys()) for cond in CONDITIONS]))
+
+    result = {
+        'n': len(common_pids),
+        'chi2': float('nan'),
+        'p': float('nan'),
+        'df': len(CONDITIONS) - 1,
+    }
+
+    if not _SCIPY or len(common_pids) < 3:
+        return result
+
+    aligned = [[per_cond[cond][pid] for pid in common_pids] for cond in CONDITIONS]
+    try:
+        chi2, p = sp_stats.friedmanchisquare(*aligned)
+        result['chi2'] = float(chi2)
+        result['p'] = float(p)
+    except Exception:
+        pass
 
     return result
 
@@ -710,6 +758,20 @@ def run_all():
                              title=f"All participants – {cond} (n={len(cond_data)})")
             print_aoi_statistics(agg_all,
                                  title=f"ALL – {cond} (n={len(cond_data)})")
+
+        # ── Omnibus test across conditions ──────────────────────────────────
+        omni = friedman_tars_across_conditions(all_results)
+        rpt.write(f"\n\n{'='*80}\n")
+        rpt.write("TARS DWELL TIME — OMNIBUS COMPARISON ACROSS CONDITIONS\n")
+        rpt.write("=" * 80 + "\n")
+        rpt.write("Test   : Friedman chi-square test on participant-level TARS dwell times\n")
+        rpt.write("         (participants with all four conditions only)\n")
+        rpt.write(f"n      : {omni['n']} complete participants\n")
+        if np.isnan(omni['chi2']) or np.isnan(omni['p']):
+            rpt.write("Result : n/a (insufficient complete repeated-measures data)\n")
+        else:
+            p_str = f"{omni['p']:.4f}" if omni['p'] >= 0.0001 else f"{omni['p']:.2e}"
+            rpt.write(f"Result : chi²({omni['df']}) = {omni['chi2']:.3f},  p = {p_str}  {_sig_stars(omni['p'])}\n")
 
         # ── TARS vs. non-TARS summary table ──────────────────────────────────
         rpt.write(f"\n\n{'='*80}\n")

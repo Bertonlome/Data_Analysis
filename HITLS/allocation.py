@@ -652,6 +652,86 @@ def _bar(value: float, max_value: float, width: int = 20) -> str:
     return "█" * filled + "░" * (width - filled)
 
 
+def _support_mode_from_color(color: str) -> str:
+    """Map the IA support-side color to an automation-proportion support mode.
+
+    Yellow means optional support, orange means mandatory support, and any
+    other value is treated as no support available.
+    """
+    value = (color or "").strip().lower()
+    if value == "yellow":
+        return "optional"
+    if value == "orange":
+        return "mandatory"
+    return "none"
+
+
+def _automation_bounds_for_task(row: dict, performer_state: int) -> tuple[float, float]:
+    """Return the automation proportion interval for one task.
+
+    Human-led tasks inspect TARS*; agent-led tasks inspect Human. Shared tasks
+    are treated as the neutral midpoint of the scale.
+    """
+    if performer_state == SHARED:
+        return 0.5, 0.5
+
+    if performer_state == HUMAN:
+        support_mode = _support_mode_from_color(row.get("TARS*", ""))
+        if support_mode == "optional":
+            return 0.0, 0.5
+        if support_mode == "mandatory":
+            return 0.5, 0.5
+        return 0.0, 0.0
+
+    support_mode = _support_mode_from_color(row.get("Human", ""))
+    if support_mode == "optional":
+        return 0.75, 1.0
+    if support_mode == "mandatory":
+        return 0.75, 0.75
+    return 1.0, 1.0
+
+
+def _balanced_interval_from_bounds(bounds: list[tuple[float, float]],
+                                  categories: list[str]) -> tuple[float, float, dict]:
+    """Average task intervals within each category, then average categories."""
+    cat_order = _unique_ordered(categories)
+    per_category = {}
+    for cat in cat_order:
+        idxs = [i for i, name in enumerate(categories) if name == cat]
+        if not idxs:
+            continue
+        cat_mins = [bounds[i][0] for i in idxs]
+        cat_maxs = [bounds[i][1] for i in idxs]
+        per_category[cat] = {
+            "min": round(float(np.mean(cat_mins)), 3),
+            "max": round(float(np.mean(cat_maxs)), 3),
+        }
+
+    overall_min = round(float(np.mean([d["min"] for d in per_category.values()])), 3) if per_category else 0.0
+    overall_max = round(float(np.mean([d["max"] for d in per_category.values()])), 3) if per_category else 0.0
+    return overall_min, overall_max, per_category
+
+
+def _task_achievable_bounds(row: dict, is_choice_task: bool) -> tuple[float, float]:
+    """Return achievable AP bounds for one task from template constraints only.
+
+    For fixed tasks (no TARS allocation choice), only the human-led state is
+    feasible. For choice tasks, bounds are taken over all performer states.
+    """
+    if not is_choice_task:
+        return _automation_bounds_for_task(row, HUMAN)
+
+    candidates = [
+        _automation_bounds_for_task(row, HUMAN),
+        _automation_bounds_for_task(row, AUTO_FAST),
+        _automation_bounds_for_task(row, AUTO_SLOW),
+        _automation_bounds_for_task(row, SHARED),
+    ]
+    lo = min(b[0] for b in candidates)
+    hi = max(b[1] for b in candidates)
+    return lo, hi
+
+
 def write_allocation_report(participants: list, vectors: np.ndarray,
                             ref_rows: list, is_choice: np.ndarray) -> None:
     """Compute descriptive statistics and write allocation_report.txt."""
@@ -671,6 +751,36 @@ def write_allocation_report(participants: list, vectors: np.ndarray,
     cats_c = [categories[i]   for i in choice_idx]
     objs_c = [task_objects[i] for i in choice_idx]
     total_cells = n_p * n_choice
+
+    # Theoretical AP interval from task constraints (independent of participants)
+    template_bounds = [
+        _task_achievable_bounds(ref_rows[ti], bool(is_choice[ti]))
+        for ti in range(n_tasks)
+    ]
+    ap_abs_min, ap_abs_max, _ = _balanced_interval_from_bounds(template_bounds, categories)
+
+    # ── Category-balanced automation proportion intervals ───────────────────
+    ap_per_part = {}
+    for pi, pid in enumerate(participants):
+        bounds = []
+        for ti in range(n_tasks):
+            # Fixed tasks are human-only by design (no allocation choice).
+            if not is_choice[ti]:
+                bounds.append(_automation_bounds_for_task(ref_rows[ti], HUMAN))
+            else:
+                bounds.append(_automation_bounds_for_task(ref_rows[ti], int(vectors[pi, ti])))
+
+        ap_min, ap_max, ap_by_cat = _balanced_interval_from_bounds(bounds, categories)
+        ap_per_part[pid] = {
+            "min": ap_min,
+            "max": ap_max,
+            "mid": round((ap_min + ap_max) / 2.0, 3),
+            "per_category": ap_by_cat,
+        }
+
+    ap_group_min = round(float(np.mean([ap_per_part[pid]["min"] for pid in participants])), 3)
+    ap_group_max = round(float(np.mean([ap_per_part[pid]["max"] for pid in participants])), 3)
+    ap_group_mid = round((ap_group_min + ap_group_max) / 2.0, 3)
 
     # ── Overall counts ────────────────────────────────────────────────────────
     overall = {}
@@ -735,6 +845,27 @@ def write_allocation_report(participants: list, vectors: np.ndarray,
         "participants":   participants,
         "n_choice_tasks": n_choice,
         "n_fixed_tasks":  n_fixed,
+        "automation_proportion": {
+            "overall": {
+                "min": ap_group_min,
+                "max": ap_group_max,
+                "mid": ap_group_mid,
+            },
+            "theoretical_achievable_interval": {
+                "min": ap_abs_min,
+                "max": ap_abs_max,
+            },
+            "per_participant": ap_per_part,
+            "method": {
+                "category_balanced": True,
+                "includes_fixed_human_only_tasks": True,
+                "shared_allocation_weight": 0.5,
+                "support_side_color_map": {
+                    "yellow": "optional",
+                    "orange": "mandatory",
+                },
+            },
+        },
         "overall_allocation": overall,
         "per_participant":    per_part,
         "per_category":       per_cat,
@@ -793,6 +924,26 @@ def write_allocation_report(participants: list, vectors: np.ndarray,
     a("")
     a(f"  Least automation: {sorted_auto[0]}  ({per_part[sorted_auto[0]]['auto_pct']:.1f}%)")
     a(f"  Most automation:  {sorted_auto[-1]}  ({per_part[sorted_auto[-1]]['auto_pct']:.1f}%)")
+    a("")
+
+    a("── AUTOMATION PROPORTION INTERVAL (category-balanced) " + "─" * 17)
+    a("")
+    a("  AP is normalized over ALL tasks (choice + fixed).")
+    a("  Fixed tasks are treated as human-only constraints (no delegation choice).")
+    a("  Weights: human-led independent = 0.000; human-led optional support = 0.000–0.500; "
+            "human-led mandatory support = 0.500; agent-led independent = 1.000; "
+            "agent-led optional support = 0.750–1.000; agent-led mandatory support = 0.750.")
+    a("  Shared allocations are treated as the neutral midpoint (0.500).")
+    a("")
+    a(f"  Theoretical achievable interval from task constraints: [{ap_abs_min:.3f}, {ap_abs_max:.3f}]")
+    a(f"  Group mean interval across participants: [{ap_group_min:.3f}, {ap_group_max:.3f}]")
+    a(f"  Group midpoint: {ap_group_mid:.3f}")
+    a("")
+    a(f"  {'Participant':<12}  {'AP min':>6}  {'AP max':>6}  {'AP mid':>6}")
+    a(f"  {'\u2500'*12}  {'\u2500'*6}  {'\u2500'*6}  {'\u2500'*6}")
+    for pid in participants:
+        ap = ap_per_part[pid]
+        a(f"  {pid:<12}  {ap['min']:>6.3f}  {ap['max']:>6.3f}  {ap['mid']:>6.3f}")
     a("")
 
     # Per-category
@@ -890,6 +1041,7 @@ def main():
     output_files.append(("allocation/allocation_report.txt", REPORT_PATH))
     if not _confirm_run(participants, output_files):
         return
+
 
     task_objects = build_task_objects(ref_rows)
     task_values  = build_task_values(ref_rows)

@@ -131,9 +131,15 @@ PROC_LABELS = {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def extract_condition(filename):
-    """Return condition label from scenario filename, or None (training/unfinished)."""
+    """Return condition label from scenario filename, or None for skipped files."""
     fname = os.path.basename(filename).lower()
-    if 'training' in fname or 'unfinish' in fname:
+    if (
+        'training' in fname
+        or 'unfinish' in fname
+        or 'no_birds_strike' in fname
+        or 'birds_strike' in fname
+        or 'birds' in fname
+    ):
         return None
     for cond in CONDITIONS:
         if cond.lower() in fname or cond.replace('-', '_').lower() in fname:

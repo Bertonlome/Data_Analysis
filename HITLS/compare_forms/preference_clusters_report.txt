@@ -1,0 +1,253 @@
+--- MACHINE-READABLE SUMMARY (JSON) ---
+{
+  "analysis": "preference_quadrant",
+  "n_participants_total": 18,
+  "n_participants_used": 18,
+  "feature_definition": "Per-item polarity-corrected means projected as x=(TARP-S-TARS), y=(TARP-F-TARS)",
+  "scatter_axes": {
+    "x": "mean(TARP-S - TARS)",
+    "y": "mean(TARP-F - TARS)"
+  },
+  "quadrant_counts": {
+    "Q1": 5,
+    "Q2": 5,
+    "Q3": 3,
+    "Q4": 5
+  },
+  "mode_preference_counts": {
+    "TARP-S": 9,
+    "TARP-F": 9,
+    "Parity": 0
+  },
+  "mode_balance": {
+    "definition": "y - x (positive=more TARP-F, negative=more TARP-S)",
+    "mean": 0.13550510643533897,
+    "median": 0.0
+  },
+  "participants": [
+    {
+      "participant": "P02",
+      "x_tarps_minus_tars": 0.7209302325581395,
+      "y_tarpf_minus_tars": -1.813953488372093,
+      "quadrant": "Q3",
+      "quadrant_meaning": "TARP-S above baseline; TARP-F below",
+      "relative_mode_tilt": "Relative tilt toward TARP-S",
+      "mode_balance_y_minus_x": -2.5348837209302326
+    },
+    {
+      "participant": "P03",
+      "x_tarps_minus_tars": -0.8809523809523809,
+      "y_tarpf_minus_tars": -1.255813953488372,
+      "quadrant": "Q4",
+      "quadrant_meaning": "Both modes below TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-S",
+      "mode_balance_y_minus_x": -0.37486157253599117
+    },
+    {
+      "participant": "P04",
+      "x_tarps_minus_tars": 1.1395348837209303,
+      "y_tarpf_minus_tars": 0.7906976744186046,
+      "quadrant": "Q1",
+      "quadrant_meaning": "Both modes above TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-S",
+      "mode_balance_y_minus_x": -0.34883720930232565
+    },
+    {
+      "participant": "P05",
+      "x_tarps_minus_tars": -0.4883720930232558,
+      "y_tarpf_minus_tars": 0.27906976744186046,
+      "quadrant": "Q2",
+      "quadrant_meaning": "TARP-F above baseline; TARP-S below",
+      "relative_mode_tilt": "Relative tilt toward TARP-F",
+      "mode_balance_y_minus_x": 0.7674418604651163
+    },
+    {
+      "participant": "P06",
+      "x_tarps_minus_tars": -0.5348837209302325,
+      "y_tarpf_minus_tars": -0.09302325581395349,
+      "quadrant": "Q4",
+      "quadrant_meaning": "Both modes below TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-F",
+      "mode_balance_y_minus_x": 0.441860465116279
+    },
+    {
+      "participant": "P07",
+      "x_tarps_minus_tars": -2.441860465116279,
+      "y_tarpf_minus_tars": 1.372093023255814,
+      "quadrant": "Q2",
+      "quadrant_meaning": "TARP-F above baseline; TARP-S below",
+      "relative_mode_tilt": "Relative tilt toward TARP-F",
+      "mode_balance_y_minus_x": 3.8139534883720927
+    },
+    {
+      "participant": "P08",
+      "x_tarps_minus_tars": 0.9069767441860465,
+      "y_tarpf_minus_tars": 0.5813953488372093,
+      "quadrant": "Q1",
+      "quadrant_meaning": "Both modes above TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-S",
+      "mode_balance_y_minus_x": -0.3255813953488371
+    },
+    {
+      "participant": "P09",
+      "x_tarps_minus_tars": 0.4186046511627907,
+      "y_tarpf_minus_tars": 0.09302325581395349,
+      "quadrant": "Q1",
+      "quadrant_meaning": "Both modes above TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-S",
+      "mode_balance_y_minus_x": -0.32558139534883723
+    },
+    {
+      "participant": "P10",
+      "x_tarps_minus_tars": -0.13953488372093023,
+      "y_tarpf_minus_tars": 0.3488372093023256,
+      "quadrant": "Q2",
+      "quadrant_meaning": "TARP-F above baseline; TARP-S below",
+      "relative_mode_tilt": "Relative tilt toward TARP-F",
+      "mode_balance_y_minus_x": 0.4883720930232558
+    },
+    {
+      "participant": "P11",
+      "x_tarps_minus_tars": 0.18604651162790697,
+      "y_tarpf_minus_tars": -0.23255813953488372,
+      "quadrant": "Q3",
+      "quadrant_meaning": "TARP-S above baseline; TARP-F below",
+      "relative_mode_tilt": "Relative tilt toward TARP-S",
+      "mode_balance_y_minus_x": -0.41860465116279066
+    },
+    {
+      "participant": "P12",
+      "x_tarps_minus_tars": -0.2558139534883721,
+      "y_tarpf_minus_tars": 0.46511627906976744,
+      "quadrant": "Q2",
+      "quadrant_meaning": "TARP-F above baseline; TARP-S below",
+      "relative_mode_tilt": "Relative tilt toward TARP-F",
+      "mode_balance_y_minus_x": 0.7209302325581395
+    },
+    {
+      "participant": "P13",
+      "x_tarps_minus_tars": -1.7209302325581395,
+      "y_tarpf_minus_tars": -0.06976744186046512,
+      "quadrant": "Q4",
+      "quadrant_meaning": "Both modes below TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-F",
+      "mode_balance_y_minus_x": 1.6511627906976745
+    },
+    {
+      "participant": "P14",
+      "x_tarps_minus_tars": 0.8604651162790697,
+      "y_tarpf_minus_tars": -0.4883720930232558,
+      "quadrant": "Q3",
+      "quadrant_meaning": "TARP-S above baseline; TARP-F below",
+      "relative_mode_tilt": "Relative tilt toward TARP-S",
+      "mode_balance_y_minus_x": -1.3488372093023255
+    },
+    {
+      "participant": "P15",
+      "x_tarps_minus_tars": -0.4186046511627907,
+      "y_tarpf_minus_tars": 0.13953488372093023,
+      "quadrant": "Q2",
+      "quadrant_meaning": "TARP-F above baseline; TARP-S below",
+      "relative_mode_tilt": "Relative tilt toward TARP-F",
+      "mode_balance_y_minus_x": 0.5581395348837209
+    },
+    {
+      "participant": "P16",
+      "x_tarps_minus_tars": 0.27906976744186046,
+      "y_tarpf_minus_tars": 0.13953488372093023,
+      "quadrant": "Q1",
+      "quadrant_meaning": "Both modes above TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-S",
+      "mode_balance_y_minus_x": -0.13953488372093023
+    },
+    {
+      "participant": "P17",
+      "x_tarps_minus_tars": -0.46511627906976744,
+      "y_tarpf_minus_tars": -1.6511627906976745,
+      "quadrant": "Q4",
+      "quadrant_meaning": "Both modes below TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-S",
+      "mode_balance_y_minus_x": -1.186046511627907
+    },
+    {
+      "participant": "P18",
+      "x_tarps_minus_tars": 0.0,
+      "y_tarpf_minus_tars": 0.13953488372093023,
+      "quadrant": "Q1",
+      "quadrant_meaning": "Both modes above TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-F",
+      "mode_balance_y_minus_x": 0.13953488372093023
+    },
+    {
+      "participant": "P20",
+      "x_tarps_minus_tars": -1.1395348837209303,
+      "y_tarpf_minus_tars": -0.27906976744186046,
+      "quadrant": "Q4",
+      "quadrant_meaning": "Both modes below TARS baseline",
+      "relative_mode_tilt": "Relative tilt toward TARP-F",
+      "mode_balance_y_minus_x": 0.8604651162790697
+    }
+  ]
+}
+--- END SUMMARY ---
+==============================================================================
+  Preference Quadrant — TARP-S vs TARP-F Interpretation  (cross-participant)
+==============================================================================
+
+──────────────────────────────────────────────────────────────────────────────
+  WHAT THIS FIGURE MEASURES
+──────────────────────────────────────────────────────────────────────────────
+  The quadrant plot combines all questionnaire families (SUS, TiA, Oversight,
+  Perceived Control, NASA-TLX polarity-corrected, Trust/Risk VAS) into two
+  participant-level coordinates:
+    x = mean(TARP-S - TARS),  y = mean(TARP-F - TARS).
+  Positive values mean better than TARS baseline.
+
+  Relative mode preference is summarized by mode balance:  (y - x).
+  Positive values indicate stronger tilt toward TARP-F; negative values toward TARP-S.
+
+──────────────────────────────────────────────────────────────────────────────
+  HOW TO READ THE QUADRANT
+──────────────────────────────────────────────────────────────────────────────
+  Q1 (+x, +y): both modes better than baseline TARS.
+  Q2 (-x, +y): only TARP-F better than baseline.
+  Q3 (+x, -y): only TARP-S better than baseline.
+  Q4 (-x, -y): both modes worse than baseline.
+
+  Relative mode preference is read against the diagonal y=x:
+    y > x  -> tilt toward TARP-F
+    y < x  -> tilt toward TARP-S
+
+──────────────────────────────────────────────────────────────────────────────
+  RESULTS SUMMARY
+──────────────────────────────────────────────────────────────────────────────
+  Participants in analysis: 18 / 18
+  Quadrant counts: Q1=5, Q2=5, Q3=3, Q4=5
+  Mode preference counts: TARP-S tilt=9, TARP-F tilt=9, parity=0
+  Mean mode balance (y-x): 0.136
+  Median mode balance (y-x): 0.000
+
+──────────────────────────────────────────────────────────────────────────────
+  PARTICIPANT-LEVEL INTERPRETATION
+──────────────────────────────────────────────────────────────────────────────
+  Participant  x(TS-TARS)  y(TF-TARS)      y-x  Quad  Interpretation
+  ──────────────────────────────────────────────────────────────────────────
+  P02               0.721      -1.814   -2.535    Q3  TARP-S above baseline; TARP-F below; Relative tilt toward TARP-S
+  P03              -0.881      -1.256   -0.375    Q4  Both modes below TARS baseline; Relative tilt toward TARP-S
+  P04               1.140       0.791   -0.349    Q1  Both modes above TARS baseline; Relative tilt toward TARP-S
+  P05              -0.488       0.279    0.767    Q2  TARP-F above baseline; TARP-S below; Relative tilt toward TARP-F
+  P06              -0.535      -0.093    0.442    Q4  Both modes below TARS baseline; Relative tilt toward TARP-F
+  P07              -2.442       1.372    3.814    Q2  TARP-F above baseline; TARP-S below; Relative tilt toward TARP-F
+  P08               0.907       0.581   -0.326    Q1  Both modes above TARS baseline; Relative tilt toward TARP-S
+  P09               0.419       0.093   -0.326    Q1  Both modes above TARS baseline; Relative tilt toward TARP-S
+  P10              -0.140       0.349    0.488    Q2  TARP-F above baseline; TARP-S below; Relative tilt toward TARP-F
+  P11               0.186      -0.233   -0.419    Q3  TARP-S above baseline; TARP-F below; Relative tilt toward TARP-S
+  P12              -0.256       0.465    0.721    Q2  TARP-F above baseline; TARP-S below; Relative tilt toward TARP-F
+  P13              -1.721      -0.070    1.651    Q4  Both modes below TARS baseline; Relative tilt toward TARP-F
+  P14               0.860      -0.488   -1.349    Q3  TARP-S above baseline; TARP-F below; Relative tilt toward TARP-S
+  P15              -0.419       0.140    0.558    Q2  TARP-F above baseline; TARP-S below; Relative tilt toward TARP-F
+  P16               0.279       0.140   -0.140    Q1  Both modes above TARS baseline; Relative tilt toward TARP-S
+  P17              -0.465      -1.651   -1.186    Q4  Both modes below TARS baseline; Relative tilt toward TARP-S
+  P18               0.000       0.140    0.140    Q1  Both modes above TARS baseline; Relative tilt toward TARP-F
+  P20              -1.140      -0.279    0.860    Q4  Both modes below TARS baseline; Relative tilt toward TARP-F
+

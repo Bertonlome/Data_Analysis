@@ -1493,25 +1493,20 @@ def _build_cluster_data(all_data, participants, include_ob=True, include_nasa=Fa
 
 def _draw_cluster_figure(valid_pids, scatter_xs, scatter_ys, feature_matrix,
                          suptitle, filename):
-    """Draw and save the two-panel cluster figure (scatter + dendrogram)."""
-    from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
+    """Draw and save the quadrant cluster figure (scatter only)."""
     from matplotlib.lines import Line2D
 
     if len(valid_pids) < 3:
         print(f"  ⚠  Not enough data for {filename}")
         return None
 
-    X    = np.array(feature_matrix)
-    Z    = linkage(X, method="ward")
-    labs = fcluster(Z, t=2, criterion="maxclust")
+    mode_colors = {
+        "TARP-S": "#2E75B6",
+        "TARP-F": "#E6730D",
+        "Parity": "#888888",
+    }
 
-    cluster_colors = {1: "#E6730D", 2: "#2E75B6"}
-    pid_to_color   = {pid: cluster_colors[labs[i]] for i, pid in enumerate(valid_pids)}
-
-    fig, (ax_scatter, ax_dend) = plt.subplots(
-        1, 2, figsize=(CLUSTER_FIGW, CLUSTER_FIGH),
-        gridspec_kw={"width_ratios": [1, 1.3], "wspace": 0.30}
-    )
+    fig, ax_scatter = plt.subplots(1, 1, figsize=(CLUSTER_FIGW, CLUSTER_FIGH))
     fig.suptitle(suptitle, fontsize=FONT_SUPTITLE, fontweight="bold")
 
     # ── Scatter ───────────────────────────────────────────────────────────────
@@ -1523,7 +1518,14 @@ def _draw_cluster_figure(valid_pids, scatter_xs, scatter_ys, feature_matrix,
                     linewidth=1.0, linestyle="--", zorder=1)
 
     for i, pid in enumerate(valid_pids):
-        c = cluster_colors[labs[i]]
+        mode_balance = scatter_ys[i] - scatter_xs[i]
+        if mode_balance > 0.05:
+            pref = "TARP-F"
+        elif mode_balance < -0.05:
+            pref = "TARP-S"
+        else:
+            pref = "Parity"
+        c = mode_colors[pref]
         ax_scatter.scatter(scatter_xs[i], scatter_ys[i],
                            color=c, s=80, edgecolors="black",
                            linewidths=0.8, zorder=4)
@@ -1552,30 +1554,19 @@ def _draw_cluster_figure(valid_pids, scatter_xs, scatter_ys, feature_matrix,
     ax_scatter.text(lim * 0.05, -lim * 0.28, "below: TARP-S > TARP-F",
                     ha="left", va="top", fontsize=FONT_TICK_SM, color="#888888", rotation=45)
 
-    # ── Dendrogram ────────────────────────────────────────────────────────────
-    dendrogram(Z, labels=valid_pids, ax=ax_dend, orientation="top",
-               above_threshold_color="#888888", color_threshold=0)
-    for lbl in ax_dend.get_xticklabels():
-        lbl.set_color(pid_to_color.get(lbl.get_text(), "black"))
-        lbl.set_fontsize(FONT_LABEL)
-        lbl.set_fontweight("bold")
-    ax_dend.set_title("(B)  Ward hierarchical clustering\n(feature: polarity-corrected per-item TARP-S − TARP-F)",
-                      fontsize=FONT_TITLE, fontweight="bold")
-    ax_dend.set_ylabel("Ward distance", fontsize=FONT_LABEL)
-    ax_dend.spines["top"].set_visible(False)
-    ax_dend.spines["right"].set_visible(False)
-
     legend_handles = [
-        Line2D([0], [0], marker="o", color="w", markerfacecolor=cluster_colors[1],
-               markeredgecolor="black", markersize=9, label="Cluster 1  (orange)"),
-        Line2D([0], [0], marker="o", color="w", markerfacecolor=cluster_colors[2],
-               markeredgecolor="black", markersize=9, label="Cluster 2  (blue)"),
+         Line2D([0], [0], marker="o", color="w", markerfacecolor=mode_colors["TARP-S"],
+             markeredgecolor="black", markersize=9, label="Relative tilt: TARP-S"),
+         Line2D([0], [0], marker="o", color="w", markerfacecolor=mode_colors["TARP-F"],
+             markeredgecolor="black", markersize=9, label="Relative tilt: TARP-F"),
+         Line2D([0], [0], marker="o", color="w", markerfacecolor=mode_colors["Parity"],
+             markeredgecolor="black", markersize=9, label="Near parity"),
         Line2D([0], [0], color="#cccccc", linestyle="--", linewidth=1.2,
                label="y = x  (TARP-S = TARP-F)"),
     ]
-    fig.legend(handles=legend_handles, loc="lower center", ncol=3,
+    fig.legend(handles=legend_handles, loc="lower center", ncol=4,
                fontsize=FONT_TICK, bbox_to_anchor=(0.5, 0))
-    fig.tight_layout(rect=[0, 0.07, 1, 1])
+    fig.tight_layout(rect=[0, 0.07, 1, 0.95])
     save_fig(fig, filename)
     return fig
 
@@ -1823,7 +1814,7 @@ def plot_preference_clusters(all_data, participants):
         all_data, participants, include_ob=True, include_nasa=True, include_vas=True)
     figs.append(_draw_cluster_figure(
         pids, xs, ys, feat,
-        "TARP-S vs TARP-F Preference — SUS + TiA + OB + PC + NASA-TLX + Trust/Risk VAS\n"
+        "TARP-S vs TARP-F Preference Quadrant — SUS + TiA + OB + PC + NASA-TLX + Trust/Risk VAS\n"
         "(TARS baseline · NASA polarity-corrected · Trust +1 · Risk −1)",
         "preference_clusters_all_vas.png"))
 
@@ -2522,6 +2513,138 @@ def write_pts_report(all_data, participants):
     print(f"  → {path}")
 
 
+def write_preference_cluster_report(all_data, participants):
+    """Quadrant preference interpretation report (cross-participant)."""
+
+    pids, xs, ys, feat = _build_cluster_data(
+        all_data, participants, include_ob=True, include_nasa=True, include_vas=True
+    )
+
+    def _quadrant(x, y):
+        if x >= 0 and y >= 0:
+            return "Q1", "Both modes above TARS baseline"
+        if x < 0 and y >= 0:
+            return "Q2", "TARP-F above baseline; TARP-S below"
+        if x >= 0 and y < 0:
+            return "Q3", "TARP-S above baseline; TARP-F below"
+        return "Q4", "Both modes below TARS baseline"
+
+    rows = []
+    for i, pid in enumerate(pids):
+        x = float(xs[i])
+        y = float(ys[i])
+        q, q_txt = _quadrant(x, y)
+        mode_balance = y - x
+        if mode_balance > 0.05:
+            pref = "Relative tilt toward TARP-F"
+        elif mode_balance < -0.05:
+            pref = "Relative tilt toward TARP-S"
+        else:
+            pref = "Near parity between TARP-S and TARP-F"
+        rows.append({
+            "participant": pid,
+            "x_tarps_minus_tars": x,
+            "y_tarpf_minus_tars": y,
+            "quadrant": q,
+            "quadrant_meaning": q_txt,
+            "relative_mode_tilt": pref,
+            "mode_balance_y_minus_x": float(mode_balance),
+        })
+
+    quad_counts = {"Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0}
+    mode_counts = {"TARP-S": 0, "TARP-F": 0, "Parity": 0}
+    for r in rows:
+        quad_counts[r["quadrant"]] += 1
+        if r["mode_balance_y_minus_x"] > 0.05:
+            mode_counts["TARP-F"] += 1
+        elif r["mode_balance_y_minus_x"] < -0.05:
+            mode_counts["TARP-S"] += 1
+        else:
+            mode_counts["Parity"] += 1
+
+    if rows:
+        balances = [r["mode_balance_y_minus_x"] for r in rows]
+        mean_balance = float(np.mean(balances))
+        med_balance = float(np.median(balances))
+    else:
+        mean_balance = float("nan")
+        med_balance = float("nan")
+
+    summary = {
+        "analysis": "preference_quadrant",
+        "n_participants_total": len(participants),
+        "n_participants_used": len(pids),
+        "feature_definition": "Per-item polarity-corrected means projected as x=(TARP-S-TARS), y=(TARP-F-TARS)",
+        "scatter_axes": {
+            "x": "mean(TARP-S - TARS)",
+            "y": "mean(TARP-F - TARS)",
+        },
+        "quadrant_counts": quad_counts,
+        "mode_preference_counts": mode_counts,
+        "mode_balance": {
+            "definition": "y - x (positive=more TARP-F, negative=more TARP-S)",
+            "mean": mean_balance,
+            "median": med_balance,
+        },
+        "participants": rows,
+    }
+
+    sep = "─" * 78
+    sec1 = f"{sep}\n  WHAT THIS FIGURE MEASURES\n{sep}\n"
+    sec1 += "  The quadrant plot combines all questionnaire families (SUS, TiA, Oversight,\n"
+    sec1 += "  Perceived Control, NASA-TLX polarity-corrected, Trust/Risk VAS) into two\n"
+    sec1 += "  participant-level coordinates:\n"
+    sec1 += "    x = mean(TARP-S - TARS),  y = mean(TARP-F - TARS).\n"
+    sec1 += "  Positive values mean better than TARS baseline.\n"
+    sec1 += "\n"
+    sec1 += "  Relative mode preference is summarized by mode balance:  (y - x).\n"
+    sec1 += "  Positive values indicate stronger tilt toward TARP-F; negative values toward TARP-S.\n\n"
+
+    sec2 = f"{sep}\n  HOW TO READ THE QUADRANT\n{sep}\n"
+    sec2 += "  Q1 (+x, +y): both modes better than baseline TARS.\n"
+    sec2 += "  Q2 (-x, +y): only TARP-F better than baseline.\n"
+    sec2 += "  Q3 (+x, -y): only TARP-S better than baseline.\n"
+    sec2 += "  Q4 (-x, -y): both modes worse than baseline.\n"
+    sec2 += "\n"
+    sec2 += "  Relative mode preference is read against the diagonal y=x:\n"
+    sec2 += "    y > x  -> tilt toward TARP-F\n"
+    sec2 += "    y < x  -> tilt toward TARP-S\n"
+    sec2 += "\n"
+
+    sec3 = f"{sep}\n  RESULTS SUMMARY\n{sep}\n"
+    sec3 += f"  Participants in analysis: {len(pids)} / {len(participants)}\n"
+    sec3 += (
+        f"  Quadrant counts: Q1={quad_counts['Q1']}, Q2={quad_counts['Q2']}, "
+        f"Q3={quad_counts['Q3']}, Q4={quad_counts['Q4']}\n"
+    )
+    sec3 += (
+        f"  Mode preference counts: TARP-S tilt={mode_counts['TARP-S']}, "
+        f"TARP-F tilt={mode_counts['TARP-F']}, parity={mode_counts['Parity']}\n"
+    )
+    if not np.isnan(mean_balance):
+        sec3 += f"  Mean mode balance (y-x): {mean_balance:.3f}\n"
+        sec3 += f"  Median mode balance (y-x): {med_balance:.3f}\n"
+    sec3 += "\n"
+
+    sec4 = f"{sep}\n  PARTICIPANT-LEVEL INTERPRETATION\n{sep}\n"
+    sec4 += (
+        f"  {'Participant':<11}  {'x(TS-TARS)':>10}  {'y(TF-TARS)':>10}  {'y-x':>7}  {'Quad':>4}  Interpretation\n"
+    )
+    sec4 += "  " + "─" * 74 + "\n"
+    for r in rows:
+        sec4 += (
+            f"  {r['participant']:<11}  {r['x_tarps_minus_tars']:>10.3f}  "
+            f"{r['y_tarpf_minus_tars']:>10.3f}  {r['mode_balance_y_minus_x']:>7.3f}  {r['quadrant']:>4}  "
+            f"{r['quadrant_meaning']}; {r['relative_mode_tilt']}\n"
+        )
+    sec4 += "\n"
+
+    path = os.path.join(REPORTS_DIR, "preference_clusters_report.txt")
+    _write_report(path, "Preference Quadrant — TARP-S vs TARP-F Interpretation  (cross-participant)", summary,
+                  [sec1, sec2, sec3, sec4])
+    print(f"  → {path}")
+
+
 def write_all_reports(all_data, participants):
     os.makedirs(REPORTS_DIR, exist_ok=True)
     print(f"\n[4/4] Generating cross-participant reports → {REPORTS_DIR}/\n")
@@ -2532,6 +2655,7 @@ def write_all_reports(all_data, participants):
     write_ob_report(all_data, participants)
     write_perceived_control_report(all_data, participants)
     write_pts_report(all_data, participants)
+    write_preference_cluster_report(all_data, participants)
 
 
 _COMPARE_FORMS_PLOTS = [
@@ -2556,6 +2680,7 @@ _COMPARE_FORMS_REPORTS = [
     "oversight_bespoke_report.txt",
     "perceived_control_report.txt",
     "pts_report.txt",
+    "preference_clusters_report.txt",
 ]
 
 

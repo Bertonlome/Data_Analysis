@@ -1,6 +1,6 @@
 --- MACHINE-READABLE SUMMARY (JSON) ---
 {
-  "generated": "2026-05-27",
+  "generated": "2026-05-31",
   "n_participants": 18,
   "participants": [
     "P02",
@@ -24,6 +24,1018 @@
   ],
   "n_choice_tasks": 62,
   "n_fixed_tasks": 24,
+  "automation_proportion": {
+    "overall": {
+      "min": 0.519,
+      "max": 0.519,
+      "mid": 0.519
+    },
+    "theoretical_achievable_interval": {
+      "min": 0.0,
+      "max": 0.715
+    },
+    "per_participant": {
+      "P02": {
+        "min": 0.349,
+        "max": 0.349,
+        "mid": 0.349,
+        "per_category": {
+          "CRM": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Switch / Lever": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Parameter Check": {
+            "min": 0.286,
+            "max": 0.286
+          },
+          "Environment Check": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Autopilot Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "System Check": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Flight Control": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Callout": {
+            "min": 0.8,
+            "max": 0.8
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 0.429,
+            "max": 0.429
+          },
+          "Other": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      },
+      "P03": {
+        "min": 0.428,
+        "max": 0.428,
+        "mid": 0.428,
+        "per_category": {
+          "CRM": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Switch / Lever": {
+            "min": 0.133,
+            "max": 0.133
+          },
+          "Parameter Check": {
+            "min": 0.429,
+            "max": 0.429
+          },
+          "Environment Check": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Autopilot Mgmt": {
+            "min": 0.8,
+            "max": 0.8
+          },
+          "System Check": {
+            "min": 0.111,
+            "max": 0.111
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 0.6,
+            "max": 0.6
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 0.286,
+            "max": 0.286
+          },
+          "Other": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      },
+      "P04": {
+        "min": 0.429,
+        "max": 0.429,
+        "mid": 0.429,
+        "per_category": {
+          "CRM": {
+            "min": 0.429,
+            "max": 0.429
+          },
+          "Switch / Lever": {
+            "min": 0.267,
+            "max": 0.267
+          },
+          "Parameter Check": {
+            "min": 0.429,
+            "max": 0.429
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "ATC Communication": {
+            "min": 0.5,
+            "max": 0.5
+          },
+          "Checklist Mgmt": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P05": {
+        "min": 0.429,
+        "max": 0.429,
+        "mid": 0.429,
+        "per_category": {
+          "CRM": {
+            "min": 0.429,
+            "max": 0.429
+          },
+          "Switch / Lever": {
+            "min": 0.267,
+            "max": 0.267
+          },
+          "Parameter Check": {
+            "min": 0.429,
+            "max": 0.429
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "ATC Communication": {
+            "min": 0.5,
+            "max": 0.5
+          },
+          "Checklist Mgmt": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P06": {
+        "min": 0.587,
+        "max": 0.587,
+        "mid": 0.587,
+        "per_category": {
+          "CRM": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Switch / Lever": {
+            "min": 0.433,
+            "max": 0.433
+          },
+          "Parameter Check": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 0.6,
+            "max": 0.6
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 0.5,
+            "max": 0.5
+          },
+          "Checklist Mgmt": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P07": {
+        "min": 0.517,
+        "max": 0.517,
+        "mid": 0.517,
+        "per_category": {
+          "CRM": {
+            "min": 0.571,
+            "max": 0.571
+          },
+          "Switch / Lever": {
+            "min": 0.1,
+            "max": 0.1
+          },
+          "Parameter Check": {
+            "min": 0.429,
+            "max": 0.429
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 0.8,
+            "max": 0.8
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Checklist Mgmt": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P08": {
+        "min": 0.639,
+        "max": 0.639,
+        "mid": 0.639,
+        "per_category": {
+          "CRM": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Switch / Lever": {
+            "min": 0.633,
+            "max": 0.633
+          },
+          "Parameter Check": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 0.8,
+            "max": 0.8
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P09": {
+        "min": 0.64,
+        "max": 0.64,
+        "mid": 0.64,
+        "per_category": {
+          "CRM": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Switch / Lever": {
+            "min": 0.633,
+            "max": 0.633
+          },
+          "Parameter Check": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P10": {
+        "min": 0.359,
+        "max": 0.359,
+        "mid": 0.359,
+        "per_category": {
+          "CRM": {
+            "min": 0.429,
+            "max": 0.429
+          },
+          "Switch / Lever": {
+            "min": 0.4,
+            "max": 0.4
+          },
+          "Parameter Check": {
+            "min": 0.286,
+            "max": 0.286
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 0.6,
+            "max": 0.6
+          },
+          "System Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Flight Control": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Callout": {
+            "min": 0.6,
+            "max": 0.6
+          },
+          "Navigation": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "ATC Communication": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      },
+      "P11": {
+        "min": 0.576,
+        "max": 0.576,
+        "mid": 0.576,
+        "per_category": {
+          "CRM": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Switch / Lever": {
+            "min": 0.633,
+            "max": 0.633
+          },
+          "Parameter Check": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 0.286,
+            "max": 0.286
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P12": {
+        "min": 0.351,
+        "max": 0.351,
+        "mid": 0.351,
+        "per_category": {
+          "CRM": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Switch / Lever": {
+            "min": 0.433,
+            "max": 0.433
+          },
+          "Parameter Check": {
+            "min": 0.571,
+            "max": 0.571
+          },
+          "Environment Check": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Autopilot Mgmt": {
+            "min": 0.8,
+            "max": 0.8
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "ATC Communication": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Checklist Mgmt": {
+            "min": 0.714,
+            "max": 0.714
+          },
+          "Other": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      },
+      "P13": {
+        "min": 0.634,
+        "max": 0.634,
+        "mid": 0.634,
+        "per_category": {
+          "CRM": {
+            "min": 0.429,
+            "max": 0.429
+          },
+          "Switch / Lever": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "Parameter Check": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Environment Check": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Autopilot Mgmt": {
+            "min": 0.8,
+            "max": 0.8
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P14": {
+        "min": 0.448,
+        "max": 0.448,
+        "mid": 0.448,
+        "per_category": {
+          "CRM": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Switch / Lever": {
+            "min": 0.4,
+            "max": 0.4
+          },
+          "Parameter Check": {
+            "min": 0.286,
+            "max": 0.286
+          },
+          "Environment Check": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Autopilot Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      },
+      "P15": {
+        "min": 0.628,
+        "max": 0.628,
+        "mid": 0.628,
+        "per_category": {
+          "CRM": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Switch / Lever": {
+            "min": 0.633,
+            "max": 0.633
+          },
+          "Parameter Check": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P16": {
+        "min": 0.593,
+        "max": 0.593,
+        "mid": 0.593,
+        "per_category": {
+          "CRM": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Switch / Lever": {
+            "min": 0.133,
+            "max": 0.133
+          },
+          "Parameter Check": {
+            "min": 0.571,
+            "max": 0.571
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 0.8,
+            "max": 0.8
+          },
+          "System Check": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P17": {
+        "min": 0.4,
+        "max": 0.4,
+        "mid": 0.4,
+        "per_category": {
+          "CRM": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Switch / Lever": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Parameter Check": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Environment Check": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Autopilot Mgmt": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.0,
+            "max": 0.0
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P18": {
+        "min": 0.616,
+        "max": 0.616,
+        "mid": 0.616,
+        "per_category": {
+          "CRM": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Switch / Lever": {
+            "min": 0.3,
+            "max": 0.3
+          },
+          "Parameter Check": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 0.8,
+            "max": 0.8
+          },
+          "System Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 0.5,
+            "max": 0.5
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      },
+      "P20": {
+        "min": 0.715,
+        "max": 0.715,
+        "mid": 0.715,
+        "per_category": {
+          "CRM": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Switch / Lever": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "Parameter Check": {
+            "min": 0.857,
+            "max": 0.857
+          },
+          "Environment Check": {
+            "min": 0.333,
+            "max": 0.333
+          },
+          "Autopilot Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "System Check": {
+            "min": 0.444,
+            "max": 0.444
+          },
+          "Flight Control": {
+            "min": 0.25,
+            "max": 0.25
+          },
+          "Callout": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Navigation": {
+            "min": 0.667,
+            "max": 0.667
+          },
+          "ATC Communication": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Checklist Mgmt": {
+            "min": 1.0,
+            "max": 1.0
+          },
+          "Other": {
+            "min": 0.5,
+            "max": 0.5
+          }
+        }
+      }
+    },
+    "method": {
+      "category_balanced": true,
+      "includes_fixed_human_only_tasks": true,
+      "shared_allocation_weight": 0.5,
+      "support_side_color_map": {
+        "yellow": "optional",
+        "orange": "mandatory"
+      }
+    }
+  },
   "overall_allocation": {
     "human": {
       "count": 350,
@@ -250,7 +1262,7 @@
 ========================================================================
   TARC ALLOCATION REPORT
   N = 18 participants  |  62 choice tasks  |  24 fixed tasks
-  Generated: 2026-05-27
+  Generated: 2026-05-31
 ========================================================================
 
 ── OVERALL ALLOCATION (choice tasks only) ─────────────────────────────
@@ -288,6 +1300,38 @@
 
   Least automation: P02  (32.3%)
   Most automation:  P20  (100.0%)
+
+── AUTOMATION PROPORTION INTERVAL (category-balanced) ─────────────────
+
+  AP is normalized over ALL tasks (choice + fixed).
+  Fixed tasks are treated as human-only constraints (no delegation choice).
+  Weights: human-led independent = 0.000; human-led optional support = 0.000–0.500; human-led mandatory support = 0.500; agent-led independent = 1.000; agent-led optional support = 0.750–1.000; agent-led mandatory support = 0.750.
+  Shared allocations are treated as the neutral midpoint (0.500).
+
+  Theoretical achievable interval from task constraints: [0.000, 0.715]
+  Group mean interval across participants: [0.519, 0.519]
+  Group midpoint: 0.519
+
+  Participant   AP min  AP max  AP mid
+  ────────────  ──────  ──────  ──────
+  P02            0.349   0.349   0.349
+  P03            0.428   0.428   0.428
+  P04            0.429   0.429   0.429
+  P05            0.429   0.429   0.429
+  P06            0.587   0.587   0.587
+  P07            0.517   0.517   0.517
+  P08            0.639   0.639   0.639
+  P09            0.640   0.640   0.640
+  P10            0.359   0.359   0.359
+  P11            0.576   0.576   0.576
+  P12            0.351   0.351   0.351
+  P13            0.634   0.634   0.634
+  P14            0.448   0.448   0.448
+  P15            0.628   0.628   0.628
+  P16            0.593   0.593   0.593
+  P17            0.400   0.400   0.400
+  P18            0.616   0.616   0.616
+  P20            0.715   0.715   0.715
 
 ── PER-CATEGORY BREAKDOWN ──────────────────────────────────────────────
 

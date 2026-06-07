@@ -1,0 +1,31 @@
+========================================================================
+JAE VALIDATION REPORT — Tier 1 (Publication)
+========================================================================
+
+Note: JAE = mean(ED/AD) per scenario, where ED (Expected Duration) is
+the minimum Active_Duration_s observed per task across ALL reps and
+conditions.  JAE = 1.0 means perfect efficiency (equal to best run).
+
+--- Model condition summary ---
+  C1 (TARS  )  JAE = 0.6172 ± 0.0013 (CI)  n = 12
+  C2 (TARP-F)  JAE = 0.6993 ± 0.0153 (CI)  n = 12
+  C3 (TARP-S)  JAE = 0.1422 ± 0.0278 (CI)  n = 12
+
+--- Inferential statistics (model repetitions as observations) ---
+JAE across conditions
+  Friedman: χ²(2, N=11) = 22.000, p < .001 ***  W = 1.000
+  TARS vs TARP-F: p < .001 (corr: p = .002) r = +1.000  n = 11 ***
+  TARS vs TARP-S: p < .001 (corr: p = .002) r = +1.000  n = 11 ***
+  TARP-F vs TARP-S: p < .001 (corr: p = .001) r = +1.000  n = 12 ***
+
+--- HITLS scenario duration proxy ---
+  TARS    duration: 384.0 ± 86.8 s  [234.0 – 534.2]  n = 16
+  TARP-S  duration: 418.5 ± 49.7 s  [333.1 – 508.9]  n = 17
+  TARP-F  duration: 322.4 ± 45.4 s  [265.2 – 419.3]  n = 17
+
+--- Direction match ---
+  Model ranking (high→low JAE): C2 > C1 > C3
+  HITLS ranking (short→long duration, =high efficiency): C2 > C1 > C3
+  Direction match: YES ✓
+
+========================================================================

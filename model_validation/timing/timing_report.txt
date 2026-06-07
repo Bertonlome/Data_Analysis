@@ -1,0 +1,87 @@
+============================================================
+TIMING VALIDATION — TIER 1 REPORT
+============================================================
+
+Scope: BEFORE TAKEOFF (8/9 tasks) + LINE-UP AND HOLD (2/2 tasks)
+MITLS: FSM_Duration_s per task, summed per procedure (12 reps/condition)
+HITLS: per-participant procedure total_s from cleaned time reports
+
+--------------------------------------------------
+BEFORE TAKEOFF  (8/9 tasks modelled)
+--------------------------------------------------
+
+HITLS (participants):
+  TARS      n=17  mean=  83.8s  SD=40.7s
+  TARP-S    n=17  mean=  71.8s  SD=19.9s
+  TARP-F    n=17  mean=  35.9s  SD=18.2s
+
+MITLS (model repetitions):
+  TARS      n=11  mean=  50.8s  SD=2.7s
+  TARP-S    n=12  mean=  62.5s  SD=4.9s
+  TARP-F    n=12  mean=  37.7s  SD=5.3s
+
+NMAE (|model_mean − human_mean| / human_mean):
+  TARS      -39.4%
+  TARP-S    -12.9%
+  TARP-F    4.9%
+
+Direction match (condition ranking): False
+
+Friedman (HITLS):
+  χ²(2, N=17) = 17.412  p = p < .001  W = 0.512
+
+Friedman (MITLS):
+  χ²(2, N=11) = 22.000  p = p < .001  W = 1.000
+
+Pairwise Wilcoxon (HITLS, Holm-corrected):
+  TARS vs TARP-S: p_raw=p = .306  p_corr=p = .306 r=+0.294  
+  TARS vs TARP-F: p_raw=p < .001  p_corr=p < .001 r=+0.961  ***
+  TARP-S vs TARP-F: p_raw=p < .001  p_corr=p < .001 r=+0.974  ***
+
+Pairwise Wilcoxon (MITLS, Holm-corrected):
+  TARS vs TARP-S: p_raw=p < .001  p_corr=p = .002 r=+1.000  **
+  TARS vs TARP-F: p_raw=p < .001  p_corr=p = .002 r=+1.000  **
+  TARP-S vs TARP-F: p_raw=p < .001  p_corr=p = .001 r=+1.000  **
+
+--------------------------------------------------
+LINE-UP AND HOLD  (2/2 tasks modelled)
+--------------------------------------------------
+
+HITLS (participants):
+  TARS      n=17  mean=  12.7s  SD=10.3s
+  TARP-S    n=17  mean=  13.2s  SD=0.3s
+  TARP-F    n=17  mean=   5.7s  SD=16.4s
+
+MITLS (model repetitions):
+  TARS      n=11  mean=  10.4s  SD=0.7s
+  TARP-S    n=12  mean=  10.4s  SD=1.1s
+  TARP-F    n= 7  mean=   4.9s  SD=1.0s
+
+NMAE (|model_mean − human_mean| / human_mean):
+  TARS      -18.6%
+  TARP-S    -21.5%
+  TARP-F    -14.3%
+
+Direction match (condition ranking): True
+
+Friedman (HITLS):
+  χ²(2, N=17) = 13.765  p = p = .001  W = 0.405
+
+Friedman (MITLS):
+  χ²(2, N=7) = 10.571  p = p = .005  W = 0.755
+
+Pairwise Wilcoxon (HITLS, Holm-corrected):
+  TARS vs TARP-S: p_raw=p = .306  p_corr=p = .306 r=+0.294  
+  TARS vs TARP-F: p_raw=p = .035  p_corr=p = .104 r=+0.582  
+  TARP-S vs TARP-F: p_raw=p = .039  p_corr=p = .104 r=+0.569  
+
+Pairwise Wilcoxon (MITLS, Holm-corrected):
+  TARS vs TARP-S: p_raw=p = .638  p_corr=p = .638 r=+0.182  
+  TARS vs TARP-F: p_raw=p = .016  p_corr=p = .047 r=+1.000  *
+  TARP-S vs TARP-F: p_raw=p = .016  p_corr=p = .047 r=+1.000  *
+
+============================================================
+NOTE: BEFORE TAKEOFF comparison is slightly conservative — MITLS
+models 8/9 tasks; FLAPS / SET FOR TAKEOFF is absent, so model
+durations are systematically shorter by ≈1 task.
+============================================================

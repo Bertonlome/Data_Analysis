@@ -4,7 +4,9 @@ AoIs.py — Eye-tracking Area of Interest analysis for HITLS scenarios.
 
 Data source : SmartEyeProBridge signals in scenario ingescape CSV files.
 Method      : filtered_closest_world_object_name when
-              filtered_closest_world_count == 1.
+              filtered_closest_world_count == 1,
+              plus a no_intersection category when
+              filtered_closest_world_count == 0.
               Consecutive same-AoI samples are grouped into fixation bouts.
 
 Output (per scenario) :
@@ -64,7 +66,7 @@ AOI_MAP = {
 }
 
 # Display order (left-to-right on bar charts)
-AOI_ORDER = ['TARS', 'PFD', 'ND', 'pedestal', 'Outside_Window']
+AOI_ORDER = ['TARS', 'PFD', 'ND', 'pedestal', 'Outside_Window', 'no_intersection']
 
 CONDITIONS  = ['TARS', 'TARC', 'TARP-S', 'TARP-F']
 
@@ -102,9 +104,10 @@ def parse_eye_tracking(filepath):
     """
     Parse eye-tracking data from an ingescape CSV file.
 
-    Returns a sorted list of (timestamp_sec, aoi_label) tuples for every
-    frame where filtered_closest_world_count == 1 and the object name maps
-    to a known AoI.
+        Returns a sorted list of (timestamp_sec, aoi_label) tuples for every
+        frame where:
+            - filtered_closest_world_count == 1 and object_name maps to a known AoI,
+            - filtered_closest_world_count == 0 (tracked as "no_intersection").
 
     Supports both old format (column 'timestamp', Unix seconds) and new
     format (column 'relative_time_us', relative microseconds).
@@ -155,6 +158,9 @@ def parse_eye_tracking(filepath):
 
             if src == KEY_C:
                 cur_count = row[val_idx]
+                if cur_count == '0':
+                    ts_sec = float(row[ts_idx]) * ts_scale
+                    samples.append((ts_sec, 'no_intersection'))
 
             elif src == KEY_N and cur_count == '1':
                 aoi = AOI_MAP.get(row[val_idx])
@@ -688,8 +694,8 @@ def run_all():
     with open(report_path, 'w', encoding='utf-8') as rpt:
         rpt.write("HITLS Eye-Tracking: Area of Interest (AoI) Analysis\n")
         rpt.write("=" * 80 + "\n")
-        rpt.write("Method : fixation bouts on filtered_closest_world_object_name\n")
-        rpt.write("         (SmartEyeProBridge, filtered_closest_world_count == 1)\n")
+        rpt.write("Method : fixation bouts on SmartEyeProBridge world-object signals\n")
+        rpt.write("         count==1 -> mapped AoIs, count==0 -> no_intersection\n")
         rpt.write("Columns: Total dwell time (s) and percentage of fixation bouts\n")
         rpt.write("=" * 80 + "\n")
 

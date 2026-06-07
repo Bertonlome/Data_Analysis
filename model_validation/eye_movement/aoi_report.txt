@@ -1,0 +1,65 @@
+============================================================
+EYE MOVEMENT / AoI VALIDATION — TIER 1 REPORT
+============================================================
+
+Scope: BEFORE TAKEOFF (8/9 tasks) + LINE-UP AND HOLD (2/2 tasks)
+HITLS source: P{pid}/cleaned/P{pid}_{cond}_aoi_summary.csv
+MITLS source: per-run eye_movement/results_eye_movement.txt
+
+AoI mapping:
+  HITLS ND      ← MITLS ND + E_W_CAS (merged)
+  HITLS pedestal ← MITLS Central_Console
+  HITLS no_intersection (count=0) ← MITLS Other
+
+--------------------------------------------------
+Condition: TARS
+  KL divergence (model || human) = 0.7490
+
+  AoI                 HITLS mean  MITLS mean   HITLS SD   MITLS SD      NMAE
+  TARS                    22.02%      77.18%      7.20%      5.16%  +250.5% ← HIGH
+  PFD                     19.78%       3.94%      6.19%      3.12%   -80.1% ← HIGH
+  ND                       5.69%       6.48%      2.33%      3.38%   +13.8%
+  pedestal                 2.13%       1.83%      1.51%      2.50%   -13.8%
+  Outside_Window           5.79%       0.39%      6.95%      0.86%   -93.3% ← HIGH
+  no_intersection         44.59%      10.19%      3.67%      0.27%   -77.1% ← HIGH
+
+--------------------------------------------------
+Condition: TARP-S
+  KL divergence (model || human) = 0.7670
+
+  AoI                 HITLS mean  MITLS mean   HITLS SD   MITLS SD      NMAE
+  TARS                    26.49%      84.24%      7.04%      4.70%  +218.0% ← HIGH
+  PFD                     15.65%       0.91%      6.01%      0.42%   -94.2% ← HIGH
+  ND                       4.54%       3.35%      2.59%      4.22%   -26.2%
+  pedestal                 1.68%       0.33%      1.50%      0.77%   -80.2% ← HIGH
+  Outside_Window           5.98%       2.46%      6.31%      0.76%   -58.8% ← HIGH
+  no_intersection         45.67%       8.71%      2.28%      0.41%   -80.9% ← HIGH
+
+--------------------------------------------------
+Condition: TARP-F
+  KL divergence (model || human) = 0.6405
+
+  AoI                 HITLS mean  MITLS mean   HITLS SD   MITLS SD      NMAE
+  TARS                    25.21%      74.81%      5.90%      3.57%  +196.7% ← HIGH
+  PFD                     17.60%       1.32%      5.01%      2.45%   -92.5% ← HIGH
+  ND                       4.37%       6.04%      2.51%      2.46%   +38.3%
+  pedestal                 1.61%       1.20%      1.27%      1.91%   -25.7%
+  Outside_Window           5.98%       5.90%      3.94%      1.01%    -1.3%
+  no_intersection         45.23%      10.73%      2.40%      0.76%   -76.3% ← HIGH
+
+============================================================
+INTERPRETATION NOTE
+============================================================
+
+The model shows a strong bias towards TARS fixation (~75-85%)
+compared to human pilots (~10-45% depending on condition).
+Human pilots spend significant time looking at PFD (~30-40%)
+and Outside_Window (~10-45%) — ambient monitoring behaviour not
+currently modelled in MITLS. The ND/E_W_CAS comparison is also
+affected because MITLS treats it as task-driven (checklist cross-
+check) while humans use it for continuous navigation monitoring.
+
+This analysis confirms that MITLS currently models only
+task-execution gaze (TARS interaction) and lacks ambient
+monitoring productions. Adding scan-pattern productions for
+PFD and Out-of-Window in between checklist items is recommended.

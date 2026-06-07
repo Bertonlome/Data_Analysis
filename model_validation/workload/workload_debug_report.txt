@@ -1,0 +1,36 @@
+============================================================
+WORKLOAD VALIDATION — TIER 2 DEBUG REPORT
+============================================================
+
+Subnetwork vs NASA-TLX subscale breakdown
+(Conceptual mapping: Cognitive↔Mental/Effort, Perceptual↔Temporal,
+Motor↔Physical)
+
+--------------------------------------------------
+Per-Condition MITLS Subnetwork Means
+--------------------------------------------------
+  Metric           TARS          TARP-S        TARP-F      
+  Overall          0.1510        0.1477        0.1614      
+  Cognitive        0.2386        0.2222        0.1993      
+  Perceptual       0.1148        0.1406        0.1631      
+  Motor            0.0997        0.0802        0.1219      
+
+--------------------------------------------------
+Per-Condition HITLS NASA-TLX Subscale Means (0-100 scale)
+--------------------------------------------------
+  Subscale              TARS          TARP-S        TARP-F      
+  weighted_score        55.83         46.67         46.37       
+  mental_demand         67.22         56.39         48.89       
+  effort                64.17         48.06         46.39       
+  physical_demand       51.39         35.00         38.33       
+  temporal_demand       55.28         52.78         50.56       
+  frustration           41.39         33.33         36.11       
+
+--------------------------------------------------
+Proposed Mapping Comparison (normalized direction only)
+--------------------------------------------------
+
+Mapping: Cognitive ↔ Mental Demand + Effort
+  TARS: Cognitive=0.2386  Mental=67.2  Effort=64.2
+  TARP-S: Cognitive=0.2222  Mental=56.4  Effort=48.1
+  TARP-F: Cognitive=0.1993  Mental=48.9  Effort=46.4

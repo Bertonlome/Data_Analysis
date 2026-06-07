@@ -1,0 +1,60 @@
+========================================================================
+JAE VALIDATION REPORT — Tier 2 (Diagnostic)
+========================================================================
+
+--- Per-repetition JAE values ---
+  C1 (TARS):
+    rep  1: JAE = 0.483207
+    rep  2: JAE = 0.481254
+    rep  3: JAE = 0.484549
+    rep  4: JAE = 0.478637
+    rep  5: JAE = 0.479542
+    rep  6: JAE = 0.479558
+    rep  7: JAE = 0.479876
+    rep  8: JAE = 0.480436
+    rep  9: JAE = 0.480562
+    rep 10: JAE = 0.478665
+    rep 11: JAE = 0.480184
+    → mean = 0.480588  std = 0.001741
+
+  C2 (TARP-F):
+    rep  1: JAE = 0.600733
+    rep  2: JAE = 0.585056
+    rep  3: JAE = 0.610264
+    rep  4: JAE = 0.551249
+    rep  5: JAE = 0.704558
+    rep  6: JAE = 0.704558
+    rep  7: JAE = 0.704558
+    rep  8: JAE = 0.704558
+    rep  9: JAE = 0.704558
+    rep 10: JAE = 0.622381
+    rep 11: JAE = 0.618592
+    rep 12: JAE = 0.582912
+    → mean = 0.641165  std = 0.056400
+
+  C3 (TARP-S):
+    rep  1: JAE = 0.054651
+    rep  2: JAE = 0.041496
+    rep  3: JAE = 0.103732
+    rep  4: JAE = 0.398608
+    rep  5: JAE = 0.398608
+    rep  6: JAE = 0.398608
+    rep  7: JAE = 0.398608
+    rep  8: JAE = 0.398608
+    rep  9: JAE = 0.398608
+    rep 10: JAE = 0.398608
+    rep 11: JAE = 0.398608
+    rep 12: JAE = 0.398608
+    → mean = 0.315613  std = 0.144375
+
+--- Coordination overhead ---
+  C1 (TARS  )  Active=40.9%  Coordination=11.4%  Idle=47.8%
+  C2 (TARP-F)  Active=73.1%  Coordination=10.1%  Idle=16.8%
+  C3 (TARP-S)  Active=122.2%  Coordination=11.4%  Idle=0.0%
+
+--- Convergence flags ---
+  C1 run_1: rel_precision = 0.24%  ✓ converged
+  C2 run_2: rel_precision = 2.19%  ✓ converged
+  C3 run_3: rel_precision = 9.68%  ⚠ NOT CONVERGED (>5%)
+
+========================================================================

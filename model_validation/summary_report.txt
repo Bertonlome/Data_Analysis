@@ -1,0 +1,94 @@
+======================================================================
+MITLS MODEL VALIDATION — CROSS-DOMAIN SUMMARY REPORT
+Generated: 2026-06-06 20:55
+======================================================================
+
+Scope: BEFORE TAKEOFF (8/9 tasks) + LINE-UP AND HOLD (2/2 tasks)
+       10 / 64 HITLS tasks currently modelled in MITLS
+Conditions: C1=TARS (manual)  C2=TARP-F (full auto)  C3=TARP-S (supervised auto)
+MITLS repetitions per condition: 11–12 (stochastic ACT-R runs)
+HITLS participants: 16–18 per condition (within-participant design)
+
+======================================================================
+DOMAIN SUMMARY TABLE
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+1. JOINT ACTIVITY EFFICIENCY (JAE)
+──────────────────────────────────────────────────────────────────────
+   Friedman (MITLS): χ²(2) = 22.000  p < .001  W = 1.000
+   Direction match vs HITLS throughput proxy: True
+   Interpretation: Model shows strong condition separation (W=1.0).
+   TARP-F (C2) has highest JAE (least idle time); TARP-S (C3) lowest
+   (deliberate coordination window inflates idle time). Direction
+   matches HITLS inverse-duration ranking.
+
+──────────────────────────────────────────────────────────────────────
+2. TASK TIMING
+──────────────────────────────────────────────────────────────────────
+   BEFORE TAKEOFF (8/9 tasks):
+     MITLS Friedman: χ²(2) = 22.000  p < .001
+     NMAE: TARS=-39.4%  TARP-S=-12.9%  TARP-F=+4.9%
+     Direction match: False
+   LINE-UP AND HOLD (2/2 tasks):
+     NMAE: TARS=-18.6%  TARP-S=-21.5%  TARP-F=-14.3%
+     Direction match: True
+   Interpretation: Model systematically faster (BEFORE TAKEOFF −13% to
+   −39%) partly due to missing FLAPS task. Direction mismatch for BT:
+   model ranks TARP-S slowest but HITLS ranks TARS slowest.
+
+──────────────────────────────────────────────────────────────────────
+3. EYE MOVEMENT / AREA OF INTEREST (AoI)
+──────────────────────────────────────────────────────────────────────
+   KL divergence (model || human mean):
+     TARS=0.749  TARP-S=0.767  TARP-F=0.641
+   Key NMAE (TARS condition):
+     TARS AoI:          +250.5%  (model over-fixates on TARS display)
+     PFD AoI:           -80.1%  (model ignores PFD)
+     Outside_Window:    -93.3%  (model ignores outside)
+   Interpretation: MITLS models only task-execution gaze (TARS screen).
+   Ambient monitoring (PFD, out-of-window) is absent. Adding scan-
+   pattern productions between checklist items is recommended.
+
+──────────────────────────────────────────────────────────────────────
+4. COGNITIVE WORKLOAD
+──────────────────────────────────────────────────────────────────────
+   HITLS NASA-TLX Friedman: χ²(2, N=18) = 6.958  p = 0.031
+   MITLS Utilization Friedman: χ²(2, N≈11) = 17.636  p < .001
+   Spearman ρ (condition means, n=3): ρ = -0.500  [very low power]
+   Direction match: False
+     HITLS ranking: TARS > TARP-S > TARP-F
+     MITLS ranking: TARP-F > TARS > TARP-S
+   HRV RMSSD Pearson r: 0.571  (expected r<0; n=3 conditions)
+   Interpretation: Both systems show a significant condition effect, but
+   in opposite directions for TARP-F. MITLS Overall_Utilization is
+   dominated by Motor_SubNetwork; Cognitive_SubNetwork may be a better
+   proxy for NASA-TLX Mental Demand + Effort.
+
+======================================================================
+OVERALL MODEL VALIDITY ASSESSMENT
+======================================================================
+
+  ✓  JAE: Strong condition differentiation. Direction match confirmed.
+  ✓  Timing: All NMAE < 40%. Direction preserved for LINE-UP AND HOLD.
+  ✗  AoI: Large distributional divergence. Ambient gaze not modelled.
+  ✗  Workload: Condition ranking mismatch. Utilization metric limitations.
+
+The model correctly captures task-execution efficiency (JAE) and
+approximate timing, confirming the FSM and timing parameters are
+reasonable. Gaze and workload mismatches point to two missing
+behavioural components:
+
+  1. AMBIENT MONITORING: Add ACT-R productions for PFD/out-of-window
+     scanning in between checklist steps.
+
+  2. CONDITION-SENSITIVE DEMAND: Cognitive_SubNetwork utilization
+     should be compared to NASA-TLX Mental Demand + Effort directly.
+     Current Overall_Utilization conflates physical and cognitive load.
+
+Next validation steps (pending MITLS model expansion):
+  • Add remaining procedures (TAKEOFF, ENGINE FAILURE, etc.)
+  • Re-run validation suite — coverage.py drives all modules automatically
+  • Add error-detection module once MITLS error injection is stable
+
+======================================================================

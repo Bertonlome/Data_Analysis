@@ -1,0 +1,58 @@
+============================================================
+EYE MOVEMENT / AoI VALIDATION — TIER 2 DEBUG REPORT
+============================================================
+
+Full per-AoI breakdown with participant-level counts.
+
+--------------------------------------------------
+Sample Sizes
+--------------------------------------------------
+
+TARS:
+  TARS                HITLS n=16  MITLS n_reps=11
+  PFD                 HITLS n=16  MITLS n_reps=11
+  ND                  HITLS n=16  MITLS n_reps=11
+  pedestal            HITLS n=16  MITLS n_reps=11
+  Outside_Window      HITLS n=16  MITLS n_reps=11
+  no_intersection     HITLS n=16  MITLS n_reps=11
+
+TARP-S:
+  TARS                HITLS n=18  MITLS n_reps=12
+  PFD                 HITLS n=18  MITLS n_reps=12
+  ND                  HITLS n=18  MITLS n_reps=12
+  pedestal            HITLS n=18  MITLS n_reps=12
+  Outside_Window      HITLS n=18  MITLS n_reps=12
+  no_intersection     HITLS n=18  MITLS n_reps=12
+
+TARP-F:
+  TARS                HITLS n=17  MITLS n_reps=12
+  PFD                 HITLS n=17  MITLS n_reps=12
+  ND                  HITLS n=17  MITLS n_reps=12
+  pedestal            HITLS n=17  MITLS n_reps=12
+  Outside_Window      HITLS n=17  MITLS n_reps=12
+  no_intersection     HITLS n=17  MITLS n_reps=12
+
+--------------------------------------------------
+NMAE Summary (all conditions)
+--------------------------------------------------
+  AoI                 TARS        TARP-S      TARP-F    
+  TARS                +250.5%*     +218.0%*     +196.7%*   
+  PFD                  -80.1%*      -94.2%*      -92.5%*   
+  ND                   +13.8%       -26.2%       +38.3%    
+  pedestal             -13.8%       -80.2%*      -25.7%    
+  Outside_Window       -93.3%*      -58.8%*       -1.3%    
+  no_intersection      -77.1%*      -80.9%*      -76.3%*   
+
+--------------------------------------------------
+KL Divergence (model distribution vs. human mean distribution)
+--------------------------------------------------
+  TARS: 0.7490
+  TARP-S: 0.7670
+  TARP-F: 0.6405
+
+* = |NMAE| > 0.5 (model deviates >50% from human mean)
+
+Note: TARS aoi NMAE is typically large and positive (model over-estimates
+TARS fixation). PFD and Outside_Window NMAE are large and negative
+(model under-estimates these). This pattern is expected given that MITLS
+does not model ambient monitoring gaze between checklist tasks.

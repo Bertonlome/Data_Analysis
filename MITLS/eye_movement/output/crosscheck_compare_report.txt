@@ -1,0 +1,65 @@
+{
+  "domain": "mitls_crosscheck",
+  "n_runs": 85,
+  "min_fixation_s": 0.1,
+  "conditions": [
+    "TARS",
+    "TARP-F",
+    "TARP-S"
+  ],
+  "crosscheck_rate_pct": {
+    "TARS": {
+      "n": 24,
+      "mean": 0.0,
+      "sd": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "TARP-F": {
+      "n": 25,
+      "mean": 0.0,
+      "sd": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "TARP-S": {
+      "n": 34,
+      "mean": 0.0,
+      "sd": 0.0,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    }
+  },
+  "friedman": {
+    "chi2": 0.0,
+    "p": 1.0,
+    "df": 2
+  },
+  "pairwise": [
+    {
+      "pair": "TARS-TARP-S",
+      "p_raw": 1.0,
+      "p_corr": 1.0,
+      "r": 0.0,
+      "reject": false
+    },
+    {
+      "pair": "TARS-TARP-F",
+      "p_raw": 1.0,
+      "p_corr": 1.0,
+      "r": 0.0,
+      "reject": false
+    },
+    {
+      "pair": "TARP-S-TARP-F",
+      "p_raw": 1.0,
+      "p_corr": 1.0,
+      "r": 0.0,
+      "reject": false
+    }
+  ]
+}
+--- END SUMMARY ---

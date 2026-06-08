@@ -1,0 +1,109 @@
+--- MACHINE-READABLE SUMMARY (JSON) ---
+{
+  "domain": "crosscheck",
+  "n_participants": 18,
+  "conditions": [
+    "TARS",
+    "TARC",
+    "TARP-S",
+    "TARP-F"
+  ],
+  "crosscheck_rate_pct": {
+    "TARS": {
+      "n": 16,
+      "mean": 35.54,
+      "sd": 13.48,
+      "median": 39.42,
+      "min": 13.73,
+      "max": 50.98
+    },
+    "TARC": {
+      "n": 15,
+      "mean": 32.77,
+      "sd": 13.69,
+      "median": 32.0,
+      "min": 10.2,
+      "max": 57.41
+    },
+    "TARP-S": {
+      "n": 17,
+      "mean": 67.01,
+      "sd": 14.72,
+      "median": 68.42,
+      "min": 31.37,
+      "max": 89.47
+    },
+    "TARP-F": {
+      "n": 17,
+      "mean": 61.52,
+      "sd": 16.2,
+      "median": 63.46,
+      "min": 25.49,
+      "max": 87.93
+    }
+  },
+  "friedman": {
+    "chi2": 33.77142857142857,
+    "p": 2.2139823906872775e-07,
+    "df": 3
+  },
+  "pairwise": [
+    {
+      "pair": "TARS-TARP-S",
+      "p_raw": 6.103515625e-05,
+      "r": 1.0,
+      "reject": true,
+      "p_corr": 0.000244140625,
+      "stars": "***"
+    },
+    {
+      "pair": "TARS-TARP-F",
+      "p_raw": 0.00043680902321148305,
+      "r": 1.0,
+      "reject": true,
+      "p_corr": 0.001310427069634449,
+      "stars": "***"
+    },
+    {
+      "pair": "TARP-S-TARP-F",
+      "p_raw": 0.322509765625,
+      "r": 0.2941176470588235,
+      "reject": false,
+      "p_corr": 0.322509765625,
+      "stars": ""
+    },
+    {
+      "pair": "TARS-TARC",
+      "p_raw": 0.153076171875,
+      "r": 0.4476190476190476,
+      "reject": false,
+      "p_corr": 0.30615234375,
+      "stars": ""
+    }
+  ]
+}
+--- END SUMMARY ---
+==============================================================================
+  Crosscheck Behaviour  (cross-participant)
+==============================================================================
+
+──────────────────────────────────────────────────────────────────────────────
+  CROSSCHECK RATES (% of assessable task occurrences)
+──────────────────────────────────────────────────────────────────────────────
+                                           TARS                    TARC                   TARP-S                  TARP-F        
+                                  ──────────────────────  ──────────────────────  ──────────────────────  ──────────────────────  
+  Crosscheck rate (%)             μ= 35.5 σ=13.5 Md= 39.4  μ= 32.8 σ=13.7 Md= 32.0  μ= 67.0 σ=14.7 Md= 68.4  μ= 61.5 σ=16.2 Md= 63.5
+  Eye data available (n)                    16                      15                      17                      17          
+
+──────────────────────────────────────────────────────────────────────────────
+  STATISTICAL ANALYSIS  (Friedman + Wilcoxon + Holm-Bonferroni)
+  DV: crosscheck_rate_pct per participant per condition
+  Non-parametric within-subjects tests across 4 conditions
+──────────────────────────────────────────────────────────────────────────────
+
+  Crosscheck rate (%)
+    Friedman χ²(3) = 33.771,  p = 2.21e-07
+    [✓] TARP-S − TARS      W p=6.10e-05  p_Holm=0.0002  r=+1.000  ***
+    [✓] TARP-F − TARS      W p=0.0004  p_Holm=0.0013  r=+1.000  ***
+    [ ] TARP-F − TARP-S    W p=0.3225  p_Holm=0.3225  r=+0.294  ns
+    [ ] TARC − TARS      W p=0.1531  p_Holm=0.3062  r=+0.448  ns

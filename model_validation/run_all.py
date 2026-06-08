@@ -16,6 +16,7 @@ Modules run:
     3. Timing validation   (timing/timing_validation.py)
     4. AoI validation      (eye_movement/aoi_validation.py)
     5. Workload validation (workload/workload_validation.py)
+    6. Crosscheck validation (eye_movement/crosscheck_validation.py)
 """
 
 from __future__ import annotations
@@ -184,6 +185,33 @@ def _write_summary_report(all_metrics: dict, save_path: Path) -> None:
         "",
     ]
 
+    # ── Crosscheck ───────────────────────────────────────────────────────
+    cc_h_chi2 = all_metrics.get("crosscheck_hitls_friedman_chi2", float("nan"))
+    cc_h_p    = all_metrics.get("crosscheck_hitls_friedman_p", float("nan"))
+    cc_m_chi2 = all_metrics.get("crosscheck_mitls_friedman_chi2", float("nan"))
+    cc_m_p    = all_metrics.get("crosscheck_mitls_friedman_p", float("nan"))
+    cc_rho    = all_metrics.get("crosscheck_spearman_rho", float("nan"))
+    cc_dir    = all_metrics.get("crosscheck_dir_match", "—")
+
+    cc_nmaes = {
+        c: all_metrics.get(f"crosscheck_nmae_{c}", float("nan"))
+        for c in ["TARS", "TARP-S", "TARP-F"]
+    }
+
+    lines += [
+        "─" * 70,
+        "5. CROSSCHECK BEHAVIOUR",
+        "─" * 70,
+        f"   HITLS Friedman: χ²(2) = {cc_h_chi2:.3f}  p {_fmt(cc_h_p)}",
+        f"   MITLS Friedman: χ²(2) = {cc_m_chi2:.3f}  p {_fmt(cc_m_p)}",
+        f"   Spearman ρ (condition means, n=3): ρ = {cc_rho:.3f}  [very low power]",
+        f"   Direction match: {cc_dir}",
+        f"   NMAE (MITLS vs HITLS): " + "  ".join(f"{c}={v:+.1%}" for c, v in cc_nmaes.items()),
+        "   Interpretation: crosscheck behaviour is currently under-modelled",
+        "   in MITLS relative to human eye-tracking patterns.",
+        "",
+    ]
+
     # ── Overall assessment ────────────────────────────────────────────────
     lines += [
         "=" * 70,
@@ -194,6 +222,7 @@ def _write_summary_report(all_metrics: dict, save_path: Path) -> None:
         "  ✓  Timing: All NMAE < 40%. Direction preserved for LINE-UP AND HOLD.",
         "  ✗  AoI: Large distributional divergence. Ambient gaze not modelled.",
         "  ✗  Workload: Condition ranking mismatch. Utilization metric limitations.",
+        "  ✗  Crosscheck: Model crosscheck rates diverge from HITLS behaviour.",
         "",
         "The model correctly captures task-execution efficiency (JAE) and",
         "approximate timing, confirming the FSM and timing parameters are",
@@ -206,6 +235,9 @@ def _write_summary_report(all_metrics: dict, save_path: Path) -> None:
         "  2. CONDITION-SENSITIVE DEMAND: Cognitive_SubNetwork utilization",
         "     should be compared to NASA-TLX Mental Demand + Effort directly.",
         "     Current Overall_Utilization conflates physical and cognitive load.",
+        "",
+        "  3. CHECKLIST-CROSSCHECK LOOP: Add explicit fixation productions",
+        "     to enforce task-relevant visual confirmation before task completion.",
         "",
         "Next validation steps (pending MITLS model expansion):",
         "  • Add remaining procedures (TAKEOFF, ENGINE FAILURE, etc.)",
@@ -262,10 +294,16 @@ def main(n_reps: int = 12) -> None:
     all_metrics.update(aoi_metrics)
 
     # ── Workload validation ──────────────────────────────────────────────
-    _section("STEP 4 / 4 — WORKLOAD VALIDATION")
+    _section("STEP 4 / 5 — WORKLOAD VALIDATION")
     from model_validation.workload.workload_validation import run_workload_validation
     wl_metrics = _safe_run("Workload", run_workload_validation, n_reps)
     all_metrics.update(wl_metrics)
+
+    # ── Crosscheck validation ────────────────────────────────────────────
+    _section("STEP 5 / 5 — CROSSCHECK VALIDATION")
+    from model_validation.eye_movement.crosscheck_validation import run_crosscheck_validation
+    cc_metrics = _safe_run("Crosscheck", run_crosscheck_validation, n_reps)
+    all_metrics.update(cc_metrics)
 
     # ── Summary report ───────────────────────────────────────────────────
     _section("SUMMARY REPORT")

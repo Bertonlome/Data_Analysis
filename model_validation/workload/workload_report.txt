@@ -20,7 +20,7 @@ Condition ranking (NASA-TLX, highest first): TARS > TARP-S > TARP-F
 Condition ranking (model utilization):       TARP-F > TARS > TARP-S
 Direction match: False
 
-Spearman ρ (3-point, condition means): ρ = -0.500  p = p = .667
+Spearman ρ (3-point, condition means): ρ = 0.500  p = p = .667
   (n=3 — interpret with caution; p-values are unreliable at this sample size)
 
 --------------------------------------------------
@@ -42,6 +42,55 @@ MITLS pairwise Wilcoxon (Holm-corrected):
   TARS vs TARP-S: p_raw = p = .142  p_corr = p = .142  r = +0.515  
   TARS vs TARP-F: p_raw = p < .001  p_corr = p = .002  r = +1.000  **
   TARP-S vs TARP-F: p_raw = p < .001  p_corr = p = .001  r = +1.000  **
+
+--------------------------------------------------
+Requested Subnetwork Comparisons (condition means)
+--------------------------------------------------
+
+Each row compares a NASA-TLX subscale against a MITLS subnetwork
+using condition-level Spearman correlation (n=3 conditions).
+
+Mental Demand vs Cognitive SubNetwork:
+  Spearman ρ = 1.000  p = p < .001
+  Direction match: True
+  TLX rank:   TARS > TARP-S > TARP-F
+  MITLS rank: TARS > TARP-S > TARP-F
+
+Temporal Demand vs Cognitive SubNetwork:
+  Spearman ρ = 1.000  p = p < .001
+  Direction match: True
+  TLX rank:   TARS > TARP-S > TARP-F
+  MITLS rank: TARS > TARP-S > TARP-F
+
+Effort vs Cognitive SubNetwork:
+  Spearman ρ = 1.000  p = p < .001
+  Direction match: True
+  TLX rank:   TARS > TARP-S > TARP-F
+  MITLS rank: TARS > TARP-S > TARP-F
+
+Mental Demand vs Perceptual SubNetwork:
+  Spearman ρ = -1.000  p = p < .001
+  Direction match: False
+  TLX rank:   TARS > TARP-S > TARP-F
+  MITLS rank: TARP-F > TARP-S > TARS
+
+Temporal Demand vs Perceptual SubNetwork:
+  Spearman ρ = -1.000  p = p < .001
+  Direction match: False
+  TLX rank:   TARS > TARP-S > TARP-F
+  MITLS rank: TARP-F > TARP-S > TARS
+
+Effort vs Perceptual SubNetwork:
+  Spearman ρ = -1.000  p = p < .001
+  Direction match: False
+  TLX rank:   TARS > TARP-S > TARP-F
+  MITLS rank: TARP-F > TARP-S > TARS
+
+Physical Demand vs Motor SubNetwork:
+  Spearman ρ = 0.500  p = p = .667
+  Direction match: False
+  TLX rank:   TARS > TARP-F > TARP-S
+  MITLS rank: TARP-F > TARS > TARP-S
 
 --------------------------------------------------
 HRV Comparison

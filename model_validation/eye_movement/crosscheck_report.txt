@@ -1,0 +1,17 @@
+==============================================================
+CROSSCHECK VALIDATION — TIER 1 REPORT
+==============================================================
+
+Scope: shared conditions only (TARS, TARP-S, TARP-F)
+Metric: crosscheck rate (% of assessable task occurrences)
+
+Condition    HITLS mean   MITLS mean       NMAE   n HITLS   n MITLS
+TARS             35.54%        0.00%   -100.0%        16        11
+TARP-S           67.01%        0.00%   -100.0%        17        12
+TARP-F           61.53%        0.00%   -100.0%        17        12
+
+Spearman rho on condition means (n=3): rho=0.000, p=1.0000
+
+Interpretation:
+MITLS crosscheck is currently much lower than HITLS across all shared conditions
+for the available fixation-threshold settings and gaze model outputs.

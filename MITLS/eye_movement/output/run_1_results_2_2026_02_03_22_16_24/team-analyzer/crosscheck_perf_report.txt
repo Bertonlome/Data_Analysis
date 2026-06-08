@@ -1,0 +1,215 @@
+{
+  "run_dir": "run_1_results_2_2026_02_03_22_16_24",
+  "condition": "TARS",
+  "min_fixation_s": 0.1,
+  "result": {
+    "run_dir": "run_1_results_2_2026_02_03_22_16_24",
+    "condition": "TARS",
+    "n_eye_events": 78,
+    "eye_data_available": true,
+    "n_task_events": 11,
+    "n_matched": 11,
+    "n_assessable": 11,
+    "n_crosschecked": 0,
+    "task_results": [
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "Takeoff clearance",
+        "task_value": "CONFIRM",
+        "task_start_s": 0.057,
+        "task_end_accepted_s": 18.914,
+        "task_from_table": "Takeoff clearance confirm",
+        "crosscheck_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.021,
+        "seen_aoi": [
+          "TARS"
+        ],
+        "n_eye_samples_in_window": 3
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "Pitot-Static Switch",
+        "task_value": "PITOT-STATIC",
+        "task_start_s": 18.914,
+        "task_end_accepted_s": 22.197,
+        "task_from_table": "Pitot static on",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.0,
+        "seen_aoi": [],
+        "n_eye_samples_in_window": 0
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "ENGINE ANTI-ICE Switches",
+        "task_value": "AS REQUIRED",
+        "task_start_s": 22.197,
+        "task_end_accepted_s": 27.169,
+        "task_from_table": "Engine anti ice",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.014,
+        "seen_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 9
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "WINDSHIELD ANTI-ICE Switches",
+        "task_value": "AS REQUIRED",
+        "task_start_s": 27.169,
+        "task_end_accepted_s": 32.081,
+        "task_from_table": "W/S anti-ice",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.007,
+        "seen_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 8
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "PAX SAFETY Switch",
+        "task_value": "PAX SAFETY",
+        "task_start_s": 32.081,
+        "task_end_accepted_s": 35.313,
+        "task_from_table": "Pax safety",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.0,
+        "seen_aoi": [
+          "TARS"
+        ],
+        "n_eye_samples_in_window": 4
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "LANDING Light Switch",
+        "task_value": "AS DESIRED",
+        "task_start_s": 35.313,
+        "task_end_accepted_s": 41.791,
+        "task_from_table": "Landing light",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.007,
+        "seen_aoi": [
+          "PFD",
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 13
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "ANTI-COLL Light Switch",
+        "task_value": "ON",
+        "task_start_s": 41.791,
+        "task_end_accepted_s": 46.139,
+        "task_from_table": "anti-coll light",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.011,
+        "seen_aoi": [
+          "PFD",
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 9
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "EICAS",
+        "task_value": "CHECKED",
+        "task_start_s": 46.139,
+        "task_end_accepted_s": 49.379,
+        "task_from_table": "eicas check",
+        "crosscheck_aoi": [
+          "ND"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.0,
+        "seen_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 6
+      },
+      {
+        "procedure": "LINE-UP AND HOLD",
+        "task_object": "Winds",
+        "task_value": "CHECK",
+        "task_start_s": 49.379,
+        "task_end_accepted_s": 53.482,
+        "task_from_table": "Winds checked",
+        "crosscheck_aoi": [
+          "TARS",
+          "Outside_Window"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.021,
+        "seen_aoi": [
+          "PFD",
+          "TARS"
+        ],
+        "n_eye_samples_in_window": 7
+      },
+      {
+        "procedure": "LINE-UP AND HOLD",
+        "task_object": "Select Altitude",
+        "task_value": "PRESET AS CLEARED",
+        "task_start_s": 53.482,
+        "task_end_accepted_s": 59.149,
+        "task_from_table": "select altitude",
+        "crosscheck_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.021,
+        "seen_aoi": [
+          "TARS"
+        ],
+        "n_eye_samples_in_window": 9
+      },
+      {
+        "procedure": "TAKEOFF",
+        "task_object": "CAS",
+        "task_value": "CHECK CLEAR",
+        "task_start_s": 59.149,
+        "task_end_accepted_s": 60.887,
+        "task_from_table": "cas check",
+        "crosscheck_aoi": [
+          "ND"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.0,
+        "seen_aoi": [
+          "TARS"
+        ],
+        "n_eye_samples_in_window": 3
+      }
+    ],
+    "unmatched_task_objects": []
+  }
+}
+--- END SUMMARY ---

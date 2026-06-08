@@ -1,0 +1,22 @@
+==============================================================
+CROSSCHECK VALIDATION — TIER 2 DEBUG REPORT
+==============================================================
+
+Sample sizes per condition:
+  TARS     HITLS n= 16   MITLS n= 11
+  TARP-S   HITLS n= 17   MITLS n= 12
+  TARP-F   HITLS n= 17   MITLS n= 12
+
+Within-system condition effect (Friedman):
+  HITLS: chi2(2)=22.533, p=1.28e-05, W=0.751, n=15
+  MITLS: chi2(2)=0.000, p=1.0000, W=0.000, n=11
+
+Pairwise Wilcoxon (Holm-corrected):
+  HITLS:
+    TARS vs TARP-S: p=6.10e-05  p_holm=0.0001  r=+1.000  reject=True
+    TARS vs TARP-F: p=3.05e-05  p_holm=9.16e-05  r=+1.000  reject=True
+    TARP-S vs TARP-F: p=0.3225  p_holm=0.3225  r=+0.294  reject=False
+  MITLS:
+    TARS vs TARP-S: p=1.0000  p_holm=1.0000  r=+0.000  reject=False
+    TARS vs TARP-F: p=1.0000  p_holm=1.0000  r=+0.000  reject=False
+    TARP-S vs TARP-F: p=1.0000  p_holm=1.0000  r=+0.000  reject=False

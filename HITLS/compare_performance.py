@@ -58,11 +58,12 @@ _ALL_PLOTS = [
     "time_boxplots.png",
     "time_distributions.png",
     "time_mean_task_distributions.png",
+    "crosscheck_boxplots.png",
 ]
 
 # ── Reports produced by this script ───────────────────────────────────────────
 REPORTS_DIR  = os.path.join(HITLS_DIR, "compare_performance")
-_ALL_REPORTS = ["aviate_report.txt", "navigate_report.txt", "time_report.txt"]
+_ALL_REPORTS = ["aviate_report.txt", "navigate_report.txt", "time_report.txt", "crosscheck_report.txt"]
 
 # ── Pairwise comparison pairs ──────────────────────────────────────────────────
 _ALL_PAIRS = [("TARS", "TARP-S"), ("TARS", "TARP-F"), ("TARP-S", "TARP-F"), ("TARS", "TARC")]
@@ -508,7 +509,220 @@ def write_time_report(time_data, participants):
     print(f"  → {path}")
 
 
-def write_all_perf_reports(aviate_data, av_pids, navigate_data, nav_pids, time_data, time_pids):
+# ═══════════════════════════════════════════════════════════════════════════════
+#  Crosscheck report
+# ═══════════════════════════════════════════════════════════════════════════════
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+_CROSSCHECK_CONDITIONS = ["TARS", "TARC", "TARP-S", "TARP-F"]
+_COND_COLORS = {
+    "TARS":   "#4878CF",
+    "TARC":   "#6ACC65",
+    "TARP-S": "#D65F5F",
+    "TARP-F": "#B47CC7",
+}
+
+
+def load_all_crosscheck(participants):
+    """Load crosscheck_perf reports and compute per-condition crosscheck rates.
+
+    Returns
+    -------
+    dict: pid -> {"conditions": {cond: {"crosscheck_rate_pct": float|None,
+                                        "n_matched": int, "n_assessable": int,
+                                        "n_crosschecked": int,
+                                        "eye_data_available": bool}}}
+    Only participants with a valid report are included.
+    """
+    out = {}
+    for pid in participants:
+        data = _load_json(os.path.join(HITLS_DIR, pid, "cleaned",
+                                       f"{pid}_crosscheck_perf_report.txt"))
+        if not data or not data.get("scenarios"):
+            continue
+
+        cond_totals = {}  # cond -> {n_matched, n_assessable, n_crosschecked, eye_ok}
+        for scen in data["scenarios"]:
+            cond = scen.get("condition")
+            if cond not in _CROSSCHECK_CONDITIONS:
+                continue
+            if cond not in cond_totals:
+                cond_totals[cond] = {"n_matched": 0, "n_assessable": 0,
+                                     "n_crosschecked": 0, "any_eye": False}
+            ct = cond_totals[cond]
+            ct["n_matched"]     += scen.get("n_matched", 0)
+            ct["n_assessable"]  += scen.get("n_assessable", 0)
+            ct["n_crosschecked"] += scen.get("n_crosschecked", 0)
+            if scen.get("eye_data_available"):
+                ct["any_eye"] = True
+
+        if not cond_totals:
+            continue
+
+        cond_metrics = {}
+        for cond, ct in cond_totals.items():
+            rate = None
+            if ct["n_assessable"] > 0:
+                rate = round(100.0 * ct["n_crosschecked"] / ct["n_assessable"], 2)
+            cond_metrics[cond] = {
+                "crosscheck_rate_pct":  rate,
+                "n_matched":            ct["n_matched"],
+                "n_assessable":         ct["n_assessable"],
+                "n_crosschecked":       ct["n_crosschecked"],
+                "eye_data_available":   ct["any_eye"],
+            }
+        out[pid] = {"conditions": cond_metrics}
+    return out
+
+
+def write_crosscheck_report(crosscheck_data, participants):
+    conditions = _CROSSCHECK_CONDITIONS
+
+    # Collect per-condition crosscheck_rate_pct lists
+    vals = {c: [] for c in conditions}
+    for pid in participants:
+        d = crosscheck_data.get(pid, {})
+        for cond in conditions:
+            v = d.get("conditions", {}).get(cond, {}).get("crosscheck_rate_pct")
+            vals[cond].append(v)  # None preserved → excluded in stats
+
+    # Descriptive stats per condition
+    desc = {}
+    for cond in conditions:
+        a = np.array([v for v in vals[cond] if v is not None], dtype=float)
+        if len(a) == 0:
+            desc[cond] = {"n": 0, "mean": None, "sd": None, "median": None,
+                          "min": None, "max": None}
+        else:
+            desc[cond] = {
+                "n":      int(len(a)),
+                "mean":   round(float(np.mean(a)), 2),
+                "sd":     round(float(np.std(a, ddof=1)), 2) if len(a) > 1 else 0.0,
+                "median": round(float(np.median(a)), 2),
+                "min":    round(float(np.min(a)), 2),
+                "max":    round(float(np.max(a)), 2),
+            }
+
+    # Eye-data coverage
+    eye_coverage = {c: sum(
+        1 for pid in participants
+        if crosscheck_data.get(pid, {}).get("conditions", {}).get(c, {}).get("eye_data_available")
+    ) for c in conditions}
+
+    # Statistics
+    frd, pw = _run_stats(vals, conditions, _ALL_PAIRS)
+
+    summary = {
+        "domain":         "crosscheck",
+        "n_participants": len(participants),
+        "conditions":     conditions,
+        "crosscheck_rate_pct": {c: desc[c] for c in conditions},
+        "friedman": {"chi2": frd["chi2"], "p": frd["p"], "df": frd["df"]},
+        "pairwise": [
+            {"pair": f"{b}-{a}", **pw[i]}
+            for i, (b, a) in enumerate(_ALL_PAIRS)
+        ],
+    }
+
+    w = 30
+    header = _cond_header(w, conditions)
+    row = f"  {'Crosscheck rate (%)':<{w}}"
+    for c in conditions:
+        s = desc[c]
+        if s["n"] == 0:
+            row += f"  {'—':^22}"
+        else:
+            row += f"  μ={s['mean']:5.1f} σ={s['sd']:4.1f} Md={s['median']:5.1f}"
+    row += "\n"
+
+    eye_row = f"  {'Eye data available (n)':<{w}}"
+    for c in conditions:
+        eye_row += f"  {eye_coverage[c]:^22}"
+    eye_row += "\n"
+
+    desc_sec = f"{'─' * 78}\n  CROSSCHECK RATES (% of assessable task occurrences)\n{'─' * 78}\n"
+    desc_sec += header + row + eye_row + "\n"
+
+    stat_sec  = f"{'─' * 78}\n"
+    stat_sec += "  STATISTICAL ANALYSIS  (Friedman + Wilcoxon + Holm-Bonferroni)\n"
+    stat_sec += "  DV: crosscheck_rate_pct per participant per condition\n"
+    stat_sec += "  Non-parametric within-subjects tests across 4 conditions\n"
+    stat_sec += f"{'─' * 78}\n\n"
+    stat_sec += _fmt_stat_section("Crosscheck rate (%)", frd, pw, _ALL_PAIRS)
+
+    path = os.path.join(REPORTS_DIR, "crosscheck_report.txt")
+    _write_report(path, "Crosscheck Behaviour  (cross-participant)", summary,
+                  [desc_sec, stat_sec])
+    print(f"  → {path}")
+
+
+def plot_crosscheck_boxplots(crosscheck_data, participants):
+    """Boxplot of crosscheck_rate_pct per condition."""
+    conditions = _CROSSCHECK_CONDITIONS
+    vals = {c: [] for c in conditions}
+    for pid in participants:
+        for cond in conditions:
+            v = (crosscheck_data.get(pid, {})
+                 .get("conditions", {}).get(cond, {}).get("crosscheck_rate_pct"))
+            if v is not None:
+                vals[cond].append(v)
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+
+    x = np.arange(len(conditions))
+    width = 0.5
+
+    for i, cond in enumerate(conditions):
+        v = vals[cond]
+        color = _COND_COLORS.get(cond, "#888888")
+        if len(v) >= 2:
+            bp = ax.boxplot(
+                v, positions=[x[i]], widths=[width],
+                patch_artist=True,
+                medianprops=dict(color="white", linewidth=2),
+                boxprops=dict(facecolor=color, alpha=0.75),
+                whiskerprops=dict(color=color),
+                capprops=dict(color=color),
+                flierprops=dict(marker="o", color=color, markerfacecolor=color,
+                                alpha=0.5, markersize=4),
+            )
+            # Jitter individual points
+            jitter = np.linspace(-0.12, 0.12, len(v))
+            ax.scatter(np.full(len(v), x[i]) + jitter, v,
+                       color=color, s=18, alpha=0.35, zorder=3, linewidths=0)
+        elif len(v) == 1:
+            ax.scatter([x[i]], v, color=color, s=60, zorder=4, edgecolors="black")
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(conditions, fontsize=11)
+    ax.set_ylabel("Crosscheck rate (% of assessable task occurrences)", fontsize=10)
+    ax.set_ylim(0, 105)
+    ax.set_title("Crosscheck Behaviour — per condition", fontsize=12, fontweight="bold")
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+    # Means as horizontal line labels
+    for i, cond in enumerate(conditions):
+        v = vals[cond]
+        if v:
+            m = float(np.mean(v))
+            ax.text(x[i], m + 2, f"{m:.1f}%",
+                    ha="center", va="bottom", fontsize=8, color="black", fontweight="bold")
+
+    plt.tight_layout()
+    out = os.path.join(PLOTS_DIR, "crosscheck_boxplots.png")
+    plt.savefig(out, dpi=150, bbox_inches="tight", facecolor="white", transparent=False)
+    plt.close(fig)
+    print(f"  Saved: crosscheck_boxplots.png")
+    return fig
+
+
+def write_all_perf_reports(aviate_data, av_pids, navigate_data, nav_pids, time_data, time_pids,
+                           crosscheck_data=None, cc_pids=None):
     os.makedirs(REPORTS_DIR, exist_ok=True)
     print(f"\n  Generating performance reports → {REPORTS_DIR}/\n")
     if av_pids:
@@ -517,6 +731,8 @@ def write_all_perf_reports(aviate_data, av_pids, navigate_data, nav_pids, time_d
         write_navigate_report(navigate_data, nav_pids)
     if time_pids:
         write_time_report(time_data, time_pids)
+    if cc_pids:
+        write_crosscheck_report(crosscheck_data, cc_pids)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -568,6 +784,13 @@ def _has_time(pid):
     return False
 
 
+def _has_crosscheck(pid):
+    data = _load_json(os.path.join(HITLS_DIR, pid, "cleaned", f"{pid}_crosscheck_perf_report.txt"))
+    if not data:
+        return False
+    return bool(data.get("scenarios"))
+
+
 def _missing_for(pid):
     """Return list of report kinds missing for this participant."""
     missing = []
@@ -577,6 +800,8 @@ def _missing_for(pid):
         missing.append("navigate")
     if not _has_time(pid):
         missing.append("time")
+    if not _has_crosscheck(pid):
+        missing.append("crosscheck")
     return missing
 
 
@@ -658,9 +883,10 @@ def main():
 
     # ── Step 1: Generate any missing per-participant reports ──────────────────
     _scripts = {
-        "aviate":   os.path.join(PERF_DIR, "aviate_perf.py"),
-        "navigate": os.path.join(PERF_DIR, "navigate_perf.py"),
-        "time":     os.path.join(PERF_DIR, "time_perf.py"),
+        "aviate":     os.path.join(PERF_DIR, "aviate_perf.py"),
+        "navigate":   os.path.join(PERF_DIR, "navigate_perf.py"),
+        "time":       os.path.join(PERF_DIR, "time_perf.py"),
+        "crosscheck": os.path.join(PERF_DIR, "crosscheck_perf.py"),
     }
 
     n_total = sum(len(v) for v in missing_map.values())
@@ -681,19 +907,22 @@ def main():
 
     # ── Step 3: Load data ─────────────────────────────────────────────────────
     print("\n[3/4] Loading data …")
-    aviate_data   = cmp_aviate.load_all(participants)
-    navigate_data = cmp_navigate.load_all(participants)
-    time_data     = cmp_time.load_all(participants)
+    aviate_data     = cmp_aviate.load_all(participants)
+    navigate_data   = cmp_navigate.load_all(participants)
+    time_data       = cmp_time.load_all(participants)
+    crosscheck_data = load_all_crosscheck(participants)
 
     av_pids   = list(aviate_data.keys())
     nav_pids  = list(navigate_data.keys())
     time_pids = list(time_data.keys())
+    cc_pids   = list(crosscheck_data.keys())
 
-    print(f"  Aviate:   {len(av_pids)} participant(s) — {', '.join(av_pids) or 'none'}")
-    print(f"  Navigate: {len(nav_pids)} participant(s) — {', '.join(nav_pids) or 'none'}")
-    print(f"  Time:     {len(time_pids)} participant(s) — {', '.join(time_pids) or 'none'}")
+    print(f"  Aviate:     {len(av_pids)} participant(s) — {', '.join(av_pids) or 'none'}")
+    print(f"  Navigate:   {len(nav_pids)} participant(s) — {', '.join(nav_pids) or 'none'}")
+    print(f"  Time:       {len(time_pids)} participant(s) — {', '.join(time_pids) or 'none'}")
+    print(f"  Crosscheck: {len(cc_pids)} participant(s) — {', '.join(cc_pids) or 'none'}")
 
-    if not av_pids and not nav_pids and not time_pids:
+    if not av_pids and not nav_pids and not time_pids and not cc_pids:
         print("  No data available — aborting.")
         return
 
@@ -729,11 +958,19 @@ def main():
     else:
         print("  ── Time: no data, skipping.")
 
+    # ── Crosscheck ────────────────────────────────────────────────────────────
+    if cc_pids:
+        print("  ── Crosscheck behaviour (rate per condition) ──")
+        figs.append(plot_crosscheck_boxplots(crosscheck_data, cc_pids))
+    else:
+        print("  ── Crosscheck: no data, skipping.")
+
     import matplotlib.pyplot as plt
     n_saved = sum(1 for f in figs if f is not None)
     print(f"\nDone — {n_saved} figure(s) saved to {PLOTS_DIR}/")
 
-    write_all_perf_reports(aviate_data, av_pids, navigate_data, nav_pids, time_data, time_pids)
+    write_all_perf_reports(aviate_data, av_pids, navigate_data, nav_pids, time_data, time_pids,
+                           crosscheck_data=crosscheck_data, cc_pids=cc_pids)
 
     plt.show()
 

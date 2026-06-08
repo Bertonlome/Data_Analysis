@@ -1,0 +1,21 @@
+{
+  "run_dir": "run_1_results_1_2026_02_03_20_15_36",
+  "condition": "TARS",
+  "min_fixation_s": 0.1,
+  "result": {
+    "run_dir": "run_1_results_1_2026_02_03_20_15_36",
+    "condition": "TARS",
+    "n_eye_events": 0,
+    "eye_data_available": false,
+    "n_task_events": 0,
+    "n_matched": 0,
+    "n_assessable": 0,
+    "n_crosschecked": 0,
+    "task_results": [],
+    "unmatched_task_objects": [],
+    "notes": [
+      "Missing team-analyzer/cassandra_converted.csv"
+    ]
+  }
+}
+--- END SUMMARY ---

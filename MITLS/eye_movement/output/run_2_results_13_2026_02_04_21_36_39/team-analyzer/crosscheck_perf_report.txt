@@ -1,0 +1,149 @@
+{
+  "run_dir": "run_2_results_13_2026_02_04_21_36_39",
+  "condition": "TARP-F",
+  "min_fixation_s": 0.1,
+  "result": {
+    "run_dir": "run_2_results_13_2026_02_04_21_36_39",
+    "condition": "TARP-F",
+    "n_eye_events": 59,
+    "eye_data_available": true,
+    "n_task_events": 7,
+    "n_matched": 7,
+    "n_assessable": 7,
+    "n_crosschecked": 0,
+    "task_results": [
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "Takeoff clearance",
+        "task_value": "CONFIRM",
+        "task_start_s": 0.05,
+        "task_end_accepted_s": 10.05,
+        "task_from_table": "Takeoff clearance confirm",
+        "crosscheck_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.021,
+        "seen_aoi": [
+          "Outside_Window",
+          "TARS"
+        ],
+        "n_eye_samples_in_window": 6
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "Pitot-Static Switch",
+        "task_value": "PITOT-STATIC",
+        "task_start_s": 0.098,
+        "task_end_accepted_s": 10.098,
+        "task_from_table": "Pitot static on",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.0,
+        "seen_aoi": [
+          "Outside_Window",
+          "TARS"
+        ],
+        "n_eye_samples_in_window": 6
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "ENGINE ANTI-ICE Switches",
+        "task_value": "AS REQUIRED",
+        "task_start_s": 2.193,
+        "task_end_accepted_s": 12.193,
+        "task_from_table": "Engine anti ice",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.007,
+        "seen_aoi": [
+          "Outside_Window",
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 9
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "WINDSHIELD ANTI-ICE Switches",
+        "task_value": "AS REQUIRED",
+        "task_start_s": 10.14,
+        "task_end_accepted_s": 25.832,
+        "task_from_table": "W/S anti-ice",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.007,
+        "seen_aoi": [
+          "ND",
+          "Outside_Window",
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 16
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "PAX SAFETY Switch",
+        "task_value": "PAX SAFETY",
+        "task_start_s": 25.832,
+        "task_end_accepted_s": 35.832,
+        "task_from_table": "Pax safety",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.011,
+        "seen_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 8
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "LANDING Light Switch",
+        "task_value": "AS DESIRED",
+        "task_start_s": 25.88,
+        "task_end_accepted_s": 35.88,
+        "task_from_table": "Landing light",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.011,
+        "seen_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 8
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "ANTI-COLL Light Switch",
+        "task_value": "ON",
+        "task_start_s": 31.806,
+        "task_end_accepted_s": 41.806,
+        "task_from_table": "anti-coll light",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.013,
+        "seen_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 15
+      }
+    ],
+    "unmatched_task_objects": []
+  }
+}
+--- END SUMMARY ---

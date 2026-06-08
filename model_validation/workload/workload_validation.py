@@ -99,9 +99,21 @@ TLX_LABELS = {
     "mental_demand":   "Mental Demand",
     "effort":          "Effort",
     "temporal_demand": "Temporal Demand",
+    "perceptual_demand": "Perceptual Demand (Temporal Demand proxy)",
     "physical_demand": "Physical Demand",
     "frustration":     "Frustration",
 }
+
+# Explicit user-requested comparisons
+REQUESTED_COMPARISONS = [
+    ("cognitive_vs_mental", "Cognitive", "mental_demand"),
+    ("cognitive_vs_temporal", "Cognitive", "temporal_demand"),
+    ("cognitive_vs_effort", "Cognitive", "effort"),
+    ("perceptual_vs_mental", "Perceptual", "mental_demand"),
+    ("perceptual_vs_perceptual_demand", "Perceptual", "temporal_demand"),
+    ("perceptual_vs_effort", "Perceptual", "effort"),
+    ("motor_vs_physical", "Motor", "physical_demand"),
+]
 
 # ---------------------------------------------------------------------------
 # Data loaders
@@ -303,7 +315,7 @@ def _compute_stats(
     else:
         hrv_rho, hrv_p = float("nan"), float("nan")
 
-    # --- Subnetwork vs TLX subscale comparison ---
+    # --- Subnetwork vs TLX subscale comparison (legacy grouped mapping) ---
     subscale_stats: dict[str, dict] = {}
     for metric_key, tlx_subscales in METRIC_TO_TLX.items():
         if metric_key == "Overall":
@@ -319,6 +331,41 @@ def _compute_stats(
                          if mitls[cond][metric_key] else np.nan
             sub_vals[cond] = {"tlx": tlx_sub_mean, "mitls": mitls_mean}
         subscale_stats[metric_key] = sub_vals
+
+    # --- Requested pairwise comparisons ---
+    requested_stats: dict[str, dict] = {}
+    for comp_key, metric_key, tlx_key in REQUESTED_COMPARISONS:
+        tlx_means = {}
+        mitls_means = {}
+        for cond in _COND_ORDER:
+            tlx_series = tlx_df[tlx_df["condition"] == cond][tlx_key] \
+                         if tlx_key in tlx_df.columns else pd.Series(dtype=float)
+            tlx_means[cond] = float(tlx_series.mean()) if len(tlx_series) > 0 else np.nan
+            mitls_vals = mitls[cond][metric_key]
+            mitls_means[cond] = float(np.mean(mitls_vals)) if mitls_vals else np.nan
+
+        tlx_vec = [tlx_means[c] for c in _COND_ORDER]
+        mitls_vec = [mitls_means[c] for c in _COND_ORDER]
+        if not any(np.isnan(v) for v in tlx_vec + mitls_vec):
+            rho, p = scipy_stats.spearmanr(tlx_vec, mitls_vec)
+        else:
+            rho, p = float("nan"), float("nan")
+
+        tlx_rank = sorted(_COND_ORDER, key=lambda c: tlx_means[c], reverse=True)
+        mitls_rank = sorted(_COND_ORDER, key=lambda c: mitls_means[c], reverse=True)
+
+        requested_stats[comp_key] = {
+            "metric": metric_key,
+            "tlx_key": tlx_key,
+            "tlx_label": TLX_LABELS.get(tlx_key, tlx_key),
+            "mitls_means": mitls_means,
+            "tlx_means": tlx_means,
+            "spearman_rho": float(rho),
+            "spearman_p": float(p),
+            "direction_match": (tlx_rank == mitls_rank),
+            "tlx_rank": tlx_rank,
+            "mitls_rank": mitls_rank,
+        }
 
     return {
         "h_fried":      h_fried,
@@ -340,6 +387,7 @@ def _compute_stats(
         "hrv_rho":      hrv_rho,
         "hrv_p":        hrv_p,
         "subscale_stats": subscale_stats,
+        "requested_stats": requested_stats,
     }
 
 
@@ -615,6 +663,27 @@ def _write_tier1_report(stats: dict, tlx_df: pd.DataFrame, save_path: Path) -> N
     lines += [
         "",
         "-" * 50,
+        "Requested Subnetwork Comparisons (condition means)",
+        "-" * 50,
+        "",
+        "Each row compares a NASA-TLX subscale against a MITLS subnetwork",
+        "using condition-level Spearman correlation (n=3 conditions).",
+    ]
+    for comp_key, comp in stats["requested_stats"].items():
+        metric = comp["metric"]
+        tlx_label = comp["tlx_label"]
+        lines += [
+            "",
+            f"{tlx_label} vs {metric} SubNetwork:",
+            f"  Spearman ρ = {comp['spearman_rho']:.3f}  p = {fmt_p(comp['spearman_p'])}",
+            f"  Direction match: {comp['direction_match']}",
+            f"  TLX rank:   {' > '.join(comp['tlx_rank'])}",
+            f"  MITLS rank: {' > '.join(comp['mitls_rank'])}",
+        ]
+
+    lines += [
+        "",
+        "-" * 50,
         "HRV Comparison",
         "-" * 50,
         "",
@@ -703,6 +772,28 @@ def _write_tier2_report(
         ef  = tlx_df[tlx_df["condition"] == cond]["effort"].mean()
         lines.append(f"  {cond}: Cognitive={cog:.4f}  Mental={md:.1f}  Effort={ef:.1f}")
 
+    lines += [
+        "",
+        "-" * 50,
+        "Requested Comparison Matrix (condition means, n=3)",
+        "-" * 50,
+    ]
+    for _, comp in stats["requested_stats"].items():
+        lines += [
+            "",
+            f"{comp['tlx_label']} vs {comp['metric']} SubNetwork",
+            f"  Spearman ρ={comp['spearman_rho']:.3f}  p={fmt_p(comp['spearman_p'])}  "
+            f"DirectionMatch={comp['direction_match']}",
+            f"  TLX rank:   {' > '.join(comp['tlx_rank'])}",
+            f"  MITLS rank: {' > '.join(comp['mitls_rank'])}",
+            "  Per-condition means:",
+        ]
+        for cond in _COND_ORDER:
+            lines.append(
+                f"    {cond}: TLX={comp['tlx_means'][cond]:.2f}  "
+                f"MITLS={comp['mitls_means'][cond]:.4f}"
+            )
+
     save_path.parent.mkdir(parents=True, exist_ok=True)
     save_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"  [debug] Saved: {save_path.name}")
@@ -752,6 +843,13 @@ def run_workload_validation(n: int = 12) -> dict:
     print(f"    HITLS: {' > '.join(stats['h_rank'])}")
     print(f"    MITLS: {' > '.join(stats['m_rank'])}")
     print(f"  HRV Pearson r: {stats['hrv_rho']:.3f}")
+    print("  Requested subnetwork comparisons (n=3 condition means):")
+    for _, comp in stats["requested_stats"].items():
+        print(
+            f"    {comp['tlx_label']} vs {comp['metric']}: "
+            f"rho={comp['spearman_rho']:.3f} p={fmt_p(comp['spearman_p'])} "
+            f"dir_match={comp['direction_match']}"
+        )
 
     print("\n[3/5] Writing Tier 1 outputs (publication)...")
     _plot_pub_workload_comparison(
@@ -784,6 +882,11 @@ def run_workload_validation(n: int = 12) -> dict:
         "workload_dir_match":           stats["dir_match"],
         "workload_hrv_pearson_r":       stats["hrv_rho"],
     }
+
+    for comp_key, comp in stats["requested_stats"].items():
+        metrics[f"workload_{comp_key}_rho"] = comp["spearman_rho"]
+        metrics[f"workload_{comp_key}_p"] = comp["spearman_p"]
+        metrics[f"workload_{comp_key}_dir_match"] = comp["direction_match"]
 
     print("\nSummary metrics:")
     for k, v in metrics.items():

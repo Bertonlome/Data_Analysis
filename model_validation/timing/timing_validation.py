@@ -38,6 +38,8 @@ import matplotlib.patches as mpatches
 import numpy as np
 import pandas as pd
 
+plt.style.use("default")
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
@@ -321,6 +323,7 @@ def _plot_pub_procedure_comparison(
     Per panel: side-by-side box plots (HITLS=blue, MITLS=red) per condition.
     """
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    fig.patch.set_facecolor("white")
     fig.suptitle(
         "Procedure Duration: Model vs. Human Participants\n"
         "(covered procedures only)",
@@ -329,6 +332,103 @@ def _plot_pub_procedure_comparison(
 
     proc_keys = list(PROC_INFO.keys())  # [before_takeoff, lineup_hold]
 
+    def _draw_condition_box(
+        ax: plt.Axes,
+        values: list[float],
+        x_pos: float,
+        width: float,
+        color: str,
+    ) -> None:
+        """Draw a boxplot that stays visible even when IQR collapses to ~0."""
+        if len(values) >= 2:
+            vals = np.asarray(values, dtype=float)
+            q1, q3 = np.percentile(vals, [25, 75])
+            if np.isclose(q1, q3):
+                y_lo, y_hi = ax.get_ylim()
+                data_per_pixel = (y_hi - y_lo) / max(ax.bbox.height, 1.0)
+                min_box_h = max((y_hi - y_lo) * 0.015, data_per_pixel * 12.0, 2.0)
+                y_mid = float(np.median(vals))
+                y0 = y_mid - min_box_h / 2
+                box_w = width * 0.9
+                whisker_low = float(np.min(vals))
+                whisker_high = float(np.max(vals))
+
+                ax.add_patch(
+                    mpatches.Rectangle(
+                        (x_pos - box_w / 2, y0),
+                        box_w,
+                        min_box_h,
+                        facecolor=color,
+                        edgecolor=color,
+                        alpha=0.7,
+                        zorder=2,
+                    )
+                )
+                ax.plot(
+                    [x_pos - box_w / 2, x_pos + box_w / 2],
+                    [y_mid, y_mid],
+                    color="white",
+                    linewidth=2,
+                    zorder=3,
+                )
+
+                # Whiskers and caps from collapsed box to min/max observed values.
+                ax.plot([x_pos, x_pos], [y0, whisker_low], color=color, linewidth=1.4, zorder=2)
+                ax.plot([x_pos, x_pos], [y0 + min_box_h, whisker_high], color=color, linewidth=1.4, zorder=2)
+                cap_w = box_w * 0.45
+                ax.plot(
+                    [x_pos - cap_w / 2, x_pos + cap_w / 2],
+                    [whisker_low, whisker_low],
+                    color=color,
+                    linewidth=1.4,
+                    zorder=2,
+                )
+                ax.plot(
+                    [x_pos - cap_w / 2, x_pos + cap_w / 2],
+                    [whisker_high, whisker_high],
+                    color=color,
+                    linewidth=1.4,
+                    zorder=2,
+                )
+            else:
+                ax.boxplot(
+                    vals,
+                    positions=[x_pos],
+                    widths=[width * 0.9],
+                    patch_artist=True,
+                    medianprops=dict(color="white", linewidth=2),
+                    boxprops=dict(facecolor=color, alpha=0.7),
+                    whiskerprops=dict(color=color),
+                    capprops=dict(color=color),
+                    flierprops=dict(
+                        marker="o",
+                        color=color,
+                        markerfacecolor=color,
+                        markersize=3,
+                    ),
+                )
+
+            if len(vals) >= 3:
+                x_jitter = np.linspace(-width * 0.09, width * 0.09, len(vals))
+                ax.scatter(
+                    np.full(len(vals), x_pos) + x_jitter,
+                    vals,
+                    color=color,
+                    s=10,
+                    alpha=0.25,
+                    linewidths=0,
+                    zorder=1,
+                )
+        elif len(values) == 1:
+            ax.scatter(
+                [x_pos],
+                values,
+                color=color,
+                edgecolors="black",
+                s=25,
+                zorder=3,
+            )
+
     for ax, proc_key in zip(axes, proc_keys):
         info   = PROC_INFO[proc_key]
         st     = stats[proc_key]
@@ -336,39 +436,39 @@ def _plot_pub_procedure_comparison(
         x      = np.arange(n_cond)
         width  = 0.35
 
+        ax.set_facecolor("white")
+
+        # Add a bit of headroom for top annotations and isolate from outliers.
+        all_vals = []
+        for cond in _COND_ORDER:
+            all_vals.extend(hitls_arrays[proc_key][cond])
+            all_vals.extend(mitls_totals[cond][proc_key])
+        if all_vals:
+            vals_arr = np.asarray(all_vals, dtype=float)
+            y_floor = min(0.0, float(np.nanmin(vals_arr)) * 0.95)
+            y_top = float(np.nanpercentile(vals_arr, 98)) * 1.10
+            if y_top <= y_floor:
+                y_top = y_floor + 1.0
+            ax.set_ylim(y_floor, y_top)
+
         for i, cond in enumerate(_COND_ORDER):
             h_vals = hitls_arrays[proc_key][cond]
             m_vals = mitls_totals[cond][proc_key]
 
-            # HITLS box
-            if h_vals:
-                bp = ax.boxplot(
-                    h_vals,
-                    positions=[x[i] - width / 2],
-                    widths=[width * 0.9],
-                    patch_artist=True,
-                    medianprops=dict(color="white", linewidth=2),
-                    boxprops=dict(facecolor="#4878CF", alpha=0.7),
-                    whiskerprops=dict(color="#4878CF"),
-                    capprops=dict(color="#4878CF"),
-                    flierprops=dict(marker="o", color="#4878CF",
-                                   markerfacecolor="#4878CF", markersize=3),
-                )
-
-            # MITLS box
-            if m_vals:
-                ax.boxplot(
-                    m_vals,
-                    positions=[x[i] + width / 2],
-                    widths=[width * 0.9],
-                    patch_artist=True,
-                    medianprops=dict(color="white", linewidth=2),
-                    boxprops=dict(facecolor="#D65F5F", alpha=0.7),
-                    whiskerprops=dict(color="#D65F5F"),
-                    capprops=dict(color="#D65F5F"),
-                    flierprops=dict(marker="o", color="#D65F5F",
-                                   markerfacecolor="#D65F5F", markersize=3),
-                )
+            _draw_condition_box(
+                ax=ax,
+                values=h_vals,
+                x_pos=x[i] - width / 2,
+                width=width,
+                color="#4878CF",
+            )
+            _draw_condition_box(
+                ax=ax,
+                values=m_vals,
+                x_pos=x[i] + width / 2,
+                width=width,
+                color="#D65F5F",
+            )
 
         ax.set_xticks(x)
         ax.set_xticklabels(_COND_ORDER, fontsize=10)
@@ -384,10 +484,12 @@ def _plot_pub_procedure_comparison(
         for i, cond in enumerate(_COND_ORDER):
             nv = st["nmae_vals"][cond]
             if not np.isnan(nv):
+                nmae_label = f"-{abs(nv):.0%}" if nv < 0 else f"{nv:.0%}"
                 ax.text(
-                    x[i], ax.get_ylim()[1] * 0.92 if ax.get_ylim()[1] > 0 else 1,
-                    f"NMAE={nv:.0%}",
-                    ha="center", va="bottom", fontsize=7,
+                    x[i], 0.92,
+                    f"NMAE={nmae_label}",
+                    transform=ax.get_xaxis_transform(),
+                    ha="center", va="bottom", fontsize=9,
                     color="darkred" if nv > 0.5 else "black",
                 )
 
@@ -400,8 +502,14 @@ def _plot_pub_procedure_comparison(
         bbox_to_anchor=(0.5, -0.04),
     )
 
-    plt.tight_layout(rect=[0, 0.04, 1, 1])
-    plt.savefig(save_path, dpi=150, bbox_inches="tight")
+    plt.tight_layout(rect=[0, 0.06, 1, 0.95])
+    plt.savefig(
+        save_path,
+        dpi=150,
+        bbox_inches="tight",
+        facecolor="white",
+        transparent=False,
+    )
     plt.close()
     print(f"  [pub] Saved: {save_path.name}")
 

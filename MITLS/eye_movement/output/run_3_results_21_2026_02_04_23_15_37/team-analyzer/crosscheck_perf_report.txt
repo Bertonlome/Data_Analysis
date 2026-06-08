@@ -1,0 +1,74 @@
+{
+  "run_dir": "run_3_results_21_2026_02_04_23_15_37",
+  "condition": "TARP-S",
+  "min_fixation_s": 0.1,
+  "result": {
+    "run_dir": "run_3_results_21_2026_02_04_23_15_37",
+    "condition": "TARP-S",
+    "n_eye_events": 88,
+    "eye_data_available": true,
+    "n_task_events": 3,
+    "n_matched": 3,
+    "n_assessable": 3,
+    "n_crosschecked": 0,
+    "task_results": [
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "Takeoff clearance",
+        "task_value": "CONFIRM",
+        "task_start_s": 0.028,
+        "task_end_accepted_s": 10.028,
+        "task_from_table": "Takeoff clearance confirm",
+        "crosscheck_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.021,
+        "seen_aoi": [
+          "TARS"
+        ],
+        "n_eye_samples_in_window": 2
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "Pitot-Static Switch",
+        "task_value": "PITOT-STATIC",
+        "task_start_s": 3.102,
+        "task_end_accepted_s": 13.102,
+        "task_from_table": "Pitot static on",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.014,
+        "seen_aoi": [
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 8
+      },
+      {
+        "procedure": "BEFORE TAKEOFF",
+        "task_object": "ENGINE ANTI-ICE Switches",
+        "task_value": "AS REQUIRED",
+        "task_start_s": 11.358,
+        "task_end_accepted_s": 21.358,
+        "task_from_table": "Engine anti ice",
+        "crosscheck_aoi": [
+          "no_intersection"
+        ],
+        "crosschecked": false,
+        "max_fix_dwell_s": 0.014,
+        "seen_aoi": [
+          "Outside_Window",
+          "TARS",
+          "no_intersection"
+        ],
+        "n_eye_samples_in_window": 20
+      }
+    ],
+    "unmatched_task_objects": []
+  }
+}
+--- END SUMMARY ---

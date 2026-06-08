@@ -1,0 +1,21 @@
+{
+  "run_dir": "run_3_results_1_2026_02_04_22_35_42",
+  "condition": "TARP-S",
+  "min_fixation_s": 0.1,
+  "result": {
+    "run_dir": "run_3_results_1_2026_02_04_22_35_42",
+    "condition": "TARP-S",
+    "n_eye_events": 0,
+    "eye_data_available": false,
+    "n_task_events": 0,
+    "n_matched": 0,
+    "n_assessable": 0,
+    "n_crosschecked": 0,
+    "task_results": [],
+    "unmatched_task_objects": [],
+    "notes": [
+      "Missing team-analyzer/cassandra_converted.csv"
+    ]
+  }
+}
+--- END SUMMARY ---
